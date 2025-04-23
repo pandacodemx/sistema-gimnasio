@@ -1,13 +1,11 @@
 <template>
-    <div>
-        <h1>Visitas <span class="indigo--text display-1"> {{ visitas.length }}</span></h1>
+    <div class="miembros">        
         <periodo-busqueda @buscar="onBuscar"/>
-        <cartas-totales v-if="visitas.length > 0" :totales="totalesMembresias" :titulo="'Visitas registradas por membresía'" :icono="'mdi-wallet-membership'" :color="'deep-purple accent-4'" />
-
+        <cartas-totales v-if="visitas.length > 0" :totales="totalesMembresias" :titulo="'Visitas registradas por membresía'" :icono="'mdi-alarm'" :color="'error'" />
+        <br>
+        <h1>Visitas total:  <span class="secondary--text display-1"> {{ visitas.length }}</span></h1>
         <v-card class="mt-3">
-            <v-card-title>
-                Visitas registradas: 
-                <b v-if="!filtros.fechaInicio"> hoy</b>
+            <v-card-title>              
                 <b v-if="filtros.fechaInicio"> {{ filtros.fechaInicio }} al {{ filtros.fechaFin}}</b>
                 <v-spacer></v-spacer>
                 <v-text-field
@@ -41,12 +39,25 @@
                     <v-alert :value="true" color="error" icon="warning">
                         No se han encontrado datos :(
                     </v-alert>
-                    </template>
+                </template>
+
+                <template v-slot:[`item.membresia`]="{ item }">
+                    <div
+                        class="medalla"
+                        :class="claseMembresia(item.membresia)"
+                    >
+                        <v-icon left small>{{ iconoMembresia(item.membresia) }}</v-icon>
+                        {{ item.membresia }}
+                    </div>
+                </template>
             </v-data-table>
         </v-card>
 
-        <cartas-totales v-if="visitas.length > 0" :totales="totalesUsuarios" :titulo="'Visitas registradas por usuarios'" :icono="'mdi-badge-account'" :color="'brown darken-4'" />
-        <cartas-totales-miembros v-if="visitas.length > 0" class="mt-3" :totales="totalesMiembros" :titulo="'Miembros con ,mayores visitas'"  />
+        <hr>
+        <br>
+        <cartas-totales v-if="visitas.length > 0" :totales="totalesUsuarios" :titulo="'Visitas registradas (Usuarios)'" :icono="'mdi-account-check'" :color="'brown darken-4'" />
+            
+        <cartas-totales-miembros v-if="visitas.length > 0" class="mt-3" :totales="totalesMiembros" :titulo="'Miembros mayores visitas'"  />
 
     </div>
 </template>
@@ -115,8 +126,36 @@ export default {
                 this.totalesMiembros = respuesta.totalesMiembros
                 this.cargando = false
             })
+        },
+        claseMembresia(nombre) {
+        const tipo = nombre.toLowerCase()
+        if (tipo.includes('oro')) return 'medalla-oro'
+        if (tipo.includes('plata')) return 'medalla-plata'
+        if (tipo.includes('bronce')) return 'medalla-bronce'
+        if (tipo.includes('premium')) return 'medalla-premium'
+        return 'medalla-default'
+        },
+
+        iconoMembresia(nombre) {
+        const tipo = nombre.toLowerCase()
+        if (tipo.includes('oro')) return 'mdi-trophy'
+        if (tipo.includes('plata')) return 'mdi-medal'
+        if (tipo.includes('bronce')) return 'mdi-star-outline'
+        if (tipo.includes('premium')) return 'mdi-diamond'
+        return 'mdi-certificate'
         }
     }
     
 }
 </script>
+<style>
+.miembros {  
+    font-weight: 400;  
+    padding: 30px;
+    background-color: #1e1e1e;
+    border-radius: 12px;
+    min-height: 100vh;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  
+  }
+</style>

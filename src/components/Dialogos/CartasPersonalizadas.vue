@@ -12,20 +12,22 @@
             pa-3
             v-card--material-stats
             v-card v-sheet
-            theme--light
+            theme--dark
             v-card--material--has-heading
+            
           "
         >
           <div class="d-flex grow flex-wrap">
             <div
               :class="item.color"
               class="
-                text-start
+                text-left
                 v-card--material__heading
                 mb-n6
                 v-sheet
                 elevation-6
-                pa-7
+                pa-4
+                rounded-lg
               "
               style="max-height: 70px; width: auto"
             >
@@ -34,11 +36,11 @@
               </v-icon>
             </div>
             <div class="ml-6">
-              <div class="ml-auto text-right">
+              <div class="ml-auto text-left">
                 <div class="body-3 grey--text font-weight-light">
                   {{ item.nombre }}
                 </div>
-                <h3 class="display-1 font-weight-light text--primary">
+                <h3 class="display-1 font-weight-bold text--primary">
                   {{ item.total }}
                   <small></small>
                 </h3>
@@ -50,6 +52,9 @@
     </div>
   </section>
 </template>
+
+
+////////////SCRIPT////////////////
 <script>
 export default {
   name: "CartasPersonalizadas",

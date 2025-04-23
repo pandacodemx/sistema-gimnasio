@@ -1,21 +1,26 @@
 <template>
   <div class="miembros">
     <busqueda-miembro @seleccionado="onMiembroSeleccionado" />
-    <v-card class="mx-auto mt-3 px-5" v-if="!miembro">
-      <v-card-title class="title-card justify-center">
+    <v-card class="mx-auto mt-3 px-5" v-if="!miembro">      
+      <v-card-actions class="justify-space-around flex-wrap">       
+        <img class="img_visita" src="https://static.vecteezy.com/system/resources/previews/025/002/016/non_2x/3d-sportsman-character-sculpting-upper-body-with-incline-bench-press-workout-free-png.png" alt="">
+  
+        <div class="d-flex flex-column box-check">
+        <v-card-title class="title-card text-center">
         Escribe el nombre o matrícula del miembro o registra una visita
         regular para personas sin membresia.</v-card-title
-      >
-      <v-card-actions class="justify-center">
-        <v-btn
-          x-large
-          color="primary"
-          dark
-          @click="mostrarDialogoRegular = true"
         >
-          <v-icon left> check </v-icon>
-          Registrar visita regular
-        </v-btn>
+        <v-btn
+            x-large
+            color="primary"
+            dark
+            @click="mostrarDialogoRegular = true"
+          >
+            <v-icon left> check </v-icon>
+            Registrar visita regular
+          </v-btn>
+        </div>
+       
       </v-card-actions>
     </v-card>
     <v-card
@@ -284,5 +289,18 @@ export default {
   border-radius: 12px;
   min-height: 100vh;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+.img_visita
+{
+  width: 500px;
+}
+@media (max-width: 480px) {
+  .img_visita {
+    width: 100%;
+  }
+  .title-card {
+    font-size: 12px;
+  }
+  
 }
 </style>

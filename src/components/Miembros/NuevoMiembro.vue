@@ -91,7 +91,7 @@ export default {
         nombre: "",
         telefono: "",
         direccion: "",
-        edad: 10,
+        edad: 20,
       },
       datosContacto: {
         sufreEnfermedad: false,

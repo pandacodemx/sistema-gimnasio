@@ -1,9 +1,9 @@
 <template>
     <section >
-        <p class="display-1">{{ titulo }}</p>
+        {{ titulo }}
         <div class="row">
         <div class="col-sm-6 col-lg-3 col-12" v-for="(item,index) in totales" :key="index">
-            <div class="v-card--material pa-3 v-card--material-stats v-card v-sheet theme--light v-card--material--has-heading">
+            <div class="v-card--material pa-3 v-card--material-stats v-card v-sheet theme--dark v-card--material--has-heading">
                 <div class="d-flex grow flex-wrap">
                     <v-avatar
                     size="90"
@@ -11,13 +11,13 @@
                         <v-img :src="urlImagen(item.imagen)"></v-img>
                     </v-avatar>
                     <div class="ml-6">
-                        <div class="ml-auto text-right">
-                            <div class="body-3 grey--text font-weight-light">
+                        <div class="ml-auto text-left">
+                            <div class="body-3 warning--text font-weight-light">
                                 {{ item.nombre }}
                                 <br>
-                                <small>{{ item.matricula }}</small>
+                                <small class=" white--text ">Matricula: {{ item.matricula }}</small>
                             </div>
-                            <h3 class="display-1 font-weight-light text--primary">{{ item.total}}
+                            <h3 class="display-1 font-weight-bold text--primary">{{ item.total}}
                                 <small></small>
                             </h3>
                         </div>

@@ -1,7 +1,7 @@
 <template>
-    <div>
-        <h1>Configuración del sistema</h1>
-        <form-configuracion :ajustes="datosAjustes" @registrar="onRegistrar" v-if="datosAjustes"/>
+    <div class="pa-10">
+        <h1 class=" mb-5 ">Configuración</h1>
+        <form-configuracion :ajustes="datosAjustes" @registrar="onRegistrar" v-if="datosAjustes" />
         <v-overlay :value="cargando">
             <v-progress-circular size="64"></v-progress-circular>
         </v-overlay>

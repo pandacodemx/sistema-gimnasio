@@ -1,15 +1,17 @@
 <template>
-    <div>
-        <h1>Pagos <span class="indigo--text display-1"> ${{ totalPagos }}</span></h1>
+    <div class="miembros">       
         <periodo-busqueda @buscar="onBuscar"/>
         
-        <cartas-totales v-if="pagos.length > 0" :totales="totalesMembresias" :titulo="'Pagos realizados por membresía'" :icono="'mdi-currency-usd'" :color="'deep-orange darken-1'" />
+        <cartas-totales v-if="pagos.length > 0" :totales="totalesMembresias" :titulo="'Pagos realizados membresías'" :icono="'mdi-cash-multiple'" :color="'secondary'" />
+        <br>
+        <hr>
         
         <v-card class="mt-3">
+            <h1>Pagos totales: <span class="primary--text font-weight-bold display-1"> ${{ totalPagos }}</span></h1>
             <v-card-title>
                 Pagos realizados: 
                 <b v-if="!filtros.fechaInicio"> hoy</b>
-                <b v-if="filtros.fechaInicio"> {{ filtros.fechaInicio }} al {{ filtros.fechaFin}}</b>
+                <b v-if="filtros.fechaInicio"> &nbsp; {{ filtros.fechaInicio }} - {{ filtros.fechaFin}}</b>
                 <v-spacer></v-spacer>
                 <v-text-field
                     v-model="busqueda"
@@ -18,7 +20,7 @@
                     single-line
                     hide-details
                 ></v-text-field>
-            </v-card-title>
+            </v-card-title>            
 
             <v-data-table
             :loading="cargando"
@@ -37,13 +39,25 @@
                     >
                     </v-avatar>
                 </template>
+                
 
                 <template slot="no-data">
                     <v-alert :value="true" color="error" icon="warning">
                         No se han encontrado datos :(
                     </v-alert>
-                    </template>
+                </template>
+
+                <template v-slot:[`item.membresia`]="{ item }">
+                    <div
+                        class="medalla"
+                        :class="claseMembresia(item.membresia)"
+                    >
+                        <v-icon left small>{{ iconoMembresia(item.membresia) }}</v-icon>
+                        {{ item.membresia }}
+                    </div>
+                </template>
             </v-data-table>
+            
         </v-card>
         <cartas-totales v-if="pagos.length > 0" class="mt-3" :totales="totalesUsuarios" :titulo="'Pagos realizados por usuario'" :icono="'mdi-account-cash'" :color="'green darken-3'" />
 
@@ -55,7 +69,9 @@
                 size="64"
             ></v-progress-circular>
         </v-overlay>
+        
     </div>
+    
 </template>
 <script>
 import HttpService from '../../Servicios/HttpService'
@@ -72,12 +88,12 @@ export default {
         cargando: false,
         pagos: [],
         encabezadoTabla: [
-            {text: "Imagen", sortable: true, value: "imagen"},
+            {text: "Fotografia", sortable: true, value: "imagen"},
             {text: "Miembro", sortable: true, value: "nombre"},
-            {text: "Matrícula", sortable: true, value: "matricula"},
-            {text: "Fecha", sortable: true, value: "fecha"},
+            {text: "Matrícula", sortable: true, value: "matricula"},                
+            {text: "Membresía", sortable: true, value: "membresia"},
+            {text: "Fecha", sortable: true, value: "fecha"},       
             {text: "Monto pagado", sortable: true, value: "monto"},
-            {text: "Membresía pagada", sortable: true, value: "membresia"},
             {text: "Cobró", sortable: true, value: "usuario"},
             ],
         filtros: {
@@ -126,7 +142,68 @@ export default {
                 this.cargando = false
             })
 
+        }, 
+        claseMembresia(nombre) {
+        const tipo = nombre.toLowerCase()
+        if (tipo.includes('oro')) return 'medalla-oro'
+        if (tipo.includes('plata')) return 'medalla-plata'
+        if (tipo.includes('bronce')) return 'medalla-bronce'
+        if (tipo.includes('premium')) return 'medalla-premium'
+        return 'medalla-default'
+        },
+
+        iconoMembresia(nombre) {
+        const tipo = nombre.toLowerCase()
+        if (tipo.includes('oro')) return 'mdi-trophy'
+        if (tipo.includes('plata')) return 'mdi-medal'
+        if (tipo.includes('bronce')) return 'mdi-star-outline'
+        if (tipo.includes('premium')) return 'mdi-diamond'
+        return 'mdi-certificate'
         }
     }
 }
 </script>
+<style>
+.miembros {  
+  font-weight: 400;  
+  padding: 30px;
+  background-color: #1e1e1e;
+  border-radius: 12px;
+  min-height: 100vh;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+
+}
+.medalla {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-weight: bold;
+  font-size: 14px;
+  color: #fff;
+  text-transform: capitalize;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
+
+.medalla-oro {
+  background: linear-gradient(145deg, #ff9100, #ff9c07);
+}
+
+.medalla-plata {
+  background: linear-gradient(145deg, #C0C0C0, #B0B0B0);
+}
+
+.medalla-bronce {
+  background: linear-gradient(145deg, #CD7F32, #B87333);
+}
+
+.medalla-premium {
+  background: linear-gradient(145deg, #9C27B0, #7B1FA2);
+}
+
+.medalla-default {
+  background: linear-gradient(145deg, #546E7A, #455A64);
+}
+
+
+</style>

@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="miembros">
         <h1>Usuarios</h1>
         <v-btn 
         fab dark x-large elevation="8" 
@@ -18,20 +18,29 @@
         :footer-props="{itemsPerPageText: 'Por página'}"
         >
         <template v-slot:[`item.opciones`]="{ item }">
-            <v-icon
-                color="blue"
-                class="mr-2"
-                @click="editar(item.id)"
-            >
-                mdi-pencil
-            </v-icon>
-            <v-icon
-                color="red"
-                @click="eliminar(item)"
-            >
-                mdi-delete
-            </v-icon>
-            </template>
+            <v-btn
+                    color="secondary"
+                    small
+                    fab
+                    dark
+                    v-bind="attrs"
+                    v-on="on"
+                    @click="editar(item.id)"
+                    >
+                    <v-icon>mdi-pencil-box-outline</v-icon>
+            </v-btn>
+            <v-btn
+                color="error"
+                small
+                fab
+                dark
+                v-bind="attrs"
+                v-on="on"
+                 @click="eliminar(item)"
+                >
+                <v-icon>mdi-delete</v-icon>
+            </v-btn>
+        </template>
         </v-data-table>
         <v-dialog v-model="mostrarDialogoEliminar" max-width="500px">
             <dialogo-eliminar :nombre="itemSeleccionado" @cancelar="cerrarDialogoEliminar" @eliminar="confirmarEliminar"/>
@@ -39,7 +48,7 @@
         <v-snackbar
         v-model="mostrarMensaje"
         :timeout="3000"
-        :color="mensaje.color"
+        :color="primary"
         top
         >
             {{ mensaje.texto }}
@@ -131,3 +140,11 @@ export default ({
     
 })
 </script>
+<style>
+.miembros {
+  padding: 30px;
+  background-color: #1e1e1e;
+  border-radius: 12px;
+  min-height: 100vh;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}</style>

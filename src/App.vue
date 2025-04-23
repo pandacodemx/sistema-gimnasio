@@ -119,3 +119,18 @@ export default {
   }
 }
 </script>
+
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+/* Aplica la fuente a toda la app */
+body,
+.v-application {
+  font-family: 'Poppins', sans-serif !important;
+  margin: 0;
+  padding: 0;
+  background-color: #121212;
+  color: #fff;
+}
+</style>

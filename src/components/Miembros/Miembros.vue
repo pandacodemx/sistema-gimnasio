@@ -130,6 +130,15 @@
           </v-simple-table>
         </td>
       </template>
+      <template v-slot:[`item.membresia`]="{ item }">
+                    <div
+                        class="medalla"
+                        :class="claseMembresia(item.membresia)"
+                    >
+                        <v-icon left small>{{ iconoMembresia(item.membresia) }}</v-icon>
+                        {{ item.membresia }}
+                    </div>
+      </template>
     </v-data-table>
     <v-btn
       fab
@@ -339,6 +348,23 @@ export default {
         ? "error"
         : "warning";
     },
+    claseMembresia(nombre) {
+        const tipo = nombre.toLowerCase()
+        if (tipo.includes('oro')) return 'medalla-oro'
+        if (tipo.includes('plata')) return 'medalla-plata'
+        if (tipo.includes('bronce')) return 'medalla-bronce'
+        if (tipo.includes('premium')) return 'medalla-premium'
+        return 'medalla-default'
+        },
+
+    iconoMembresia(nombre) {
+        const tipo = nombre.toLowerCase()
+        if (tipo.includes('oro')) return 'mdi-trophy'
+        if (tipo.includes('plata')) return 'mdi-medal'
+        if (tipo.includes('bronce')) return 'mdi-star-outline'
+        if (tipo.includes('premium')) return 'mdi-diamond'
+        return 'mdi-certificate'
+    }
   },
 };
 </script>

@@ -1,34 +1,29 @@
 
-
-
-//////////// Componente para mostrar el perfil del usuario
+////////////VISTA////////////////
 <template>
-    <div>
+    <div class="miembros">
         <div class="d-flex flex-row justify-space-between align-center mt-6 pa-6">   
              
-        <h1>Hola! {{ nombreUsuario }}</h1>
+        <h1>Bienvenido! {{ nombreUsuario }}</h1>
         <v-btn depressed
         rounded="lg"
         elevation="4"
         color="primary"
         @click="cambiarPassword">
-        Modificar Contraseña
+        Cambiar contraseña
         </v-btn>  
         </div>
         <div class="mt-8">
-        <h2 class="pa-6">Visitas</h2>            
+        <h2 class="pa-6">Pagos:</h2>
+        <cartas-personalizadas :cartas="datosPagos" />    
+        <h2 class="pa-6">Visitas:</h2>            
         <cartas-personalizadas :cartas="datosVisitas" />
-        <h2 class="pa-6">Pagos</h2>
-        <cartas-personalizadas :cartas="datosPagos" />
+        
     </div>     
     </div>   
 </template>
 
-
-
-
-
-/////////////// Script Cartas Personalizadas
+////////////SCRIPT////////////////
 <script>
 import HttpService from '../../Servicios/HttpService'
 import CartasPersonalizadas from '../Dialogos/CartasPersonalizadas.vue'
@@ -79,3 +74,14 @@ export default {
     }
 }
 </script>
+
+////////////ESTILOS////////////////
+<style>
+.miembros {
+  padding: 30px;
+  background-color: #1e1e1e;
+  border-radius: 12px;
+  min-height: 100vh;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+</style>

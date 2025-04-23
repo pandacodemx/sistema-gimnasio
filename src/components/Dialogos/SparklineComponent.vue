@@ -1,8 +1,8 @@
-<template>
+<template >
   <v-card >
     <v-sheet
       class="v-sheet--offset mx-auto"
-      color="white"
+      color="gray"
       elevation="6"
       max-width="calc(100% - 32px)"
     >
@@ -16,9 +16,9 @@
     </v-sheet>
 
     <v-card-text class="pt-0">
-      <div class="text-h6 font-weight-light mb-2">{{ titulo }}</div>
+      <div class="text-h6 font-weight-light  white--text mb-2 mt-4">{{ titulo }}</div>
       <v-divider class="my-2"></v-divider>
-      <span class="text-caption grey--text font-weight-light">{{
+      <span class="text-caption white--text font-weight-light">{{
         subtitulo
       }}</span>
       <v-simple-table>
