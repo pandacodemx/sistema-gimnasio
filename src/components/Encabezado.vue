@@ -34,25 +34,68 @@
         </v-list-item-content>
       </v-list-item>
       <v-divider></v-divider>
+      
       <v-list dense nav>
+        <!-- Sección Principal -->
+        <v-subheader class="white--text">Principal</v-subheader>
         <v-list-item
-          v-for="item in items"
+          v-for="item in mainItems"
           :key="item.title"
           link
           :to="item.link"
           class="white--text drawer-item"
         >
-          <v-list-item-icon >
-            <v-icon class="white--text mr-2" :class="{ 'mdi-spin': item.title === 'Configurar' }">
-              {{ item.icon }}
-            </v-icon>
-          </v-list-item-icon>
-
           <v-list-item-content>
-            <v-list-item-title>{{ item.title }}</v-list-item-title>
+              <v-list-item-title>{{ item.title }}</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        
+        <!-- Sección Registros -->
+        <v-subheader class="white--text">Registros</v-subheader>
+        <v-list-item
+          v-for="item in registerItems"
+          :key="item.title"
+          link
+          :to="item.link"
+          class="white--text drawer-item"
+        >
+          <v-list-item-content>
+              <v-list-item-title>{{ item.title }}</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        
+        <!-- Sección Reportes -->
+        <v-subheader class="white--text">Reportes</v-subheader>
+        <v-list-item
+          v-for="item in reportItems"
+          :key="item.title"
+          link
+          :to="item.link"
+          class="white--text drawer-item"
+        >
+          <v-list-item-content>
+              <v-list-item-title>{{ item.title }}</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        
+        <!-- Sección Configuración -->
+        <v-subheader class="white--text">Configuración</v-subheader>
+        <v-list-item
+          v-for="item in configItems"
+          :key="item.title"
+          link
+          :to="item.link"
+          class="white--text drawer-item"
+        >
+          <v-list-item-content>
+              <v-list-item-title>{{ item.title }}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </v-list>
+
+
+
+
     </v-navigation-drawer>
   </div>
 </template>
@@ -66,18 +109,20 @@ export default {
     nombreUsuario: "",
     nombreGimnasio: "",
     logo: "",
-    items: [
+    mainItems: [
       { title: "Inicio", icon: "mdi-view-dashboard", link: "/" },
       { title: "Registrar visita", icon: "mdi-home-account", link: "/registrar-visita" },
+    ],
+    registerItems: [
       { title: "Usuarios", icon: "mdi-account-box", link: "/usuarios" },
       { title: "Miembros", icon: "mdi-weight-lifter", link: "/miembros" },
-      {
-        title: "Membresías",
-        icon: "mdi-wallet-membership",
-        link: "/membresias",
-      },
+      { title: "Membresías", icon: "mdi-wallet-membership", link: "/membresias" },
+    ],
+    reportItems: [
       { title: "Pagos", icon: "mdi-account-cash", link: "/pagos" },
       { title: "Visitas", icon: "mdi-calendar-star", link: "/visitas" },
+    ],
+    configItems: [
       { title: "Configurar", icon: "mdi-cog", link: "/configurar" },
       { title: "Mi perfil", icon: "mdi-account-key", link: "/perfil" },
     ],
@@ -108,17 +153,21 @@ export default {
 <style>
 .fondo {
 background-color: #000000;
-background-image: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTUzTU-z2QrfVu5VJdJFv29vQsUtiUJuJwgVoJemKs2tg&s&ec=72940544");
+background-image: url("https://img.freepik.com/foto-gratis/fondo-oscuro-abstracto_1048-1920.jpg");
 background-attachment: fixed;
 background-size: cover;
+background-position: center;
 backdrop-filter: blur(50px);
 } 
-
-.drawer-item {
-  transition: background-color 0.3s ease;
-  border-radius: 8px;
-}
-.drawer-item:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+.v-subheader {
+  height: 36px;
+  margin-top: 16px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  opacity: 0.7;
+  background-color: #000000;
+  
 }
 </style>
