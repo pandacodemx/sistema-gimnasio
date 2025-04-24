@@ -130,3 +130,15 @@ function obtenerImagenPorMatricula($matricula)
     $sentencia  = "SELECT imagen FROM miembros WHERE matricula = ?";
     return selectPrepare($sentencia, [$matricula])[0];
 }
+
+function obtenerHistorialPagos($matricula)
+{
+    $sentencia = "SELECT pagos.*, membresias.nombre AS nombreMembresia, usuarios.nombre AS nombreUsuario
+        FROM pagos
+        LEFT JOIN membresias ON membresias.id = pagos.idMembresia
+        LEFT JOIN usuarios ON usuarios.id = pagos.idUsuario
+        WHERE pagos.matricula = ?
+        ORDER BY pagos.fecha DESC";
+
+    return selectPrepare($sentencia, [$matricula]);
+}

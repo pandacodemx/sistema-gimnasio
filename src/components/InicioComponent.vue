@@ -1,5 +1,17 @@
 <template>
   <div>
+    
+    <div class="bienvenida">
+      <v-list-item-avatar size="100" mr-4>
+          <img :src="urlImagen(logo)" alt="Logo">
+      </v-list-item-avatar>   
+      <div>
+        <h1 class="primary--text" >Bienvenido! </h1> {{ nombreUsuario }}
+        <small>- Dashboard {{ nombreGimnasio }} </small>
+      </div>
+        
+    </div>
+   
     <cartas-personalizadas :cartas="datosVisitas" />
     <div class="row">
       <div class="col-sm-6 col-lg-4 col-12">
@@ -76,6 +88,9 @@ export default {
   components: { CartasPersonalizadas, SparklineComponent },
 
   data: () => ({
+    nombreGimnasio: "",
+    nombreUsuario: localStorage.getItem('nombreUsuario'),
+    logo: "",
     cargando: false,
     datosVisitas: [],
     datosPagos: [],
@@ -95,6 +110,8 @@ export default {
 
   mounted() {
     this.obtenerDatos();
+    this.nombreGimnasio = localStorage.getItem("nombreGimnasio")
+    this.logo = localStorage.getItem("logoGimnasio")
   },
 
   methods: {
@@ -180,6 +197,24 @@ export default {
         },
       ];
     },
+
+    urlImagen(imagen) {
+      return Utiles.generarURL(imagen);
+    },
   },
 };
 </script>
+<style>
+
+.bienvenida
+{
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 150px;
+  background-color: rgb(31, 30, 30);
+  border-radius: 10px;
+  margin-bottom: 10px;
+  padding: 30px;
+}
+</style>

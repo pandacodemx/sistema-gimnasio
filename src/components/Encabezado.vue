@@ -156,7 +156,7 @@ background-color: #000000;
 background-image: url("https://img.freepik.com/foto-gratis/fondo-oscuro-abstracto_1048-1920.jpg");
 background-attachment: fixed;
 background-size: cover;
-background-position: center;
+background-position: left;
 backdrop-filter: blur(50px);
 } 
 .v-subheader {

@@ -129,6 +129,26 @@
             </template>
           </v-simple-table>
         </td>
+        <tr v-if="historiales[item.matricula]">
+          <td colspan="100%">
+            <v-simple-table dense>
+              <thead>
+                <tr>
+                  <th>Fecha</th>
+                  <th>Acción</th>
+                  <th>Detalle</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(registro, index) in historiales[item.matricula]" :key="index">
+                  <td>{{ registro.fecha }}</td>
+                  <td>{{ registro.accion }}</td>
+                  <td>{{ registro.detalle }}</td>
+                </tr>
+              </tbody>
+            </v-simple-table>
+          </td>
+        </tr>
       </template>
       <template v-slot:[`item.membresia`]="{ item }">
                     <div
@@ -185,6 +205,9 @@
     </v-overlay>
   </div>
 </template>
+
+
+
 <script>
 import HttpService from "../../Servicios/HttpService";
 import Utiles from "../../Servicios/Utiles";
@@ -253,7 +276,8 @@ export default {
     itemSeleccionado: null,
     miembro: null,
     mostrarDialogoEliminar: false,
-    mostrarCredencial: false
+    mostrarCredencial: false,
+    historiales: {},
   }),
 
   mounted() {
@@ -349,16 +373,16 @@ export default {
         : "warning";
     },
     claseMembresia(nombre) {
-        const tipo = nombre.toLowerCase()
-        if (tipo.includes('oro')) return 'medalla-oro'
-        if (tipo.includes('plata')) return 'medalla-plata'
-        if (tipo.includes('bronce')) return 'medalla-bronce'
-        if (tipo.includes('premium')) return 'medalla-premium'
-        return 'medalla-default'
-        },
+    const tipo = (nombre && nombre.toLowerCase()) || ''
+    if (tipo.includes('oro')) return 'medalla-oro'
+    if (tipo.includes('plata')) return 'medalla-plata'
+    if (tipo.includes('bronce')) return 'medalla-bronce'
+    if (tipo.includes('premium')) return 'medalla-premium'
+    return 'medalla-default'
+    },
 
     iconoMembresia(nombre) {
-        const tipo = nombre.toLowerCase()
+        const tipo = (nombre && nombre.toLowerCase()) || ''
         if (tipo.includes('oro')) return 'mdi-trophy'
         if (tipo.includes('plata')) return 'mdi-medal'
         if (tipo.includes('bronce')) return 'mdi-star-outline'
@@ -368,6 +392,9 @@ export default {
   },
 };
 </script>
+
+
+
 <style >
 body {
   background-color: #121212;

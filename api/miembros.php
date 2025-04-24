@@ -11,7 +11,7 @@ include_once "funciones_miembros.php";
 
 $metodo = $payload->metodo;
 
-switch($metodo){
+switch ($metodo) {
     case "registrar":
         echo json_encode(registrarMiembro($payload->miembro));
         break;
@@ -24,19 +24,23 @@ switch($metodo){
     case "editar";
         echo json_encode(editarMiembro($payload->miembro));
         break;
-    case("pagar"):
+    case ("pagar"):
         echo json_encode(registrarPago($payload->pago));
-    break;
-    
-    case("obtener_nombre_matricula"):
+        break;
+
+    case ("obtener_nombre_matricula"):
         echo json_encode(obtenerMiembroNombreMatricula($payload->busqueda));
-    break;
-    
-    case("obtener_imagen"):
+        break;
+
+    case ("obtener_imagen"):
         echo json_encode(obtenerImagenPorMatricula($payload->matricula));
-    break;
-    
-    case("obtener_id"):
+        break;
+
+    case ("obtener_id"):
         echo json_encode(obtenerPorId($payload->id));
-    break;
+        break;
+
+    case ("obtener_historial"):
+        echo json_encode(obtenerHistorialPagos($payload->matricula));
+        break;
 }

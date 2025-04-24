@@ -296,7 +296,7 @@ export default {
 }
 @media (max-width: 480px) {
   .img_visita {
-    width: 100%;
+    width: 85%;
   }
   .title-card {
     font-size: 12px;

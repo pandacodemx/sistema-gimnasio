@@ -1,5 +1,4 @@
 
-////////////VISTA////////////////
 <template>
     <div class="miembros">
         <div class="d-flex flex-row justify-space-between align-center mt-6 pa-6">   
