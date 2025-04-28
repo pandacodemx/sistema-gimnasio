@@ -42,9 +42,9 @@
     </v-card-text>
     <v-card-actions>
       <v-spacer></v-spacer>
-      <v-btn color="blue darken-1" text @click="cerrarDialogo"> Cerrar </v-btn>
+      <v-btn color="error darken-1" text @click="cerrarDialogo"> Cerrar </v-btn>
       <v-btn
-        color="blue darken-1"
+        color="white"
         text
         :disabled="!formValido"
         @click="registrar"
@@ -62,7 +62,7 @@ export default {
   data: () => ({
     
     formValido: false,
-    reglas: [(value) => !!value || "Debes colocar este campo."],
+    reglas: [(value) => !!value || "Campo obligatorio"],
   }),
 
   mounted(){

@@ -78,8 +78,8 @@
 
     <v-dialog v-model="mostrarRegistrarVisita" max-width="600px" v-if="miembro">
       <v-card>
-        <v-card-title class="text-h5"
-          >¿Registrar visita del miembro {{ miembro.nombre }}?</v-card-title
+        <v-card-title 
+          >Registrar visita del miembro {{ miembro.nombre }}?</v-card-title
         >
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -93,7 +93,7 @@
             text
             :disabled="cargando"
           >
-            Registrar visita
+            Registrar
             <template v-slot:loader>
               <span>Registrando...</span>
             </template>
@@ -123,7 +123,7 @@
     <v-dialog v-model="mostrarDialogoRegular" persistent max-width="600px">
       <v-card>
         <v-card-title>
-          <span class="text-h5">Registrar visita regular</span>
+          <span >Registrar visita regular</span>
         </v-card-title>
         <v-card-text>
           <v-container>

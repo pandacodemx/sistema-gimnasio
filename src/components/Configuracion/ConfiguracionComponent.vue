@@ -54,7 +54,7 @@ export default {
                 if(resultado){
                     this.mostrarMensaje = true
                     this.mensaje = {
-                        texto: "Información actualizada",
+                        texto: "Datos actualizados correctamente",
                         color: "success"
                     }
                     this.cargando = false

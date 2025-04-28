@@ -60,11 +60,25 @@
       <!-- Snackbar para mensajes -->
       <v-snackbar
         v-model="mostrarMensaje"
+        :multi-line="multiLine"
         :timeout="3000"
         :color="mensaje.color"
+        right
+        shaped
         top
+        
       >
         {{ mensaje.texto }}
+        <template v-slot:action="{ attrs }">
+        <v-btn
+          color="blackbox"
+          text
+          v-bind="attrs"
+          @click="mostrarMensaje = false"
+        >
+          Cerrar
+        </v-btn>
+      </template>
       </v-snackbar>
     </v-container>
   </div>
@@ -79,26 +93,27 @@ export default {
 
   data: () => ({
     usuario: "",
-    password: "",
+    password: "", 
     mensaje: {
       texto: "",
       color: "",
     },
-    mostrarMensaje: false
+    mostrarMensaje: false,
+    multiLine: true,  
   }),
 
   methods: {
     iniciarSesion() {
       if (!this.usuario) {
           this.mostrarMensaje = true
-          this.mensaje.texto = "Ingresa datos de usuario"
-          this.mensaje.color = "warning"
+          this.mensaje.texto = "Atencion! Campos vacios"
+          this.mensaje.color = "error"
           return
       }
       if (!this.password) {
           this.mostrarMensaje = true
-          this.mensaje.texto = "Ingresa la contraseña"
-          this.mensaje.color = "warning"
+          this.mensaje.texto = "Error! Ingresa la contraseña"
+          this.mensaje.color = "error"
           return
       }
       let payload = {
@@ -133,7 +148,7 @@ export default {
 }
 
 .glass-card {
-  background: rgba(17, 104, 107, 0.08);
+  background: rgba(161, 199, 201, 0.08);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);

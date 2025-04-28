@@ -11,7 +11,7 @@ include_once "funciones_pagos.php";
 
 $metodo = $payload->metodo;
 
-switch($metodo){
+switch ($metodo) {
     case "obtener":
         echo json_encode([
             "totalPagos" => obtenerTotalesPago($payload->filtros),
@@ -21,6 +21,4 @@ switch($metodo){
             "totalesMiembros" => obtenerTotalesPorMiembro($payload->filtros),
         ]);
         break;
-
 }
-

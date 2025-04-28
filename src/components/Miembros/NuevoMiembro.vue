@@ -11,25 +11,25 @@
 
     <v-dialog v-model="mostrarMiembroRegistrado" persistent max-width="600">
       <v-card>
-        <v-card-title class="text-h5"> Miembro registrado </v-card-title>
+        <v-card-title > Miembro registrado </v-card-title>
         <v-card-text>
-          El miembro ha sido registrado con la matricula {{ matricula }}. Puedes
-          pagar la membresía en este momento o en la primera visita.
+          El miembro registrado matricula {{ matricula }}. Puede
+          pagar la membresía en este momento o al realizar la primera visita.
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn
-            color="green darken-1"
+            color="primary"
             text
             @click="generarCredencial"
           >
             Generar credencial
           </v-btn>
-          <v-btn color="green darken-1" text @click="realizarPago">
+          <v-btn color="white" text @click="realizarPago">
             Realizar pago
           </v-btn>
           <v-btn
-            color="green darken-1"
+            color="white"
             text
             @click="mostrarMiembroRegistrado = false"
           >

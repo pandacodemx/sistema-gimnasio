@@ -86,7 +86,7 @@ export default {
         this.establecerUsuario(respuesta.datos.nombreUsuario, respuesta.datos.idUsuario)
         this.mostrarMensaje = true
         this.mensaje = {
-          texto: "Datos correctos. Bienvenido",
+          texto: "Ingreso correcto",
           color: "success"
         }
         this.$router.push( { name: "InicioComponent"} )

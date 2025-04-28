@@ -71,10 +71,10 @@
           <span>Eliminar</span>
         </v-tooltip>
 
-        <v-tooltip bottom color="success" v-if="!item.estado || item.estado === 'VENCIDO'">
+        <v-tooltip bottom color="primary" v-if="!item.estado || item.estado === 'VENCIDO'">
           <template v-slot:activator="{ on, attrs }">
             <v-btn
-              color="success"
+              color="primary"
               small
               fab
               dark
@@ -82,10 +82,10 @@
               v-on="on"
               @click="realizarPago(item.matricula)"
             >
-              <v-icon>mdi-wallet-membership</v-icon>
+              <v-icon>mdi-cash-multiple</v-icon>
             </v-btn>
           </template>
-          <span>Realizar pago</span>
+          <span>Adquirir membresia</span>
         </v-tooltip>
       </template>
 

@@ -1,6 +1,10 @@
 <template>
   <v-form ref="form" v-model="formDatos">
+   
     <v-card class="mb-12 pa-3">
+      <div class="d-flex flex-column justify-space-between align-center">
+        <img :src="imagenUrl" alt="" aspect-ratio="16/9" width="300" />
+    </div>
       <v-text-field
         label="Nombre del gimnasio"
         :rules="reglasForm"
@@ -29,10 +33,7 @@
         v-model="imagen"
         type="file"
         @change="onSeleccionarImagen"
-      ></v-file-input>
-      <div class="d-flex flex-column justify-space-between align-center">
-        <img :src="imagenUrl" alt="" aspect-ratio="16/9" width="300" />
-      </div>
+      ></v-file-input>     
       <v-card-actions class="justify-center">
         <v-btn elevation="14" color="primary"  x-large :disabled="!formDatos" @click="registrar"> Registrar </v-btn>
       </v-card-actions>

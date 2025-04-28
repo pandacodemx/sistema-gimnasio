@@ -4,6 +4,7 @@
       <v-card elevation="5" class="mx-auto">
         <v-card-text>
           <v-text-field
+            class="mb-10"
             label="Nombre de usuario"
             v-model="usuario.usuario"
             :rules="reglas"
@@ -11,6 +12,7 @@
             hide-details="auto"
           ></v-text-field>
           <v-text-field
+            class="mb-10"
             label="Nombre completo"
             v-model="usuario.nombre"
             :rules="reglas"
@@ -19,6 +21,7 @@
           ></v-text-field>
           <v-text-field
             label="Teléfono"
+            class="mb-10"
             v-model="usuario.telefono"
             :rules="reglas"
             required
@@ -49,7 +52,7 @@ export default {
   data: () => ({
     formValido: false,
     formHasErrors: false,
-    reglas: [(value) => !!value || "Debes colocar este campo."],
+    reglas: [(value) => !!value || "Campo obligatorio."],
   }),
 
   mounted() {
@@ -81,3 +84,13 @@ export default {
     },
 };
 </script>
+<style>
+.miembros {
+  padding: 30px;
+  background-color: #1e1e1e;
+  border-radius: 12px;
+  min-height: 100vh;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+  
+  </style>

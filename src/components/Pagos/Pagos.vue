@@ -21,7 +21,14 @@
                     hide-details
                 ></v-text-field>
             </v-card-title>            
-
+            <v-btn color="primary" @click="generarPDF">
+            <v-icon left>mdi-file-pdf-box</v-icon>
+            Descargar PDF
+            </v-btn>
+            <v-btn color="success" @click="generarExcel">
+            <v-icon left>mdi-file-excel</v-icon>
+            Descargar Excel
+            </v-btn>
             <v-data-table
             :loading="cargando"
             :headers="encabezadoTabla"
@@ -79,6 +86,10 @@ import Utiles from '../../Servicios/Utiles'
 import PeriodoBusqueda from '../Dialogos/PeriodoBusqueda.vue'
 import CartasTotales from '../Dialogos/CartasTotales.vue'
 import CartasTotalesMiembros from '../Dialogos/CartasTotalesMiembros.vue'
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable'
+import * as XLSX from 'xlsx'
+import { saveAs } from 'file-saver'
 
 export default {
     name: "Pagos",
@@ -111,6 +122,96 @@ export default {
     },
 
     methods: {
+            generarExcel() {
+                const datos = this.pagos.map(pago => ({
+                    Miembro: pago.nombre,
+                    Matrícula: pago.matricula,
+                    Membresía: pago.membresia,
+                    Fecha: pago.fecha,
+                    'Monto pagado': pago.monto,
+                    Usuario: pago.usuario,
+                }));
+
+                const ws = XLSX.utils.json_to_sheet(datos, { origin: 'A3' });
+                XLSX.utils.sheet_add_aoa(ws, [
+                ["Reporte de Pagos"], 
+                [], 
+                ], { origin: 'A1' });
+                ws['!cols'] = [
+                    { wch: 20 }, // Miembro
+                    { wch: 15 }, // Matrícula
+                    { wch: 20 }, // Membresía
+                    { wch: 15 }, // Fecha
+                    { wch: 15 }, // Monto
+                    { wch: 20 }, // Usuario
+                ];
+                ws['!autofilter'] = {
+                    ref: "A3:F3" 
+                };
+
+                const wb = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(wb, ws, 'Pagos');
+
+                const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+                saveAs(new Blob([wbout], { type: 'application/octet-stream' }), 'reporte_pagos.xlsx');
+            },
+            generarPDF() {
+            const doc = new jsPDF({ orientation: 'portrait', unit: 'pt', format: 'A4' });
+
+            const pageWidth = doc.internal.pageSize.getWidth();
+
+            // Dibujar el título centrado
+            const title = "Reporte de Pagos";
+            doc.setFontSize(18);
+            doc.setFont('helvetica', 'bold');
+            const textWidth = doc.getTextWidth(title);
+            doc.text(title, (pageWidth - textWidth) / 2, 40);
+
+            const columnas = [
+            { header: 'Miembro', dataKey: 'nombre' },
+            { header: 'Matrícula', dataKey: 'matricula' },
+            { header: 'Membresía', dataKey: 'membresia' },
+            { header: 'Fecha', dataKey: 'fecha' },
+            { header: 'Monto', dataKey: 'monto' },
+            { header: 'Cobró', dataKey: 'usuario' },
+            ];
+
+            autoTable(doc, {
+            startY: 70,
+            head: [columnas.map(col => col.header)],
+            body: this.pagos.map(item => [
+                item.nombre,
+                item.matricula,
+                item.membresia,
+                item.fecha,
+                `$${item.monto}`,
+                item.usuario
+            ]),
+            theme: 'striped', 
+            headStyles: {
+                fillColor: [41, 128, 185], 
+                textColor: 255,
+                fontStyle: 'bold',
+            },
+            styles: {
+                fontSize: 10,
+                cellPadding: 5,
+            },
+            margin: { top: 70, bottom: 50 },
+            didDrawPage: function (data) {
+                // Pie de página
+                const pageCount = doc.internal.getNumberOfPages();
+                const pageSize = doc.internal.pageSize;
+                const pageHeight = pageSize.height ? pageSize.height : pageSize.getHeight();
+                
+                doc.setFontSize(10);
+                doc.setTextColor(150);
+                doc.text(`Página ${doc.internal.getCurrentPageInfo().pageNumber} de ${pageCount}`, pageWidth / 2, pageHeight - 20, { align: 'center' });
+            },
+            });
+
+            doc.save('reporte_pagos.pdf');
+        },
         onBuscar(fechas){
             console.log(fechas)
             this.filtros = {
@@ -160,6 +261,7 @@ export default {
         if (tipo.includes('premium')) return 'mdi-diamond'
         return 'mdi-certificate'
         }
+        
     }
 }
 </script>

@@ -16,7 +16,7 @@
         v-bind="attrs"
         v-on="on"
         :first-day-of-week="1"
-        locale="es-se"
+        locale="es-mx"
       ></v-text-field>
     </template>
     <v-date-picker v-model="fechas" range no-title scrollable>

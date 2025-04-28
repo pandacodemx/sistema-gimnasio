@@ -16,6 +16,14 @@
                     hide-details
                 ></v-text-field>
             </v-card-title>
+            <v-btn color="primary" @click="generarPDF">
+            <v-icon left>mdi-file-pdf-box</v-icon>
+            Descargar PDF
+            </v-btn>
+            <v-btn color="success" @click="generarExcel">
+            <v-icon left>mdi-file-excel</v-icon>
+            Descargar Excel
+            </v-btn>
 
             <v-data-table
             :loading="cargando"
@@ -67,6 +75,10 @@ import Utiles from '../../Servicios/Utiles'
 import PeriodoBusqueda from  '../Dialogos/PeriodoBusqueda.vue'
 import CartasTotales from  '../Dialogos/CartasTotales.vue'
 import CartasTotalesMiembros from  '../Dialogos/CartasTotalesMiembros.vue'
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable'
+import * as XLSX from 'xlsx'
+import { saveAs } from 'file-saver'
 
 export default {
     name: "Visitas",
@@ -98,6 +110,77 @@ export default {
     },
 
     methods: {
+        generarExcel() {
+                const ws = XLSX.utils.json_to_sheet(this.visitas.map(visitas => ({               
+                Miembro: visitas.nombre,
+                Matrícula: visitas.matricula,
+                Fecha: visitas.fecha,
+                Membresía: visitas.membresia,      
+                Usuario: visitas.usuario
+                })))
+
+                const wb = XLSX.utils.book_new()
+                XLSX.utils.book_append_sheet(wb, ws, 'Pagos')
+
+                const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'array' })
+
+                saveAs(new Blob([wbout], { type: 'application/octet-stream' }), 'reporte_visitas.xlsx')
+            },
+            generarPDF() {
+            const doc = new jsPDF({ orientation: 'portrait', unit: 'pt', format: 'A4' });
+
+            const pageWidth = doc.internal.pageSize.getWidth();
+
+            // Dibujar el título centrado
+            const title = "Reporte de Visitas";
+            doc.setFontSize(18);
+            doc.setFont('helvetica', 'bold');
+            const textWidth = doc.getTextWidth(title);
+            doc.text(title, (pageWidth - textWidth) / 2, 40);
+
+            const columnas = [
+            { header: 'Miembro', dataKey: 'nombre' },
+            { header: 'Matrícula', dataKey: 'matricula' },           
+            { header: 'Fecha', dataKey: 'fecha' },
+            { header: 'Membresía', dataKey: 'membresia' },
+            { header: 'Cobró', dataKey: 'usuario' },
+            ];
+
+            autoTable(doc, {
+            startY: 70,
+            head: [columnas.map(col => col.header)],
+            body: this.visitas.map(item => [
+                item.nombre,
+                item.matricula,               
+                item.fecha,
+                item.membresia,               
+                item.usuario
+            ]),
+            theme: 'striped', 
+            headStyles: {
+                fillColor: [41, 128, 185], 
+                textColor: 255,
+                fontStyle: 'bold',
+            },
+            styles: {
+                fontSize: 10,
+                cellPadding: 5,
+            },
+            margin: { top: 70, bottom: 50 },
+            didDrawPage: function (data) {
+                // Pie de página
+                const pageCount = doc.internal.getNumberOfPages();
+                const pageSize = doc.internal.pageSize;
+                const pageHeight = pageSize.height ? pageSize.height : pageSize.getHeight();
+                
+                doc.setFontSize(10);
+                doc.setTextColor(150);
+                doc.text(`Página ${doc.internal.getCurrentPageInfo().pageNumber} de ${pageCount}`, pageWidth / 2, pageHeight - 20, { align: 'center' });
+            },
+            });
+
+            doc.save('reporte_visitas.pdf');
+        },
         onBuscar(fechas){
             console.log(fechas)
             this.filtros = {

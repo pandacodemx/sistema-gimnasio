@@ -2,13 +2,22 @@
   <div>
     <v-card>
       <v-card-title>
-        <span class="text-h5">Realizar pago para {{matricula}}</span>
+        <span >Realizar pago para {{matricula}}</span>
       </v-card-title>
+      <v-alert
+      
+      shaped
+      prominent
+      type="error"
+      
+    >
+      Atencion! Revise atentamente la membresia seleccionada, una vez guardada no hay forma de ser modificada.
+    </v-alert>
       <v-card-text>
           <v-container>
             <v-select
               v-model="membresiaSeleccionada"
-              :hint="`${membresiaSeleccionada.nombre}, ${membresiaSeleccionada.precio}`"
+              :hint="`${membresiaSeleccionada.nombre} | $${membresiaSeleccionada.precio} | ${membresiaSeleccionada.duracion} Dias`"
               :items="membresias"
               item-text="nombre"
               item-value="id"
@@ -18,8 +27,7 @@
               single-line
             >
             </v-select>
-
-            <v-row justify="center">
+            <v-row justify="center mt-5">
               <v-date-picker
                 v-model="fechaSeleccionada"
                 :first-day-of-week="1"
@@ -31,11 +39,11 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="blue darken-1" text @click="cerrarDialogo">
+        <v-btn color="primary" text @click="cerrarDialogo">
           Cerrar
         </v-btn>
         <v-btn
-          color="blue darken-1"
+          color="white"
           text
           @click="realizarPago"
         >

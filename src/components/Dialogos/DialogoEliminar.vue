@@ -1,12 +1,12 @@
 <template>
   <v-card>
-    <v-card-title class="text-h5"
-      >¿Seguro que deseas eliminar {{ nombre }}?</v-card-title
+    <v-card-title 
+      >Se eliminara {{ nombre }}</v-card-title
     >
     <v-card-actions>
       <v-spacer></v-spacer>
-      <v-btn color="blue darken-1" text @click="cerrarDialogo">Cancelar</v-btn>
-      <v-btn color="blue darken-1" text @click="eliminar">OK</v-btn>
+      <v-btn color="error darken-1" text @click="cerrarDialogo">Cancelar</v-btn>
+      <v-btn color="white" text @click="eliminar">Aceptar</v-btn>
       <v-spacer></v-spacer>
     </v-card-actions>
   </v-card>
