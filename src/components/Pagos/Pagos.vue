@@ -21,7 +21,7 @@
                     hide-details
                 ></v-text-field>
             </v-card-title>            
-            <v-btn color="primary" @click="generarPDF">
+            <v-btn color="error" @click="generarPDF">
             <v-icon left>mdi-file-pdf-box</v-icon>
             Descargar PDF
             </v-btn>

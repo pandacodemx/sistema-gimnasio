@@ -1,8 +1,6 @@
 <template>
   <v-card>
-    <v-card-title 
-      >Se eliminara {{ nombre }}</v-card-title
-    >
+    <v-card-title>Eliminando {{ nombre }}</v-card-title>
     <v-card-actions>
       <v-spacer></v-spacer>
       <v-btn color="error darken-1" text @click="cerrarDialogo">Cancelar</v-btn>
@@ -13,17 +11,17 @@
 </template>
 <script>
 export default {
-    name: "DialogoEliminar",
-    props: ["nombre"],
+  name: "DialogoEliminar",
+  props: ["nombre"],
 
-    methods: {
-        cerrarDialogo(){
-            this.$emit("cancelar", false)
-        },
+  methods: {
+    cerrarDialogo() {
+      this.$emit("cancelar", false)
+    },
 
-        eliminar(){
-            this.$emit("eliminar", true)
-        }
+    eliminar() {
+      this.$emit("eliminar", true)
     }
+  }
 }
 </script>

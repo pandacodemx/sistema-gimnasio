@@ -11,7 +11,7 @@ include_once "funciones_usuarios.php";
 
 $metodo = $payload->metodo;
 
-switch($metodo){
+switch ($metodo) {
     case "registrar":
         echo json_encode(registrarUsuario($payload->usuario));
         break;
@@ -30,7 +30,7 @@ switch($metodo){
     case "login":
         echo json_encode(iniciarSesion($payload->usuario));
         break;
-    case "verifica_pass": 
+    case "verifica_pass":
         echo json_encode(verificarPassword($payload->password, $payload->id));
         break;
     case "cambiar_pass":
@@ -50,10 +50,8 @@ switch($metodo){
                 "pagosSemana" => obtenerPagosSemana($payload->idUsuario),
                 "pagosMes" => obtenerPagosMes($payload->idUsuario),
             ]
-            
-            
+
+
         ]);
         break;
-
 }
-

@@ -1,6 +1,5 @@
 <template>
-  <div>
-    
+  <div>    
     <div class="bienvenida">
       <v-list-item-avatar size="100" mr-4>
           <img :src="urlImagen(logo)" alt="Logo">
@@ -78,6 +77,8 @@
     </v-overlay>
   </div>
 </template>
+
+
 <script>
 import HttpService from "../Servicios/HttpService";
 import Utiles from "../Servicios/Utiles";
