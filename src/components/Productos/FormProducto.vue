@@ -34,7 +34,7 @@ export default {
     },
     data() {
         return {
-            categorias: ['Equipamiento y maquinaria', 'Ropa y accesorios', 'Suplementos y nutrición', ' Limpieza e higiene', 'Productos deportivos / energetivos', 'Otros productos'],
+            categorias: ['Equipamiento y maquinaria', 'Ropa y accesorios', 'Suplementos y nutrición', ' Limpieza e higiene', 'Productos deportivos / energetivos', 'Consumibles', 'Otros productos'],
             imagenBase64: ""
         };
     },

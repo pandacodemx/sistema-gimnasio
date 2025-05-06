@@ -104,6 +104,7 @@ export default {
     reportItems: [
       { title: "Pagos", icon: "mdi-account-cash", link: "/pagos" },
       { title: "Visitas", icon: "mdi-calendar-star", link: "/visitas" },
+      { title: "Ventas productos", icon: "mdi mdi-store", link: "/reporte-ventas" },
     ],
     configItems: [
       { title: "Informacion", icon: "mdi-cog", link: "/configurar" },

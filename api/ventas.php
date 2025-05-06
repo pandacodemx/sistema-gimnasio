@@ -18,7 +18,10 @@ switch ($metodo) {
     case "get":
         echo json_encode(obtenerVentas());
         break;
-    case "get_detalle":
-        echo json_encode(obtenerDetalleVenta($payload->id));
+    case "delete":
+        echo json_encode(eliminarVenta($payload->id));
+        break;
+    case "put":
+        echo json_encode(editarVenta($payload->venta));
         break;
 }

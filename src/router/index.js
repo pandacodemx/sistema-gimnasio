@@ -16,6 +16,7 @@ import InicioComponent from "../components/InicioComponent";
 import MiPerfil from "../components/Usuarios/MiPerfil";
 import ProductosComponente from "../components/Productos/ProductosComponente.vue";
 import Ventas from "../components/Productos/Ventas.vue";
+import ReporteVentas from "../components/Productos/ReporteVentas.vue";
 
 Vue.use(Router);
 
@@ -100,6 +101,11 @@ export default new Router({
       path: "/ventas",
       name: "Ventas",
       component: Ventas
+    },
+    {
+      path: "/reporte-ventas",
+      name: "ReporteVentas",
+      component: ReporteVentas
     }
   ]
 });
