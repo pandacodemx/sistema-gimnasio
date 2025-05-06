@@ -1,53 +1,52 @@
 <template>
-    <div class="productos">
-        <periodo-busqueda @buscar="onBuscar" />
+    <div class="miembros">
+        <div class="productos">
+            <periodo-busqueda @buscar="onBuscar" />
 
-        <cartas-totales v-if="ventas.length > 0" :totales="totalesProductos" :titulo="'Pagos realizados por productos'"
-            :icono="'mdi-cash-multiple'" :color="'secondary'" />
-        <br>
-        <hr>
+            <cartas-totales v-if="ventas.length > 0" :totales="totalesProductos"
+                :titulo="'Pagos realizados por productos'" :icono="'mdi-cash-multiple'" :color="'secondary'" />
+            <br>
+            <hr>
 
-        <v-card class="mt-3">
-            <h1>Pagos totales: <span class="primary--text font-weight-bold display-1"> ${{ totalVentas }}</span></h1>
-            <v-card-title>
-                Pagos realizados:
-                <b v-if="!filtros.fechaInicio"> hoy</b>
-                <b v-if="filtros.fechaInicio"> &nbsp; {{ filtros.fechaInicio }} - {{ filtros.fechaFin }}</b>
-                <v-spacer></v-spacer>
-                <v-text-field v-model="busqueda" append-icon="mdi-magnify" label="Buscar" single-line
-                    hide-details></v-text-field>
-            </v-card-title>
-            <v-btn color="error" @click="generarPDF">
-                <v-icon left>mdi-file-pdf-box</v-icon>
-                Descargar PDF
-            </v-btn>
-            <v-btn color="success" @click="generarExcel">
-                <v-icon left>mdi-file-excel</v-icon>
-                Descargar Excel
-            </v-btn>
-            <v-data-table :loading="cargando" :headers="encabezadoTabla" :items="ventas" :search="busqueda"
-                sort-by="producto" class="elevation-1" :footer-props="{ itemsPerPageText: 'Por página' }">
-                <template v-slot:[`item.imagen`]="{ item }">
-                    <v-avatar v-if="item.imagen">
-                        <img :src="urlImagen(item.imagen)" alt="Foto">
-                    </v-avatar>
-                </template>
+            <v-card class="mt-3">
+                <h1>Pagos totales: <span class="primary--text font-weight-bold display-1"> ${{ totalVentas }}</span>
+                </h1>
+                <v-card-title>
+                    Pagos realizados:
+                    <b v-if="!filtros.fechaInicio"> hoy</b>
+                    <b v-if="filtros.fechaInicio"> &nbsp; {{ filtros.fechaInicio }} - {{ filtros.fechaFin }}</b>
+                    <v-spacer></v-spacer>
+                    <v-text-field v-model="busqueda" append-icon="mdi-magnify" label="Buscar" single-line
+                        hide-details></v-text-field>
+                </v-card-title>
+                <v-btn color="error" @click="generarPDF">
+                    <v-icon left>mdi-file-pdf-box</v-icon>
+                    Descargar PDF
+                </v-btn>
+                <v-btn color="success" @click="generarExcel">
+                    <v-icon left>mdi-file-excel</v-icon>
+                    Descargar Excel
+                </v-btn>
+                <v-data-table :loading="cargando" :headers="encabezadoTabla" :items="ventas" :search="busqueda"
+                    sort-by="producto" class="elevation-1" :footer-props="{ itemsPerPageText: 'Por página' }">
+                    <template v-slot:[`item.imagen`]="{ item }">
+                        <v-avatar v-if="item.imagen">
+                            <img :src="urlImagen(item.imagen)" alt="Foto">
+                        </v-avatar>
+                    </template>
 
-                <template slot="no-data">
-                    <v-alert :value="true" color="error" icon="warning">
-                        No se han encontrado datos :(
-                    </v-alert>
-                </template>
+                    <template slot="no-data">
+                        <v-alert :value="true" color="error" icon="warning">
+                            No se han encontrado datos :
+                        </v-alert>
+                    </template>
 
-                <template v-slot:[`item.producto`]="{ item }">
-                    <div>{{ item.producto }}</div>
-                </template>
-            </v-data-table>
-
-        </v-card>
-
-        <cartas-totales v-if="ventas.length > 0" class="mt-3" :totales="totalesVendedores"
-            :titulo="'Pagos realizados por vendedor'" :icono="'mdi-account-cash'" :color="'green darken-3'" />
+                    <template v-slot:[`item.producto`]="{ item }">
+                        <div>{{ item.producto }}</div>
+                    </template>
+                </v-data-table>
+            </v-card>
+        </div>
     </div>
 </template>
 <script>
@@ -61,7 +60,7 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable'
 
 export default {
-    name: "VentasProductos",
+    name: "Ventas",
     components: { PeriodoBusqueda, CartasTotales },
     data() {
         return {
@@ -69,10 +68,10 @@ export default {
             cargando: false,
             ventas: [],
             encabezadoTabla: [
-                { text: "Producto", sortable: true, value: "producto" },
+                { text: "Producto", sortable: true, value: "nombre_producto" },
+                { text: "Cantidad", sortable: true, value: "cantidad" },
+                { text: "Monto pagado", sortable: true, value: "subtotal" },
                 { text: "Fecha", sortable: true, value: "fecha" },
-                { text: "Monto pagado", sortable: true, value: "monto" },
-                { text: "Vendedor", sortable: true, value: "vendedor" },
             ],
             filtros: {
                 fechaInicio: null,
@@ -89,17 +88,18 @@ export default {
     methods: {
         generarExcel() {
             const datos = this.ventas.map(venta => ({
-                Producto: venta.producto,
+                Producto: venta.nombre_producto,
+                Cantidad: venta.cantidad,
+                'Monto pagado': venta.total,
                 Fecha: venta.fecha,
-                'Monto pagado': venta.monto,
-                Vendedor: venta.vendedor,
+
             }));
 
             const ws = XLSX.utils.json_to_sheet(datos, { origin: 'A3' });
             XLSX.utils.sheet_add_aoa(ws, [["Reporte de Pagos de Productos"], [],], { origin: 'A1' });
             ws['!cols'] = [{ wch: 20 }, { wch: 15 }, { wch: 15 }, { wch: 20 }];
             const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, 'Pagos');
+            XLSX.utils.book_append_sheet(wb, ws, 'Ventas');
 
             const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
             saveAs(new Blob([wbout], { type: 'application/octet-stream' }), 'reporte_ventas_productos.xlsx');
@@ -116,20 +116,19 @@ export default {
             doc.text(title, (pageWidth - textWidth) / 2, 40);
 
             const columnas = [
-                { header: 'Producto', dataKey: 'producto' },
+                { header: 'Producto', dataKey: 'nombre_producto' },
+                { header: 'Cantidad', dataKey: 'cantidad' },
+                { header: 'Monto pagado', dataKey: 'total' },
                 { header: 'Fecha', dataKey: 'fecha' },
-                { header: 'Monto', dataKey: 'monto' },
-                { header: 'Vendedor', dataKey: 'vendedor' },
             ];
-
             autoTable(doc, {
                 startY: 70,
                 head: [columnas.map(col => col.header)],
                 body: this.ventas.map(item => [
-                    item.producto,
-                    item.fecha,
-                    `$${item.monto}`,
-                    item.vendedor
+                    item.nombre_producto,
+                    item.cantidad,
+                    `$${item.total}`,
+                    item.fecha
                 ]),
                 theme: 'striped',
                 headStyles: {
@@ -163,15 +162,16 @@ export default {
         obtenerVentas() {
             this.cargando = true;
             let payload = {
-                metodo: 'obtenerVentas',
+                metodo: 'obtener',
                 filtros: this.filtros
             };
-            HttpService.obtenerConDatos(payload, 'ventas_productos.php')
+            HttpService.obtenerConDatos(payload, 'ventas.php')
                 .then(respuesta => {
                     this.ventas = respuesta.ventas;
                     this.totalVentas = respuesta.totalVentas;
                     this.totalesProductos = respuesta.totalesProductos;
-                    this.totalesVendedores = respuesta.totalesVendedores;
+                    //this.totalesVendedores = respuesta.totalesVendedores;
+                    console.log(respuesta)
                     this.cargando = false;
                 })
                 .catch(err => {
@@ -182,3 +182,14 @@ export default {
     }
 }
 </script>
+<style>
+.miembros {
+    font-weight: 400;
+    padding: 30px;
+    background-color: #1e1e1e;
+    border-radius: 12px;
+    min-height: 100vh;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+
+}
+</style>

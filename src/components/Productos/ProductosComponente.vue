@@ -23,6 +23,14 @@
         </v-avatar>
       </template>
       <template v-slot:item.acciones="{ item }">
+        <v-tooltip bottom color="success">
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn color="success" small fab dark v-bind="attrs" v-on="on" @click="agregarAlCarrito(item)">
+              <v-icon>mdi-cart-plus</v-icon>
+            </v-btn>
+          </template>
+          <span>Agregar al carrito</span>
+        </v-tooltip>
         <v-tooltip bottom color="secondary">
           <template v-slot:activator="{ on, attrs }">
             <v-btn color="secondary" small fab dark v-bind="attrs" v-on="on" @click="editar(item)">
@@ -39,14 +47,7 @@
           </template>
           <span>Eliminar</span>
         </v-tooltip>
-        <v-tooltip bottom color="success">
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn color="success" small fab dark v-bind="attrs" v-on="on" @click="agregarAlCarrito(item)">
-              <v-icon>mdi-cart-plus</v-icon>
-            </v-btn>
-          </template>
-          <span>Agregar al carrito</span>
-        </v-tooltip>
+
       </template>
       <template v-slot:expanded-item="{ headers, item }">
         <td :colspan="headers.length" class="pa-6">
@@ -140,7 +141,6 @@ export default {
   data: () => ({
     carrito: [],
     mostrarVenta: false,
-    ventaTotal: 0,
     dialogoImagen: false,
     imagenSeleccionada: "",
     busqueda: "",
@@ -217,22 +217,32 @@ export default {
     },
 
     confirmarEliminar() {
-      this.cargando = true
+      this.cargando = true;
       let payload = {
         metodo: "delete",
         id: this.producto.id
-      }
+      };
       HttpService.eliminar("productos.php", payload)
-        .then(eliminado => {
-          if (eliminado) {
-            this.mostrarDialogoEliminar = false
-            this.mostrarMensaje = true
-            this.mensaje.texto = "Producto eliminado"
-            this.mensaje.color = "success"
-            this.cargando = false
-            this.obtenerProductos()
+        .then(respuesta => {
+          this.cargando = false;
+          if (respuesta.error) {
+            this.mostrarMensaje = true;
+            this.mensaje.texto = respuesta.mensaje;
+            this.mensaje.color = "error";
+          } else {
+            this.mostrarDialogoEliminar = false;
+            this.mostrarMensaje = true;
+            this.mensaje.texto = "Producto eliminado";
+            this.mensaje.color = "success";
+            this.obtenerProductos();
           }
         })
+        .catch(error => {
+          this.cargando = false;
+          this.mostrarMensaje = true;
+          this.mensaje.texto = "Error al eliminar el producto.";
+          this.mensaje.color = "error";
+        });
     },
 
     onCerrado(valor) {

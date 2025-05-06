@@ -37,6 +37,14 @@ function insertar($sentencia, $parametros)
     return $respuesta->execute($parametros);
 }
 
+function insertarP($sentencia, $parametros)
+{
+    $bd = conectarBaseDatos();
+    $respuesta = $bd->prepare($sentencia);
+    $respuesta->execute($parametros);
+    return $bd->lastInsertId();
+}
+
 function eliminar($sentencia, $id)
 {
     $bd = conectarBaseDatos();

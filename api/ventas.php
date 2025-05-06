@@ -15,8 +15,12 @@ switch ($metodo) {
     case "post":
         echo json_encode(registrarVenta($payload->venta));
         break;
-    case "get":
-        echo json_encode(obtenerVentas());
+    case "obtener":
+        echo json_encode([
+            "ventas" => obtenerVentas($payload->filtros),
+            "totalVentas" => obtenerTotalVentas($payload->filtros),
+            "totalesProductos" => obtenerTotalesProductos($payload->filtros),
+        ]);
         break;
     case "delete":
         echo json_encode(eliminarVenta($payload->id));

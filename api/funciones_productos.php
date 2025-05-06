@@ -26,8 +26,22 @@ function obtenerProductos()
 
 function eliminarProducto($id)
 {
-    $sentencia = "DELETE FROM productos WHERE id = ?";
-    return eliminar($sentencia, $id);
+    try {
+        $sentencia = "DELETE FROM productos WHERE id = ?";
+        return eliminar($sentencia, $id);
+    } catch (PDOException $e) {
+        if ($e->getCode() == '23000') {
+            return [
+                "error" => true,
+                "mensaje" => "No se puede eliminar el producto porque está relacionado con una venta."
+            ];
+        } else {
+            return [
+                "error" => true,
+                "mensaje" => "Ocurrió un error al intentar eliminar el producto."
+            ];
+        }
+    }
 }
 
 function editarProducto($producto)

@@ -7,7 +7,7 @@
         <v-card-text>
             <v-form ref="form" lazy-validation>
 
-                <v-text-field v-model="producto.nombre" label="Nombre" required />
+                <v-text-field v-model="producto.nombre" label="Nombre" required :counter="25" maxlength="25" />
                 <v-textarea v-model="producto.descripcion" label="Descripción" required />
                 <v-text-field v-model="producto.precio" label="Precio" type="number" required />
                 <v-text-field v-model="producto.stock" label="Stock" type="number" required />

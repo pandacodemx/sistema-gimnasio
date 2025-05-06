@@ -6,7 +6,7 @@ function registrarVenta($venta)
 
     $sentencia = "INSERT INTO ventas (total, fecha) VALUES (?, NOW())";
     $parametros = [$venta->total];
-    $ventaId = insertar($sentencia, $parametros);
+    $ventaId = insertarP($sentencia, $parametros);
 
 
     foreach ($venta->productos as $producto) {
@@ -18,7 +18,7 @@ function registrarVenta($venta)
             $producto->cantidad,
             $producto->subtotal
         ];
-        insertar($sentenciaProducto, $parametrosProducto);
+        insertarP($sentenciaProducto, $parametrosProducto);
 
 
         $sentenciaStock = "UPDATE productos SET stock = stock - ? WHERE id = ?";
@@ -35,26 +35,56 @@ function registrarVenta($venta)
 
 function obtenerVentas($filtros)
 {
-
     $fechaInicio = (isset($filtros->fechaInicio)) ? $filtros->fechaInicio : FECHA_HOY;
     $fechaFin = (isset($filtros->fechaFin)) ? $filtros->fechaFin : FECHA_HOY;
-
     $sentencia = "SELECT 
             v.id AS id_venta,
             v.fecha,
             v.total,            
             vp.producto_id,
+            vp.subtotal,
             vp.cantidad,          
             p.nombre AS nombre_producto
         FROM ventas v
         INNER JOIN ventas_productos vp ON v.id = vp.venta_id
         INNER JOIN productos p ON vp.producto_id = p.id
-        WHERE v.fecha BETWEEN ? AND ?
-        ORDER BY v.fecha DESC";
+        WHERE DATE(v.fecha) >= ? AND DATE(v.fecha) <= ? ";
     $parametros = [$fechaInicio, $fechaFin];
 
     return selectPrepare($sentencia, $parametros);
 }
+
+function obtenerTotalVentas($filtros)
+{
+    $fechaInicio = (isset($filtros->fechaInicio)) ? $filtros->fechaInicio : FECHA_HOY;
+    $fechaFin = (isset($filtros->fechaFin)) ? $filtros->fechaFin : FECHA_HOY;
+
+    $sentencia = "SELECT IFNULL(SUM(total),0) AS totalVentas FROM ventas WHERE DATE(fecha) >= ? AND DATE(fecha) <= ?";
+    $parametros = [$fechaInicio, $fechaFin];
+    return selectPrepare($sentencia, $parametros)[0]->totalVentas;
+}
+
+function obtenerTotalesProductos($filtros)
+{
+    $fechaInicio = (isset($filtros->fechaInicio)) ? $filtros->fechaInicio : FECHA_HOY;
+    $fechaFin = (isset($filtros->fechaFin)) ? $filtros->fechaFin : FECHA_HOY;
+
+    $sentencia  = "SELECT 
+    vp.producto_id,
+    p.nombre AS nombre,
+    SUM(vp.subtotal) AS total,
+    SUM(vp.cantidad) AS total_cantidad,
+    DATE(v.fecha) AS fecha
+    FROM ventas v
+    INNER JOIN ventas_productos vp ON v.id = vp.venta_id
+    INNER JOIN productos p ON vp.producto_id = p.id
+    WHERE DATE(v.fecha) >= ? AND DATE(v.fecha) <= ?
+    GROUP BY vp.producto_id, DATE(v.fecha)
+    ORDER BY fecha, nombre";
+    $parametros = [$fechaInicio, $fechaFin];
+    return selectPrepare($sentencia, $parametros);
+}
+
 
 function eliminarVenta($id)
 {

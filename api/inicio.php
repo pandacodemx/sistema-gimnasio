@@ -11,7 +11,7 @@ include_once "funciones_inicio.php";
 
 $metodo = $payload->metodo;
 
-switch($metodo){
+switch ($metodo) {
     case "obtener":
         echo json_encode(
             [
@@ -39,4 +39,3 @@ switch($metodo){
         );
         break;
 }
-

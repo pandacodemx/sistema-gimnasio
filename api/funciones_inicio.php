@@ -3,49 +3,58 @@
 include_once "base_datos.php";
 
 
-function obtenerTotalVisitas(){
+function obtenerTotalVisitas()
+{
     $sentencia  = "SELECT COUNT(*) AS total FROM visitas";
     return selectQuery($sentencia)[0]->total;
 }
 
-function obtenerVisitasHoy(){
+function obtenerVisitasHoy()
+{
     $sentencia = "SELECT COUNT(*) AS total FROM visitas WHERE DATE(fecha) = CURDATE()";
     return selectQuery($sentencia)[0]->total;
 }
 
-function obtenerVisitasSemana(){
+function obtenerVisitasSemana()
+{
     $sentencia = "SELECT COUNT(*) AS total FROM visitas WHERE YEARWEEK(fecha)=YEARWEEK(CURDATE())";
     return selectQuery($sentencia)[0]->total;
 }
 
-function obtenerVisitasMes(){
+function obtenerVisitasMes()
+{
     $sentencia = "SELECT COUNT(*) AS total FROM visitas WHERE  MONTH(fecha) = MONTH(CURRENT_DATE())
     AND YEAR(fecha) = YEAR(CURRENT_DATE())";
     return selectQuery($sentencia)[0]->total;
 }
 
-function obtenerTotalPagos(){
+function obtenerTotalPagos()
+{
     $sentencia  = "SELECT SUM(monto) AS total FROM pagos";
     return selectQuery($sentencia)[0]->total;
 }
-    
-function obtenerPagosHoy(){
+
+function obtenerPagosHoy()
+{
     $sentencia = "SELECT IFNULL(SUM(monto),0) AS total FROM pagos WHERE DATE(fecha) = CURDATE()";
     return selectQuery($sentencia)[0]->total;
 }
-    
-function obtenerPagosSemana(){
+
+function obtenerPagosSemana()
+{
     $sentencia = "SELECT IFNULL(SUM(monto), 0) AS total FROM pagos WHERE YEARWEEK(fecha)=YEARWEEK(CURDATE())";
     return selectQuery($sentencia)[0]->total;
 }
-    
-function obtenerPagosMes(){
+
+function obtenerPagosMes()
+{
     $sentencia = "SELECT IFNULL(SUM(monto),0) AS total FROM pagos WHERE  MONTH(fecha) = MONTH(CURRENT_DATE())
         AND YEAR(fecha) = YEAR(CURRENT_DATE())";
     return selectQuery($sentencia)[0]->total;
 }
 
-function obtenerVisitasHora(){
+function obtenerVisitasHora()
+{
     $sentencia = "SELECT CONCAT(DATE_FORMAT(fecha,'%H'), 'hrs') AS hora, 
     COUNT(*) AS numeroVisitas FROM visitas 
     GROUP BY DATE_FORMAT(fecha,'%H') 
@@ -54,16 +63,17 @@ function obtenerVisitasHora(){
     return selectQuery($sentencia);
 }
 
-function obtenerVisitasDiasSemana() {
+function obtenerVisitasDiasSemana()
+{
     $sentencia = "SELECT DAYNAME(fecha) AS dia, DAYOFWEEK(fecha) AS numeroDia, COUNT(*) AS numeroVisitas FROM visitas
      WHERE YEARWEEK(fecha)=YEARWEEK(CURDATE())
      GROUP BY dia 
      ORDER BY fecha ASC";
     return selectQuery($sentencia);
-
 }
 
-function obtenerVisitasPorDiaMes(){
+function obtenerVisitasPorDiaMes()
+{
     $sentencia = "SELECT DAY(fecha) AS dia, COUNT(*) AS numeroVisitas
 	FROM visitas
 	WHERE MONTH(fecha) = MONTH(CURRENT_DATE())
@@ -73,16 +83,17 @@ function obtenerVisitasPorDiaMes(){
     return selectQuery($sentencia);
 }
 
-function obtenerPagosDiasSemana() {
+function obtenerPagosDiasSemana()
+{
     $sentencia = "SELECT DAYNAME(fecha) AS dia, DAYOFWEEK(fecha) AS numeroDia, SUM(monto) AS total FROM pagos
      WHERE YEARWEEK(fecha)=YEARWEEK(CURDATE())
      GROUP BY dia 
      ORDER BY fecha ASC";
     return selectQuery($sentencia);
-
 }
 
-function obtenerPagosPorDiaMes(){
+function obtenerPagosPorDiaMes()
+{
     $sentencia = "SELECT DAY(fecha) AS dia, SUM(monto) AS total
 	FROM pagos
 	WHERE MONTH(fecha) = MONTH(CURRENT_DATE())
@@ -92,7 +103,8 @@ function obtenerPagosPorDiaMes(){
     return selectQuery($sentencia);
 }
 
-function obtenerPagosPorMeses(){
+function obtenerPagosPorMeses()
+{
     $sentencia = "SELECT MONTH(fecha) AS mes, IFNULL(SUM(monto),0) AS total FROM pagos 
     WHERE YEAR(fecha) = YEAR(CURRENT_DATE())
     GROUP BY MONTH(fecha) ORDER BY mes ASC";
