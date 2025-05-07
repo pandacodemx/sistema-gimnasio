@@ -8,8 +8,8 @@ function registrarMiembro($miembro)
     $sentencia = "INSERT INTO miembros 
     (matricula, nombre, telefono, direccion, edad,
     sufreEnfermedad, tieneSeguro, enfermedad, institucion, 
-    nombreContacto, telefonoContacto, imagen, fechaRegistro) 
-    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
+    nombreContacto, telefonoContacto, imagen, fechaRegistro, afiliacion) 
+    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
     $parametros = [
         $matricula,
         $miembro->nombre,
@@ -23,7 +23,8 @@ function registrarMiembro($miembro)
         $miembro->nombreContacto,
         $miembro->telefonoContacto,
         $imagen,
-        date("Y-m-d H:i:s")
+        date("Y-m-d H:i:s"),
+        $miembro->afiliacion
     ];
     $resultado = insertar($sentencia, $parametros);
     if ($resultado) return $matricula;
@@ -107,7 +108,7 @@ function editarMiembro($miembro)
     $miembro->imagen = ($miembro->imagenCambia) ? obtenerImagen($miembro->imagen) : $miembro->imagen;
     $sentencia =  "UPDATE miembros SET nombre = ?, telefono = ?, direccion = ?, edad = ?,
     sufreEnfermedad = ?, tieneSeguro = ?, enfermedad = ?, institucion = ?, 
-    nombreContacto = ?, telefonoContacto = ?, imagen = ? WHERE id = ?";
+    nombreContacto = ?, telefonoContacto = ?, afiliacion = ?, imagen = ? WHERE id = ?";
     $parametros = [
         $miembro->nombre,
         $miembro->telefono,
@@ -119,6 +120,7 @@ function editarMiembro($miembro)
         $miembro->institucion,
         $miembro->nombreContacto,
         $miembro->telefonoContacto,
+        $miembro->afiliacion,
         $miembro->imagen,
         $miembro->id
     ];

@@ -3,12 +3,7 @@
         <h1>Editar miembro</h1>
         <small>Revisa con atención todos los campos</small>
         <form-miembro :miembro="datosMiembro" @registrado="onEditar" />
-        <v-snackbar
-        v-model="mostrarMensaje"
-        :timeout="3000"
-        :color="mensaje.color"
-        top
-        >
+        <v-snackbar v-model="mostrarMensaje" :timeout="3000" :color="mensaje.color" top>
             {{ mensaje.texto }}
         </v-snackbar>
         <v-overlay :value="cargando">
@@ -24,7 +19,7 @@ export default {
     name: "EditarMiembro",
     components: { FormMiembro },
 
-    data:()=>({
+    data: () => ({
         cargando: false,
         datosMiembro: {
             datosPersonales: null,
@@ -37,7 +32,7 @@ export default {
         }
     }),
 
-    mounted(){
+    mounted() {
         this.cargando = true
         const payload = {
             metodo: "obtener_id",
@@ -45,59 +40,60 @@ export default {
         }
 
         HttpService.obtenerConDatos(payload, "miembros.php")
-        .then(resultado => {
-            this.datosMiembro.datosPersonales = {
-                nombre: resultado.nombre,
-                telefono: resultado.telefono,
-                direccion: resultado.direccion,
-                edad: resultado.edad,
-            }
-            this.datosMiembro.datosContacto = {
-                sufreEnfermedad: resultado.sufreEnfermedad,
-                tieneSeguro: resultado.tieneSeguro,
-                enfermedad: resultado.enfermedad,
-                institucion: resultado.institucion,
-                nombreContacto: resultado.nombreContacto,
-                telefonoContacto: resultado.telefonoContacto,
-            }
-            this.datosMiembro.imagen = resultado.imagen
-            
-            
-            this.cargando = false
-        })
+            .then(resultado => {
+                this.datosMiembro.datosPersonales = {
+                    nombre: resultado.nombre,
+                    telefono: resultado.telefono,
+                    direccion: resultado.direccion,
+                    edad: resultado.edad,
+                }
+                this.datosMiembro.datosContacto = {
+                    sufreEnfermedad: resultado.sufreEnfermedad,
+                    tieneSeguro: resultado.tieneSeguro,
+                    enfermedad: resultado.enfermedad,
+                    institucion: resultado.institucion,
+                    afiliacion: resultado.afiliacion,
+                    nombreContacto: resultado.nombreContacto,
+                    telefonoContacto: resultado.telefonoContacto,
+                }
+                this.datosMiembro.imagen = resultado.imagen
+
+
+                this.cargando = false
+            })
     },
 
     methods: {
-        onEditar(miembro){
+        onEditar(miembro) {
             const imagenCambia = miembro.imagen.includes('data:image')
-            if(!imagenCambia){
+            if (!imagenCambia) {
                 miembro.imagen = miembro.imagen.split('api/')[1]
             }
-            miembro.imagenCambia =  imagenCambia
+            miembro.imagenCambia = imagenCambia
             miembro.id = this.$route.params.id
-             
+
             this.cargando = true
             let payload = {
                 metodo: "editar",
                 miembro: miembro
             }
             HttpService.registrar(payload, "miembros.php")
-            .then(resultado => {
-                if(resultado){
-                    this.mostrarMensaje = true
-                    this.mensaje.texto = "Información de miembro actualizada"
-                    this.mensaje.color = "success"
-                    
-                    setTimeout(()=>
-                        this.$router.push({
-                            name: "Miembros"
-                        }),
-                        1000
-                    )
-                    this.cargando = false
-                }
-            })
-        
+                .then(resultado => {
+                    if (resultado) {
+                        this.mostrarMensaje = true
+                        this.mensaje.texto = "Información de miembro actualizada"
+                        this.mensaje.color = "success"
+
+                        setTimeout(() =>
+                            this.$router.push({
+                                name: "Miembros"
+                            }),
+                            1000
+                        )
+                        this.cargando = false
+                    }
+                })
+
         }
     }
 }

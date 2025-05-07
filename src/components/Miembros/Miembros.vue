@@ -1,15 +1,8 @@
-<template >
+<template>
   <div class="miembros">
     <h1>Listado de miembros</h1>
-    <v-data-table
-      :loading="cargando"
-      :headers="encabezadoTabla"
-      :items="miembros"
-      item-key="matricula"
-      show-expand
-      class="elevation-1"
-      :footer-props="{ itemsPerPageText: 'Por página' }"
-    >
+    <v-data-table :loading="cargando" :headers="encabezadoTabla" :items="miembros" item-key="matricula" show-expand
+      class="elevation-1" :footer-props="{ itemsPerPageText: 'Por página' }">
       <template v-slot:[`item.imagen`]="{ item }">
         <v-avatar>
           <img :src="urlImagen(item.imagen)" alt="Foto" />
@@ -17,11 +10,7 @@
       </template>
 
       <template v-slot:[`item.estado`]="{ item }">
-        <v-chip
-          class="ma-2"
-          :color="estado(item.estado)"
-          text-color="white"
-        >
+        <v-chip class="ma-2" :color="estado(item.estado)" text-color="white">
           {{ item.estado }}
           <span v-if="!item.estado">SIN MEMBRESÍA</span>
         </v-chip>
@@ -30,20 +19,12 @@
       <template v-slot:[`item.opciones`]="{ item }">
         <v-tooltip bottom color="secondary">
           <template v-slot:activator="{ on, attrs }">
-            <v-btn
-              color="secondary"
-              small
-              fab
-              dark
-              v-bind="attrs"
-              v-on="on"
-              @click="editar(item.id)"
-            >
+            <v-btn color="secondary" small fab dark v-bind="attrs" v-on="on" @click="editar(item.id)">
               <v-icon>mdi-pencil-box-outline</v-icon>
             </v-btn>
           </template>
           <span>Editar</span>
-        </v-tooltip>       
+        </v-tooltip>
 
         <v-tooltip bottom color="blue darken-2">
           <template v-slot:activator="{ on, attrs }">
@@ -56,15 +37,7 @@
 
         <v-tooltip bottom color="error">
           <template v-slot:activator="{ on, attrs }">
-            <v-btn
-              color="error"
-              small
-              fab
-              dark
-              v-bind="attrs"
-              v-on="on"
-              @click="eliminar(item)"
-            >
+            <v-btn color="error" small fab dark v-bind="attrs" v-on="on" @click="eliminar(item)">
               <v-icon>mdi-delete</v-icon>
             </v-btn>
           </template>
@@ -73,15 +46,7 @@
 
         <v-tooltip bottom color="primary" v-if="!item.estado || item.estado === 'VENCIDO'">
           <template v-slot:activator="{ on, attrs }">
-            <v-btn
-              color="primary"
-              small
-              fab
-              dark
-              v-bind="attrs"
-              v-on="on"
-              @click="realizarPago(item.matricula)"
-            >
+            <v-btn color="primary" small fab dark v-bind="attrs" v-on="on" @click="realizarPago(item.matricula)">
               <v-icon>mdi-cash-multiple</v-icon>
             </v-btn>
           </template>
@@ -91,39 +56,54 @@
 
       <template v-slot:expanded-item="{ headers, item }">
         <td :colspan="headers.length" class="pa-6">
-          Más información de <b>{{ item.nombre }}</b> 
+          <div class=" mb-6">
+            Información adicional: <b>{{ item.nombre }}</b>
+          </div>
           <v-simple-table height="200px">
             <template v-slot:default>
               <tbody>
                 <tr>
                   <td>
+                    <v-icon color="red "> mdi-clipboard-account </v-icon>
+                    <b>Edad: </b>{{ item.edad }}
+                  </td>
+                </tr>
+                <tr>
+                  <td>
                     <v-icon color="red "> mdi-map-marker </v-icon>
-                    <b>Dirección: </b>{{ item.direccion }} </td>
+                    <b>Dirección: </b>{{ item.direccion }}
+                  </td>
                 </tr>
                 <tr>
                   <td>
                     <v-icon color="red "> mdi-calendar </v-icon>
-                    <b>Miembro desde: </b>{{ item.fechaRegistro }} </td>
+                    <b>Miembro desde: </b>{{ item.fechaRegistro }}
+                  </td>
                 </tr>
                 <tr>
                   <td>
-                    <v-icon color="red "> mdi-calendar-account </v-icon>
-                    <b>Edad: </b>{{ item.edad }} </td>
+                    <v-icon color="red "> mdi-account </v-icon>
+                    <b>Contacto de emergencia: </b>{{ item.nombreContacto }}, <b>Teléfono:</b> {{
+                      item.telefonoContacto }}
+                  </td>
                 </tr>
                 <tr>
                   <td>
-                      <v-icon color="red "> mdi-account </v-icon>
-                    <b>En accidente comunicarse con: </b>{{ item.nombreContacto }}, <b>Teléfono:</b> {{ item.telefonoContacto }}</td>
-                </tr>
-                <tr>
-                  <td>
-                    <v-icon color="red "> mdi-mother-heart </v-icon>
-                    <b>Enfermedades crónicas: </b>{{ item.enfermedad }} </td>
+                    <v-icon color="red "> mdi-hospital </v-icon>
+                    <b>Enfermedades crónicas: </b>{{ item.enfermedad }}
+                  </td>
                 </tr>
                 <tr>
                   <td>
                     <v-icon color="red "> mdi-hospital-building </v-icon>
-                    <b>Seguro en : </b>{{ item.institucion }} </td>
+                    <b>Seguridad Social: </b>{{ item.institucion }}
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <v-icon color="red "> mdi-human-child </v-icon>
+                    <b>NSS/Numero de afiliación: </b>{{ item.afiliacion }}
+                  </td>
                 </tr>
               </tbody>
             </template>
@@ -151,52 +131,27 @@
         </tr>
       </template>
       <template v-slot:[`item.membresia`]="{ item }">
-                    <div
-                        class="medalla"
-                        :class="claseMembresia(item.membresia)"
-                    >
-                        <v-icon left small>{{ iconoMembresia(item.membresia) }}</v-icon>
-                        {{ item.membresia }}
-                    </div>
+        <div class="medalla" :class="claseMembresia(item.membresia)">
+          <v-icon left small>{{ iconoMembresia(item.membresia) }}</v-icon>
+          {{ item.membresia }}
+        </div>
       </template>
     </v-data-table>
-    <v-btn
-      fab
-      dark
-      x-large
-      elevation="8"
-      color="primary"
-      fixed
-      right
-      bottom
-      to="/nuevo-miembro"
-    >
+    <v-btn fab dark x-large elevation="8" color="primary" fixed right bottom to="/nuevo-miembro">
       <v-icon dark>add</v-icon>
     </v-btn>
     <v-dialog v-model="mostrarRealizarPago" persistent max-width="600">
-      <realizar-pago
-        :matricula="matriculaSeleccionada"
-        @cerrar="cerrarDialogoPago"
-        @pagado="onPagado"
-      />
+      <realizar-pago :matricula="matriculaSeleccionada" @cerrar="cerrarDialogoPago" @pagado="onPagado" />
     </v-dialog>
 
     <v-dialog v-model="mostrarDialogoEliminar" max-width="500px">
-      <dialogo-eliminar
-        :nombre="itemSeleccionado"
-        @cancelar="cerrarDialogoEliminar"
-        @eliminar="confirmarEliminar"
-      />
+      <dialogo-eliminar :nombre="itemSeleccionado" @cancelar="cerrarDialogoEliminar" @eliminar="confirmarEliminar" />
     </v-dialog>
 
-  <credencial-miembro :matricula="matriculaSeleccionada" :miembro="miembro"  @impreso="onImpreso" v-if="mostrarCredencial"/> 
+    <credencial-miembro :matricula="matriculaSeleccionada" :miembro="miembro" @impreso="onImpreso"
+      v-if="mostrarCredencial" />
 
-    <v-snackbar
-      v-model="mostrarMensaje"
-      :timeout="3000"
-      :color="mensaje.color"
-      top
-    >
+    <v-snackbar v-model="mostrarMensaje" :timeout="3000" :color="mensaje.color" top>
       {{ mensaje.texto }}
     </v-snackbar>
 
@@ -285,7 +240,7 @@ export default {
   },
 
   methods: {
-    generarCredencial(miembro){
+    generarCredencial(miembro) {
       this.matriculaSeleccionada = miembro.matricula
       this.miembro = miembro
       this.mostrarCredencial = true
@@ -369,25 +324,25 @@ export default {
       return val === "ACTIVO"
         ? "success"
         : val === "VENCIDO"
-        ? "error"
-        : "warning";
+          ? "error"
+          : "warning";
     },
     claseMembresia(nombre) {
-    const tipo = (nombre && nombre.toLowerCase()) || ''
-    if (tipo.includes('oro')) return 'medalla-oro'
-    if (tipo.includes('plata')) return 'medalla-plata'
-    if (tipo.includes('bronce')) return 'medalla-bronce'
-    if (tipo.includes('premium')) return 'medalla-premium'
-    return 'medalla-default'
+      const tipo = (nombre && nombre.toLowerCase()) || ''
+      if (tipo.includes('oro')) return 'medalla-oro'
+      if (tipo.includes('plata')) return 'medalla-plata'
+      if (tipo.includes('bronce')) return 'medalla-bronce'
+      if (tipo.includes('premium')) return 'medalla-premium'
+      return 'medalla-default'
     },
 
     iconoMembresia(nombre) {
-        const tipo = (nombre && nombre.toLowerCase()) || ''
-        if (tipo.includes('oro')) return 'mdi-trophy'
-        if (tipo.includes('plata')) return 'mdi-medal'
-        if (tipo.includes('bronce')) return 'mdi-star-outline'
-        if (tipo.includes('premium')) return 'mdi-diamond'
-        return 'mdi-certificate'
+      const tipo = (nombre && nombre.toLowerCase()) || ''
+      if (tipo.includes('oro')) return 'mdi-trophy'
+      if (tipo.includes('plata')) return 'mdi-medal'
+      if (tipo.includes('bronce')) return 'mdi-star-outline'
+      if (tipo.includes('premium')) return 'mdi-diamond'
+      return 'mdi-certificate'
     }
   },
 };
@@ -395,7 +350,7 @@ export default {
 
 
 
-<style >
+<style>
 body {
   background-color: #121212;
   color: #e0e0e0;
@@ -431,7 +386,7 @@ body {
 }
 
 .v-icon {
-  vertical-align: middle; 
+  vertical-align: middle;
 }
 
 .v-chip {
@@ -441,6 +396,4 @@ body {
 .v-tooltip {
   font-size: 13px;
 }
-
-
 </style>

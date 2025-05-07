@@ -3,42 +3,22 @@
     <v-stepper v-model="e6" vertical>
       <v-stepper-step :complete="e6 > 1" step="1">
         Datos personales
-        <small>Escribe los datos del miembro</small>
+        <small class="mt-2">Escribe los datos personales</small>
       </v-stepper-step>
 
       <v-stepper-content step="1">
         <v-form ref="form" v-model="formDatosPersonales">
           <v-card class="mb-12 pa-6">
-            <v-text-field
-              label="Nombre completo"
-              :rules="reglasForm"
-              v-model="datosPersonales.nombre"
-            >
+            <v-text-field label="Nombre completo" :rules="reglasNombre" v-model="datosPersonales.nombre">
             </v-text-field>
-            <v-text-field
-              label="Teléfono"
-              :rules="reglasForm"
-              v-model="datosPersonales.telefono"
-            >
+            <v-text-field label="Teléfono / Celular" :rules="reglasTelefono" v-model="datosPersonales.telefono">
             </v-text-field>
-            <v-text-field
-              label="Dirección"
-              :rules="reglasForm"
-              v-model="datosPersonales.direccion"
-            >
+            <v-text-field label="Domicilio" :rules="reglasDireccion" v-model="datosPersonales.direccion">
             </v-text-field>
-            <v-text-field
-              label="Edad"
-              :rules="reglasForm"
-              v-model="datosPersonales.edad"
-            >
+            <v-text-field label="Edad" :rules="reglasEdad" v-model="datosPersonales.edad">
             </v-text-field>
           </v-card>
-          <v-btn
-            color="primary"
-            @click="e6 = 2"
-            :disabled="!formDatosPersonales"
-          >
+          <v-btn color="primary" @click="e6 = 2" :disabled="!formDatosPersonales">
             Continuar
           </v-btn>
           <v-btn text to="/miembros"> Cancelar </v-btn>
@@ -47,44 +27,25 @@
 
       <v-stepper-step :complete="e6 > 2" step="2">
         Datos de contacto
-        <small
-          >Escribe los siguientes datos en caso de que algun accidente
-          ocurra</small
-        >
+        <small class="mt-2">Rellena los siguientes campos en caso de algun accidente.</small>
       </v-stepper-step>
 
       <v-stepper-content step="2">
         <v-form ref="form" v-model="formDatosContacto">
           <v-card class="mb-12 pa-6">
-            <v-switch
-              v-model="datosContacto.sufreEnfermedad"
-              label="¿Sufre alguna enfermedad crónica?"
-            ></v-switch>
-            <v-text-field
-              label="Escribe las enfermedades"
-              v-if="datosContacto.sufreEnfermedad"
-              v-model="datosContacto.enfermedad"
-            ></v-text-field>
-            <v-switch
-              v-model="datosContacto.tieneSeguro"
-              label="¿Tiene seguro?"
-            ></v-switch>
-            <v-text-field
-              label="Escribe las institución de seguro"
-              v-if="datosContacto.tieneSeguro"
-              v-model="datosContacto.institucion"
-            ></v-text-field>
-            <v-text-field
-              label="Nombre completo de contacto"
-              :rules="reglasForm"
-              v-model="datosContacto.nombreContacto"
-            >
+            <v-switch v-model="datosContacto.sufreEnfermedad" label="¿Sufre alguna enfermedad crónica?"></v-switch>
+            <v-text-field label="Escribe las enfermedades." v-if="datosContacto.sufreEnfermedad"
+              v-model="datosContacto.enfermedad"></v-text-field>
+
+            <v-switch v-model="datosContacto.tieneSeguro" label="¿Cuenta con seguro medico?"></v-switch>
+            <v-text-field label="Escribe las institución medica." v-if="datosContacto.tieneSeguro"
+              v-model="datosContacto.institucion"></v-text-field>
+            <v-text-field label="NSS/Numero de afiliación" v-if="datosContacto.tieneSeguro"
+              v-model="datosContacto.afiliacion"></v-text-field>
+            <small class="mt-2">Contacto de emergencia.</small>
+            <v-text-field label="Nombre de contacto" :rules="reglasForm" v-model="datosContacto.nombreContacto">
             </v-text-field>
-            <v-text-field
-              label="Teléfono"
-              :rules="reglasForm"
-              v-model="datosContacto.telefonoContacto"
-            >
+            <v-text-field label="Teléfono" :rules="reglasForm" v-model="datosContacto.telefonoContacto">
             </v-text-field>
           </v-card>
           <v-btn color="primary" @click="e6 = 3" :disabled="!formDatosContacto">
@@ -101,16 +62,9 @@
 
       <v-stepper-content step="3">
         <v-card class="mb-12">
-          <v-file-input
-            :rules="reglaImagen"
-            accept="image/png, image/jpeg, image/bmp"
-            placeholder="Selecciona una imagen"
-            prepend-icon="mdi-camera"
-            label="Foto"
-            v-model="imagen"
-            type="file"
-            @change="onSeleccionarImagen" 
-          ></v-file-input>
+          <v-file-input :rules="reglaImagen" accept="image/png, image/jpeg, image/bmp"
+            placeholder="Selecciona una imagen" prepend-icon="mdi-camera" label="Foto" v-model="imagen" type="file"
+            @change="onSeleccionarImagen"></v-file-input>
           <div class="d-flex flex-column justify-space-between align-center">
             <img :src="imagenUrl" alt="" aspect-ratio="16/9" width="300" />
           </div>
@@ -140,29 +94,43 @@ export default {
     e6: 1,
     imagen: null,
     imagenUrl: null,
-    datosPersonales:{
-       nombre: "",
-        telefono: "",
-        direccion: "",
-        edad: 10,
+    datosPersonales: {
+      nombre: "",
+      telefono: "",
+      direccion: "",
+      edad: 18,
     },
     datosContacto: {
       sufreEnfermedad: false,
-        tieneSeguro: false,
-        enfermedad: "",
-        institucion: "",
-        nombreContacto: "",
-        telefonoContacto: ""
+      tieneSeguro: false,
+      enfermedad: "",
+      institucion: "",
+      afiliacion: "",
+      nombreContacto: "",
+      telefonoContacto: ""
     },
+    reglasNombre: [
+      v => !!v || 'El nombre es requerido',
+      v => v.length >= 3 || 'Mínimo 3 caracteres'
+    ],
+    reglasTelefono: [
+      v => !!v || 'El teléfono es requerido',
+      v => /^[0-9]+$/.test(v) || 'Solo se permiten números',
+      v => v.length >= 7 || 'Debe tener al menos 7 dígitos'
+    ],
+    reglasDireccion: [
+      v => !!v || 'El domicilio es requerido'
+    ],
+    reglasEdad: [
+      v => !!v || 'La edad es requerida',
+      v => /^[0-9]+$/.test(v) || 'Solo se permiten números',
+      v => parseInt(v) > 0 || 'Debe ser mayor a 0'
+    ]
 
-   
+
   }),
 
   mounted() {
-    //console.log(this.miembro)
-    //this.datosPersonales = this.miembro.datosPersonales
-    //this.datosContacto = this.miembro.datosContacto
-    //this.imagenUrl = this.miembro.imagen
     this.formDatosPersonales = false;
     this.formDatosContacto = false;
 
@@ -178,31 +146,29 @@ export default {
       };
 
       this.$emit("registrado", miembro)
-
-      console.log(miembro)
-
-      this.formDatosPersonales =  false
+      this.formDatosPersonales = false
       this.formDatosContacto = false,
-      this.e6= 1
-      this.imagen= null
-      this.imagenUrl= null
-      this.datosPersonales= {
+        this.e6 = 1
+      this.imagen = null
+      this.imagenUrl = null
+      this.datosPersonales = {
         nombre: "",
         telefono: "",
         direccion: "",
-        edad: 10,
+        edad: 18,
       }
       this.datosContacto = {
         sufreEnfermedad: false,
         tieneSeguro: false,
         enfermedad: "",
         institucion: "",
+        afiliacion: "",
         nombreContacto: "",
         telefonoContacto: "",
       }
     },
 
-    crearImagen(imagen){
+    crearImagen(imagen) {
       const reader = new FileReader()
 
       reader.onload = e => {
@@ -220,14 +186,14 @@ export default {
   },
 
   watch: {
-    miembro:{ 
+    miembro: {
       deep: true,
       handler() {
         this.datosPersonales = this.miembro.datosPersonales
         this.datosContacto = this.miembro.datosContacto
         this.imagenUrl = Utiles.generarURL(this.miembro.imagen)
-        
-       }
+
+      }
     }
   }
 
