@@ -79,8 +79,8 @@ function obtenerTotalesProductos($filtros)
     INNER JOIN ventas_productos vp ON v.id = vp.venta_id
     INNER JOIN productos p ON vp.producto_id = p.id
     WHERE DATE(v.fecha) >= ? AND DATE(v.fecha) <= ?
-    GROUP BY vp.producto_id, DATE(v.fecha)
-    ORDER BY fecha, nombre";
+    GROUP BY vp.producto_id
+    ORDER by nombre";
     $parametros = [$fechaInicio, $fechaFin];
     return selectPrepare($sentencia, $parametros);
 }

@@ -6,6 +6,7 @@
             <v-btn depressed rounded="lg" elevation="4" color="primary" @click="cambiarPassword">
                 Cambiar contraseña
             </v-btn>
+
         </div>
         <div class="mt-8">
             <h2 class="pa-6">Pagos:</h2>
@@ -17,14 +18,15 @@
     </div>
 </template>
 
-////////////SCRIPT////////////////
+<!---SCRIPT----------->
 <script>
 import HttpService from '../../Servicios/HttpService'
 import CartasPersonalizadas from '../Dialogos/CartasPersonalizadas.vue'
+import SelectorTema from "@/components/SelectorTema.vue";
 
 export default {
     name: "MiPerfil",
-    components: { CartasPersonalizadas },
+    components: { CartasPersonalizadas, SelectorTema, },
 
     data: () => ({
         nombreUsuario: localStorage.getItem('nombreUsuario'),

@@ -1,81 +1,55 @@
 <template>
-  <div>    
-    <div class="bienvenida">
-      <v-list-item-avatar size="100" mr-4>
+  <div>
+    <div class="bienvenida d-flex flex-row">
+      <div class="d-flex flex-row"><v-list-item-avatar size="100" mr-8>
           <img :src="urlImagen(logo)" alt="Logo">
-      </v-list-item-avatar>   
-      <div>
-        <h1 class="primary--text" >Bienvenido! </h1> {{ nombreUsuario }}
-        <small>- Dashboard {{ nombreGimnasio }} </small>
+        </v-list-item-avatar>
+        <div class="d-flex flex-column">
+          <h1 class="primary--text">Bienvenido! </h1> {{ nombreUsuario }}
+          <small>Dashboard {{ nombreGimnasio }} </small>
+        </div>
       </div>
-        
+
     </div>
-   
+
+
     <cartas-personalizadas :cartas="datosVisitas" />
     <div class="row">
       <div class="col-sm-6 col-lg-4 col-12">
-        <sparkline-component
-          :etiquetas="etiquetasVisitasHora"
-          :valores="valoresVisitasHora"
-          :color="'pink darken-1'"
-          :titulo="'Visitas por hora'"
-          :subtitulo="'Visitas registras por hora'"
-        />
+        <sparkline-component :etiquetas="etiquetasVisitasHora" :valores="valoresVisitasHora" :color="'pink darken-1'"
+          :titulo="'Visitas por hora'" :subtitulo="'Visitas registras por hora'" />
       </div>
       <div class="col-sm-6 col-lg-4 col-12">
-        <sparkline-component
-          :etiquetas="etiquetasVisitasSemana"
-          :valores="valoresVisitasSemana"
-          :color="'red darken-1'"
-          :titulo="'Visitas semana'"
-          :subtitulo="'Visitas registras en esta semana'"
-        />
+        <sparkline-component :etiquetas="etiquetasVisitasSemana" :valores="valoresVisitasSemana" :color="'red darken-1'"
+          :titulo="'Visitas semana'" :subtitulo="'Visitas registras en esta semana'" />
       </div>
       <div class="col-sm-6 col-lg-4 col-12">
-        <sparkline-component
-          :etiquetas="etiquetasVisitasMes"
-          :valores="valoresVisitasMes"
-          :color="'indigo darken-1'"
-          :titulo="'Visitas mes'"
-          :subtitulo="'Visitas registras por días de este mes'"
-        />
+        <sparkline-component :etiquetas="etiquetasVisitasMes" :valores="valoresVisitasMes" :color="'indigo darken-1'"
+          :titulo="'Visitas mes'" :subtitulo="'Visitas registras por días de este mes'" />
       </div>
     </div>
 
     <cartas-personalizadas :cartas="datosPagos" class="mt-3" />
     <div class="row">
       <div class="col-sm-6 col-lg-4 col-12">
-        <sparkline-component
-          :etiquetas="etiquetasPagosSemana"
-          :valores="valoresPagosSemana"
-          :color="'green darken-1'"
-          :titulo="'Pagos semana'"
-          :subtitulo="'Pagos registrados esta semana'"
-        />
+        <sparkline-component :etiquetas="etiquetasPagosSemana" :valores="valoresPagosSemana" :color="'green darken-1'"
+          :titulo="'Pagos semana'" :subtitulo="'Pagos registrados esta semana'" />
       </div>
       <div class="col-sm-6 col-lg-4 col-12">
-        <sparkline-component
-          :etiquetas="etiquetasPagosMes"
-          :valores="valoresPagosMes"
-          :color="'orange darken-1'"
-          :titulo="'Pagos mes'"
-          :subtitulo="'Pagos registrados este mes'"
-        />
+        <sparkline-component :etiquetas="etiquetasPagosMes" :valores="valoresPagosMes" :color="'orange darken-1'"
+          :titulo="'Pagos mes'" :subtitulo="'Pagos registrados este mes'" />
       </div>
       <div class="col-sm-6 col-lg-4 col-12">
-        <sparkline-component
-          :etiquetas="etiquetasPagosMeses"
-          :valores="valoresPagosMeses"
-          :color="'blue darken-1'"
-          :titulo="'Pagos por meses'"
-          :subtitulo="'Pagos registrados por meses de este año'"
-        />
+        <sparkline-component :etiquetas="etiquetasPagosMeses" :valores="valoresPagosMeses" :color="'blue darken-1'"
+          :titulo="'Pagos por meses'" :subtitulo="'Pagos registrados por meses de este año'" />
       </div>
     </div>
     <v-overlay :value="cargando">
       <v-progress-circular size="64"></v-progress-circular>
     </v-overlay>
+    <div class="mt-3"> <selector-tema /></div>
   </div>
+
 </template>
 
 
@@ -84,9 +58,10 @@ import HttpService from "../Servicios/HttpService";
 import Utiles from "../Servicios/Utiles";
 import CartasPersonalizadas from "./Dialogos/CartasPersonalizadas.vue";
 import SparklineComponent from "./Dialogos/SparklineComponent.vue";
+import SelectorTema from "@/components/SelectorTema.vue";
 export default {
   name: "InicioComponent",
-  components: { CartasPersonalizadas, SparklineComponent },
+  components: { CartasPersonalizadas, SparklineComponent, SelectorTema },
 
   data: () => ({
     nombreGimnasio: "",
@@ -206,9 +181,7 @@ export default {
 };
 </script>
 <style>
-
-.bienvenida
-{
+.bienvenida {
   display: flex;
   flex-direction: row;
   width: 100%;

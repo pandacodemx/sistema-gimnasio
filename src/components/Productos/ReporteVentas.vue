@@ -87,17 +87,24 @@ export default {
     },
     methods: {
         generarExcel() {
-            const datos = this.ventas.map(venta => ({
+            const datos = this.ordenarVentas('fecha', false).map(venta => ({
                 Producto: venta.nombre_producto,
                 Cantidad: venta.cantidad,
-                'Monto pagado': venta.total,
+                'Monto pagado': venta.subtotal,
                 Fecha: venta.fecha,
-
             }));
 
             const ws = XLSX.utils.json_to_sheet(datos, { origin: 'A3' });
-            XLSX.utils.sheet_add_aoa(ws, [["Reporte de Pagos de Productos"], [],], { origin: 'A1' });
+
+
+            XLSX.utils.sheet_add_aoa(ws, [["Reporte de Ventas Productos"], [],], { origin: 'A1' });
+
+            // Filtros automáticos (de A3 a D3, o ajusta si hay más columnas)
+            ws['!autofilter'] = { ref: `A3:D${datos.length + 3}` };
+
+
             ws['!cols'] = [{ wch: 20 }, { wch: 15 }, { wch: 15 }, { wch: 20 }];
+
             const wb = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(wb, ws, 'Ventas');
 
@@ -109,7 +116,7 @@ export default {
             const doc = new jsPDF({ orientation: 'portrait', unit: 'pt', format: 'A4' });
 
             const pageWidth = doc.internal.pageSize.getWidth();
-            const title = "Reporte de Pagos de Productos";
+            const title = "Reporte de Ventas Productos";
             doc.setFontSize(18);
             doc.setFont('helvetica', 'bold');
             const textWidth = doc.getTextWidth(title);
@@ -127,7 +134,7 @@ export default {
                 body: this.ventas.map(item => [
                     item.nombre_producto,
                     item.cantidad,
-                    `$${item.total}`,
+                    `$${item.subtotal}`,
                     item.fecha
                 ]),
                 theme: 'striped',
@@ -146,6 +153,13 @@ export default {
             doc.save('reporte_ventas_productos.pdf');
         },
 
+        ordenarVentas(campo, asc = true) {
+            return [...this.ventas].sort((a, b) => {
+                if (a[campo] < b[campo]) return asc ? -1 : 1;
+                if (a[campo] > b[campo]) return asc ? 1 : -1;
+                return 0;
+            });
+        },
         onBuscar(fechas) {
             console.log(fechas);
             this.filtros = {
