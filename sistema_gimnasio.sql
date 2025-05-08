@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 05-05-2025 a las 23:00:16
+-- Tiempo de generación: 08-05-2025 a las 23:16:46
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -76,7 +76,8 @@ INSERT INTO `membresias` (`id`, `nombre`, `duracion`, `precio`) VALUES
 (2, 'Bronce', 10, 120.00),
 (3, 'Plata', 20, 250.00),
 (4, 'Premium', 366, 3000.00),
-(5, 'Regular', 1, 50.00);
+(5, 'Regular', 1, 50.00),
+(6, 'Escolar ', 30, 185.00);
 
 -- --------------------------------------------------------
 
@@ -102,24 +103,24 @@ CREATE TABLE `miembros` (
   `fechaRegistro` datetime NOT NULL,
   `fechaInicio` datetime DEFAULT NULL,
   `fechaFin` datetime DEFAULT NULL,
-  `idMembresia` bigint(20) DEFAULT NULL
+  `idMembresia` bigint(20) DEFAULT NULL,
+  `afiliacion` varchar(250) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `miembros`
 --
 
-INSERT INTO `miembros` (`id`, `matricula`, `nombre`, `telefono`, `direccion`, `edad`, `sufreEnfermedad`, `tieneSeguro`, `enfermedad`, `institucion`, `nombreContacto`, `telefonoContacto`, `imagen`, `estado`, `fechaRegistro`, `fechaInicio`, `fechaFin`, `idMembresia`) VALUES
-(1, '2025-1', 'Said Alfredo Peña ', '3531015780', 'Diego Jose Abad 85 D-7', 30, 0, 1, '', 'IMSS', 'Ma de Lourdes Nava', '3531015780', './imagenes/680803de07cb7.png', 'ACTIVO', '2025-04-11 18:25:23', '2025-04-11 19:40:00', '2025-05-12 19:40:00', 1),
-(2, '2025-2', 'Juan Dominguez Urrutia', '4511237888', 'Blvd. Benito Juarez 78', 30, 1, 1, 'Diabetes ', 'ISSTE', 'Juana Dominguez Urrutia', '4511231122', './imagenes/6807c9ad44e56.png', 'ACTIVO', '2025-04-22 18:54:05', '2025-04-22 18:55:30', '2025-05-23 18:55:30', 1),
-(3, '2025-3', 'Diana Almada ', '3531018888', 'Villa Bonita 278', 23, 0, 1, '', 'IMSS', 'Valeria Dominguez', '101445580', './imagenes/6807e4ee38622.png', 'ACTIVO', '2025-04-22 20:50:22', '2025-04-22 20:53:03', '2025-05-07 20:53:03', 2),
-(4, '2025-4', 'Aurora Antonia Zendejas', '1501028785', 'Mario Moreno 250', 45, 1, 0, 'Asma', 'IMSS', 'Pablo Enrique Escobedo', '314789852', './imagenes/68081533bc9a6.png', 'ACTIVO', '2025-04-23 00:16:19', '2025-04-23 20:15:18', '2026-04-24 20:15:18', 4),
-(5, '2025-5', 'Angel Gutierres Orozco', '1451223585', 'Morelos # 75', 30, 0, 0, '', '', 'Ana Maria Gutierrez ', '1454585570', './imagenes/680930516cac6.png', 'ACTIVO', '2025-04-23 20:24:17', '2025-04-23 20:25:07', '2026-04-24 20:25:07', 4),
-(6, '2025-6', 'Alondra Ordaz Zapien', '4361045858', 'General Reyna 580', 28, 0, 1, '', 'IMSS', 'Alondra Guadalupe Zapien', '4361234545', './imagenes/680932e382cfa.png', 'ACTIVO', '2025-04-23 20:35:15', '2025-04-23 20:35:52', '2026-04-24 20:35:52', 4),
-(9, '2025-8', 'Israel Pruea', '45461616', 'Gaksadas', 23, 1, 1, 'sadasdsa', 'adasdas', 'dasdsad', '21312312', './imagenes/usuario.png', 'ACTIVO', '2025-04-24 21:00:12', '2025-04-28 13:06:15', '2026-04-29 13:06:15', 4),
-(10, '2025-10', 'Monica Dominguez ', '432423423', 'Yandel 65', 23, 0, 0, '', '', 'asdasdasdsa', '12321312', './imagenes/usuario.png', 'ACTIVO', '2025-04-24 21:01:03', '2025-04-28 13:09:12', '2025-05-18 13:09:12', 3),
-(11, '2025-11', 'Juan Santiago Urrutia', '4514567898', 'Zapopan Centro', 35, 0, 1, '', 'IMSS', 'Ana Aldama Urrutia', '123458785', './imagenes/usuario.png', 'ACTIVO', '2025-04-28 13:21:12', '2025-04-28 13:36:23', '2025-05-28 13:36:23', 1),
-(12, '2025-12', 'Prueba Cliente', '1234578998', 'Prueba Domicilio', 50, 0, 0, '', '', 'asdsadas', '21321312', './imagenes/usuario.png', 'ACTIVO', '2025-04-28 13:56:56', '2025-04-28 13:57:17', '2025-05-18 13:57:17', 3);
+INSERT INTO `miembros` (`id`, `matricula`, `nombre`, `telefono`, `direccion`, `edad`, `sufreEnfermedad`, `tieneSeguro`, `enfermedad`, `institucion`, `nombreContacto`, `telefonoContacto`, `imagen`, `estado`, `fechaRegistro`, `fechaInicio`, `fechaFin`, `idMembresia`, `afiliacion`) VALUES
+(1, '2025-1', 'Said Alfredo Peña ', '3531015780', 'Diego Jose Abad 85 D-7', 30, 0, 1, '', 'IMSS', 'Ma de Lourdes Nava', '3531015780', './imagenes/681cfa0c168ab.png', 'ACTIVO', '2025-04-11 18:25:23', '2025-04-11 19:40:00', '2025-05-12 19:40:00', 1, 'PENS19574IALA7'),
+(2, '2025-2', 'Juan Dominguez Urrutia', '4511237888', 'Blvd. Benito Juarez 78', 30, 1, 1, 'Diabetes ', 'ISSTE', 'Juana Dominguez Urrutia', '4511231122', './imagenes/6807c9ad44e56.png', 'ACTIVO', '2025-04-22 18:54:05', '2025-04-22 18:55:30', '2025-05-23 18:55:30', 1, ''),
+(3, '2025-3', 'Diana Almada ', '3531018888', 'Villa Bonita 278', 23, 0, 1, '', 'IMSS', 'Valeria Dominguez', '101445580', './imagenes/681cfa5d3d544.png', 'VENCIDO', '2025-04-22 20:50:22', '2025-04-22 20:53:03', '2025-05-07 20:53:03', 2, ''),
+(4, '2025-4', 'Aurora Antonia Zendejas', '1501028785', 'Mario Moreno 250', 45, 1, 1, 'Asma', 'IMSS', 'Pablo Enrique Escobedo', '314789852', './imagenes/681cfa71f12fb.png', 'ACTIVO', '2025-04-23 00:16:19', '2025-04-23 20:15:18', '2026-04-24 20:15:18', 4, ''),
+(5, '2025-5', 'Angel Gutierres Orozco', '1451223585', 'Morelos # 75', 30, 0, 0, '', '', 'Ana Maria Gutierrez ', '1454585570', './imagenes/680930516cac6.png', 'ACTIVO', '2025-04-23 20:24:17', '2025-04-23 20:25:07', '2026-04-24 20:25:07', 4, ''),
+(6, '2025-6', 'Alondra Ordaz Zapien', '4361045858', 'General Reyna 580', 28, 0, 1, '', 'IMSS', 'Alondra Guadalupe Zapien', '4361234545', './imagenes/680932e382cfa.png', 'ACTIVO', '2025-04-23 20:35:15', '2025-04-23 20:35:52', '2026-04-24 20:35:52', 4, ''),
+(10, '2025-10', 'Monica Dominguez ', '432423423', 'Yandel 65', 23, 0, 0, '', '', 'asdasdasdsa', '12321312', './imagenes/usuario.png', 'ACTIVO', '2025-04-24 21:01:03', '2025-04-28 13:09:12', '2025-05-18 13:09:12', 3, ''),
+(11, '2025-11', 'Juan Santiago Urrutia', '4514567898', 'Zapopan Centro', 35, 0, 1, '', 'IMSS', 'Ana Aldama Urrutia', '123458785', './imagenes/usuario.png', 'ACTIVO', '2025-04-28 13:21:12', '2025-04-28 13:36:23', '2025-05-28 13:36:23', 1, ''),
+(13, '2025-12', 'Juan Dominguez Sanchez', '1234558987', 'Rio Verde #85', 21, 0, 1, '', 'IMSS', 'Juana Ambriz Rivas', '12348568741', './imagenes/681cfa1d8e55f.png', 'ACTIVO', '2025-05-06 13:20:45', '2025-05-06 13:21:47', '2025-06-05 13:21:47', 6, '');
 
 -- --------------------------------------------------------
 
@@ -169,7 +170,11 @@ INSERT INTO `pagos` (`id`, `matricula`, `idMembresia`, `idUsuario`, `fecha`, `mo
 (26, '2025-10', 3, 1, '2025-04-28 00:00:00', 250.00),
 (27, '2025-11', 1, 1, '2025-04-28 00:00:00', 300.00),
 (28, '2025-12', 3, 1, '2025-05-01 00:00:00', 250.00),
-(29, '0', 0, 1, '2025-04-29 08:58:45', 50.00);
+(29, '0', 0, 1, '2025-04-29 08:58:45', 50.00),
+(30, '2025-12', 6, 1, '2025-05-03 00:00:00', 185.00),
+(31, '0', 0, 1, '2025-05-07 11:48:31', 50.00),
+(32, '0', 0, 6, '2025-05-07 13:38:51', 50.00),
+(33, '0', 0, 1, '2025-05-08 12:25:08', 50.00);
 
 -- --------------------------------------------------------
 
@@ -196,17 +201,18 @@ CREATE TABLE `productos` (
   `stock` int(11) DEFAULT NULL,
   `categoria` varchar(50) DEFAULT NULL,
   `imagen` varchar(255) DEFAULT NULL,
-  `creado_en` datetime DEFAULT current_timestamp()
+  `creado_en` datetime DEFAULT current_timestamp(),
+  `activo` tinyint(1) DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `productos`
 --
 
-INSERT INTO `productos` (`id`, `nombre`, `descripcion`, `precio`, `stock`, `categoria`, `imagen`, `creado_en`) VALUES
-(5, 'Generic - Formula INS PSYCHOTIC BLACK 35 SERVICIOS/PRE-ENTRENAMIENTO', 'INSANE LABZ PSYCHOTIC BLACK Psychotic Black es la última incorporación a la familia Psychotic de fórmulas pre-entrenamiento de Insane Labz! Es un Pre-entrenamiento de estímulo moderado, que proporciona solo la energía suficiente para hacer el trabajo , es de efecto rápido y suave por los que es conocida toda nuestra línea psicótica.. Solo para atletas de elíte Está hecho para el atleta de élite y no debe ser utilizado por los principiantes.', 450.00, 12, 'Suplementos y nutrición', 'uploads/681913831c3ed.jpeg', '2025-05-05 12:41:18'),
-(6, 'MUTANT WHEY 5 LBS CHOCOLATE FUDGE BROWNIE', '0.78 oz de proteína, fabricado con 100% suero de leche puro\n0.56 oz de proteína | Hecho wEAAs y BCAAs | 0.37 oz de EAAs y 0.18 oz de BCAA - Natural Presentith 100% puro suero de leche\nENCIMERA DIGESTIVA | Enzimas digestivas añadidas para optimizar la absorción', 985.00, 5, 'Suplementos y nutrición', 'uploads/68190dd7cb222.jpeg', '2025-05-05 13:13:27'),
-(7, 'Botella Shaker para Proteina Gym de 650ml ', 'Con Almacenamiento de Giro y Bloqueo De 3 Capas, 100% Libre de BPA Prueba de Fugas Fitness Deportes (Negro)', 199.00, 30, 'Ropa y accesorios', 'uploads/681910ab9ba92.jpeg', '2025-05-05 13:21:36');
+INSERT INTO `productos` (`id`, `nombre`, `descripcion`, `precio`, `stock`, `categoria`, `imagen`, `creado_en`, `activo`) VALUES
+(5, 'PSYCHOTIC 35 Pre entreno', 'INSANE LABZ PSYCHOTIC BLACK Psychotic Black es la última incorporación a la familia Psychotic de fórmulas pre-entrenamiento de Insane Labz! Es un Pre-entrenamiento de estímulo moderado, que proporciona solo la energía suficiente para hacer el trabajo , es de efecto rápido y suave por los que es conocida toda nuestra línea psicótica.. Solo para atletas de elíte Está hecho para el atleta de élite y no debe ser utilizado por los principiantes.', 450.00, 2, 'Suplementos y nutrición', 'uploads/681913831c3ed.jpeg', '2025-05-05 12:41:18', 1),
+(7, 'Botella Shaker Proteina Gym ', 'Con Almacenamiento de Giro y Bloqueo De 3 Capas, 100% Libre de BPA Prueba de Fugas Fitness Deportes (Negro) 650Ml', 199.00, 14, 'Ropa y accesorios', 'uploads/681910ab9ba92.jpeg', '2025-05-05 13:21:36', 1),
+(8, 'Agua Purificada CIEL 600ML', 'Agua purificada Ciel 600 ml', 15.00, 31, 'Equipamiento y maquinaria', 'uploads/681a330ae0eb9.png', '2025-05-06 10:04:26', 1);
 
 -- --------------------------------------------------------
 
@@ -276,7 +282,8 @@ CREATE TABLE `usuarios` (
 INSERT INTO `usuarios` (`id`, `usuario`, `nombre`, `telefono`, `password`, `id_rol`) VALUES
 (1, 'Administrador ', 'Said Alfredo Peña', '3531015780', '$2y$10$FlPveftGbW7L7OGnZadDKOXliinUN968VBAfAycQd8hgj8HDp0R.u', NULL),
 (3, 'PacoJR', 'Paco Rodriguez', '3531015888', '$2y$10$4uU2wew3CDte4DI5QZa4j.3N.DpWUUgVJufYAOW8alYF5brrzJ8Ai', NULL),
-(5, 'PruebaAdmin', 'Admin Prueba', '123455589', '$2y$10$i6zLqZ4QvZHJti2Idbr3y.YEWxKHYYwtt3nwkf5sTojJ3zeOUVcWa', NULL);
+(5, 'PruebaAdmin', 'Admin Prueba', '123455589', '$2y$10$i6zLqZ4QvZHJti2Idbr3y.YEWxKHYYwtt3nwkf5sTojJ3zeOUVcWa', NULL),
+(6, 'Prueba Ml', 'UsuarioPrueba', '152321', '$2y$10$rAQ/RvNvpsvtX/3LZkRBrud5NSx0mN06SZrcDt8RMTkpEV.S6zGR.', NULL);
 
 -- --------------------------------------------------------
 
@@ -285,11 +292,69 @@ INSERT INTO `usuarios` (`id`, `usuario`, `nombre`, `telefono`, `password`, `id_r
 --
 
 CREATE TABLE `ventas` (
-  `id` bigint(20) NOT NULL,
-  `id_miembro` bigint(20) DEFAULT NULL,
+  `id` int(11) NOT NULL,
   `total` decimal(10,2) NOT NULL,
-  `fecha` datetime NOT NULL
+  `fecha` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `ventas`
+--
+
+INSERT INTO `ventas` (`id`, `total`, `fecha`) VALUES
+(11, 221.00, '2025-05-06 18:22:30'),
+(12, 737.00, '2025-05-06 19:01:07'),
+(13, 22.00, '2025-05-06 19:16:12'),
+(14, 933.00, '2025-05-06 19:25:24'),
+(15, 398.00, '2025-05-06 21:06:02'),
+(16, 210.00, '2025-05-07 19:55:11'),
+(17, 649.00, '2025-05-07 19:59:26'),
+(18, 210.00, '2025-05-08 16:03:32'),
+(19, 30.00, '2025-05-08 16:03:48'),
+(20, 398.00, '2025-05-08 17:58:07'),
+(21, 649.00, '2025-05-08 19:12:27'),
+(22, 428.00, '2025-05-08 20:30:36');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `ventas_productos`
+--
+
+CREATE TABLE `ventas_productos` (
+  `id` int(11) NOT NULL,
+  `venta_id` int(11) NOT NULL,
+  `producto_id` int(11) NOT NULL,
+  `cantidad` int(11) NOT NULL,
+  `subtotal` decimal(10,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `ventas_productos`
+--
+
+INSERT INTO `ventas_productos` (`id`, `venta_id`, `producto_id`, `cantidad`, `subtotal`) VALUES
+(14, 11, 8, 2, 22.00),
+(15, 11, 7, 1, 199.00),
+(16, 12, 8, 8, 88.00),
+(17, 12, 7, 1, 199.00),
+(18, 12, 5, 1, 450.00),
+(19, 13, 8, 2, 22.00),
+(20, 14, 8, 3, 33.00),
+(21, 14, 5, 2, 900.00),
+(22, 15, 7, 2, 398.00),
+(23, 16, 8, 1, 11.00),
+(24, 16, 7, 1, 199.00),
+(25, 17, 7, 1, 199.00),
+(26, 17, 5, 1, 450.00),
+(27, 18, 8, 1, 11.00),
+(28, 18, 7, 1, 199.00),
+(29, 19, 8, 2, 30.00),
+(30, 20, 7, 2, 398.00),
+(31, 21, 5, 1, 450.00),
+(32, 21, 7, 1, 199.00),
+(33, 22, 8, 2, 30.00),
+(34, 22, 7, 2, 398.00);
 
 -- --------------------------------------------------------
 
@@ -341,7 +406,15 @@ INSERT INTO `visitas` (`id`, `idMiembro`, `idUsuario`, `idMembresia`, `fecha`) V
 (29, 11, 1, 1, '2025-04-28 13:36:41'),
 (30, 12, 1, 3, '2025-04-28 13:58:08'),
 (31, NULL, 1, NULL, '2025-04-29 08:58:45'),
-(32, 5, 1, 4, '2025-04-29 09:34:33');
+(32, 5, 1, 4, '2025-04-29 09:34:33'),
+(33, 1, 1, 1, '2025-05-05 16:27:19'),
+(34, 1, 1, 1, '2025-05-06 13:17:29'),
+(35, 13, 1, 6, '2025-05-06 13:22:35'),
+(36, 4, 1, 4, '2025-05-07 11:44:59'),
+(37, NULL, 1, NULL, '2025-05-07 11:48:31'),
+(38, NULL, 6, NULL, '2025-05-07 13:38:51'),
+(39, NULL, 1, NULL, '2025-05-08 12:25:08'),
+(40, 1, 1, 1, '2025-05-08 13:11:33');
 
 --
 -- Índices para tablas volcadas
@@ -417,6 +490,14 @@ ALTER TABLE `ventas`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indices de la tabla `ventas_productos`
+--
+ALTER TABLE `ventas_productos`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `venta_id` (`venta_id`),
+  ADD KEY `producto_id` (`producto_id`);
+
+--
 -- Indices de la tabla `visitas`
 --
 ALTER TABLE `visitas`
@@ -436,19 +517,19 @@ ALTER TABLE `gastos`
 -- AUTO_INCREMENT de la tabla `membresias`
 --
 ALTER TABLE `membresias`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de la tabla `miembros`
 --
 ALTER TABLE `miembros`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT de la tabla `pagos`
 --
 ALTER TABLE `pagos`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- AUTO_INCREMENT de la tabla `permisos`
@@ -460,7 +541,7 @@ ALTER TABLE `permisos`
 -- AUTO_INCREMENT de la tabla `productos`
 --
 ALTER TABLE `productos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT de la tabla `recordatorios_enviados`
@@ -484,19 +565,25 @@ ALTER TABLE `rol_permiso`
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de la tabla `ventas`
 --
 ALTER TABLE `ventas`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+
+--
+-- AUTO_INCREMENT de la tabla `ventas_productos`
+--
+ALTER TABLE `ventas_productos`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 
 --
 -- AUTO_INCREMENT de la tabla `visitas`
 --
 ALTER TABLE `visitas`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
 
 --
 -- Restricciones para tablas volcadas
@@ -514,6 +601,13 @@ ALTER TABLE `rol_permiso`
 --
 ALTER TABLE `usuarios`
   ADD CONSTRAINT `fk_usuarios_roles` FOREIGN KEY (`id_rol`) REFERENCES `roles` (`id`);
+
+--
+-- Filtros para la tabla `ventas_productos`
+--
+ALTER TABLE `ventas_productos`
+  ADD CONSTRAINT `ventas_productos_ibfk_1` FOREIGN KEY (`venta_id`) REFERENCES `ventas` (`id`),
+  ADD CONSTRAINT `ventas_productos_ibfk_2` FOREIGN KEY (`producto_id`) REFERENCES `productos` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
