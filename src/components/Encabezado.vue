@@ -20,11 +20,11 @@
           <img :src="urlImagen(logo)" alt="Logo">
         </v-list-item-avatar>
         <v-list-item-content>
-          <v-list-item-title class="text-h6 font-weight-bold white--text">
+          <v-list-item-title class="font-weight-bold white--text">
             {{ nombreGimnasio }}
           </v-list-item-title>
-          <v-list-item-subtitle class="white--text text-caption mt-1">
-            Sesión iniciada: {{ nombreUsuario }}
+          <v-list-item-subtitle class="white--text  mt-1">
+            Sesión: {{ nombreUsuario }}
           </v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
