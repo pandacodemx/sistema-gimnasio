@@ -130,19 +130,19 @@ export default {
         {
           color: "pink darken-1",
           icono: "mdi-calendar",
-          nombre: "Visitas hoy",
+          nombre: "Hoy",
           total: visitas.visitasHoy,
         },
         {
           color: "red darken-1",
           icono: "mdi-calendar-range",
-          nombre: "Visitas semana",
+          nombre: "Semana",
           total: visitas.visitasSemana,
         },
         {
           color: "indigo darken-1",
           icono: "mdi-calendar-month",
-          nombre: "Visitas mes",
+          nombre: "Mes",
           total: visitas.visitasMes,
         },
       ];
@@ -156,19 +156,19 @@ export default {
         {
           color: "teal darken-1",
           icono: "mdi-calendar",
-          nombre: "Pagos hoy",
+          nombre: "Hoy",
           total: "$" + pagos.pagosHoy,
         },
         {
           color: "green darken-1",
           icono: "mdi-calendar-range",
-          nombre: "Pagos semana",
+          nombre: "Semana",
           total: "$" + pagos.pagosSemana,
         },
         {
           color: "orange darken-1",
           icono: "mdi-calendar-month",
-          nombre: "Pagos mes",
+          nombre: "Mes",
           total: "$" + pagos.pagosMes,
         },
       ];
