@@ -21,9 +21,7 @@
           </v-toolbar>
 
           <div class="d-flex justify-center mb-4">
-            <v-img
-              src="https://static.vecteezy.com/system/resources/thumbnails/044/812/143/small_2x/dynamic-fitness-gym-logo-on-transparent-background-png.png"
-              contain width="80" height="80"></v-img>
+            <v-img src="https://i.ibb.co/pBRCQvhh/Logotipo-Bonito.png" contain width="150" height="150"></v-img>
           </div>
 
           <v-card-text>

@@ -63,13 +63,13 @@ function registrarPago($pago)
     $sentencia = "INSERT INTO pagos (matricula, idMembresia, idUsuario, fecha, monto) VALUES (?,?,?,?,?)";
     $parametros = [$pago->matricula, $pago->idMembresia, $pago->idUsuario, $pago->fecha, $pago->pago];
     $pagoRegistrado = insertar($sentencia, $parametros);
-    if ($pagoRegistrado) return actualizarMembresia($pago->matricula, $pago->idMembresia, $pago->duracion);
+    if ($pagoRegistrado) return actualizarMembresia($pago->matricula, $pago->idMembresia, $pago->duracion, $pago->fecha);
 }
 
-function actualizarMembresia($matricula, $idMembresia, $duracion)
+function actualizarMembresia($matricula, $idMembresia, $duracion, $fechaInicio)
 {
-    $sentencia = "UPDATE miembros SET idMembresia = ?, estado = ?, fechaInicio = ?, fechaFin = DATE_ADD(fechaInicio, INTERVAL ? DAY) WHERE matricula = ? ";
-    $parametros = [$idMembresia, 'ACTIVO', date("Y-m-d H:i:s"), $duracion, $matricula];
+    $sentencia = "UPDATE miembros SET idMembresia = ?, estado = ?, fechaInicio = ?, fechaFin = DATE_ADD(?, INTERVAL ? DAY) WHERE matricula = ? ";
+    $parametros = [$idMembresia, 'ACTIVO', $fechaInicio, $fechaInicio, $duracion, $matricula];
     return editar($sentencia, $parametros);
 }
 

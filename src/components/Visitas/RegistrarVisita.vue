@@ -4,9 +4,8 @@
     <v-card class="mx-auto mt-3 px-5" v-if="!miembro">
       <v-card-actions class="justify-space-around flex-wrap">
         <img class="img_visita"
-          src="https://static.vecteezy.com/system/resources/previews/025/002/016/non_2x/3d-sportsman-character-sculpting-upper-body-with-incline-bench-press-workout-free-png.png"
-          alt="">
-
+          src="https://i.ibb.co/67pHfVwZ/3d-sportsman-character-sculpting-upper-body-with-incline-bench-press-workout-free-png.webp"
+          alt="Visita">
         <div class="d-flex flex-column box-check">
           <v-card-title class="title-card text-center">
             Escribe nombre/matrícula del miembro o registra una visita
@@ -16,6 +15,8 @@
             Registrar visita regular
           </v-btn>
         </div>
+
+
 
       </v-card-actions>
     </v-card>

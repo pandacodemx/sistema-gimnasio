@@ -329,19 +329,21 @@ export default {
     },
     claseMembresia(nombre) {
       const tipo = (nombre && nombre.toLowerCase()) || ''
-      if (tipo.includes('oro')) return 'medalla-oro'
-      if (tipo.includes('plata')) return 'medalla-plata'
-      if (tipo.includes('bronce')) return 'medalla-bronce'
-      if (tipo.includes('premium')) return 'medalla-premium'
+      if (tipo.includes('semanal')) return 'medalla-oro'
+      if (tipo.includes('mensual hombre')) return 'medalla-plata'
+      if (tipo.includes('mensual mujer')) return 'medalla-mujer'
+      if (tipo.includes('mensual pareja / estudiante')) return 'medalla-bronce'
+      if (tipo.includes('semestral')) return 'medalla-premium'
       return 'medalla-default'
     },
 
     iconoMembresia(nombre) {
       const tipo = (nombre && nombre.toLowerCase()) || ''
-      if (tipo.includes('oro')) return 'mdi-trophy'
-      if (tipo.includes('plata')) return 'mdi-medal'
-      if (tipo.includes('bronce')) return 'mdi-star-outline'
-      if (tipo.includes('premium')) return 'mdi-diamond'
+      if (tipo.includes('semanal')) return 'mdi-trophy'
+      if (tipo.includes('mensual hombre')) return 'mdi-face-man'
+      if (tipo.includes('mensual mujer')) return 'mdi-face-woman'
+      if (tipo.includes('mensual pareja / estudiante')) return 'mdi-human-male-female'
+      if (tipo.includes('semestral')) return 'mdi-calendar-range'
       return 'mdi-certificate'
     }
   },
@@ -395,5 +397,42 @@ body {
 
 .v-tooltip {
   font-size: 13px;
+}
+
+
+.medalla {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-weight: bold;
+  font-size: 14px;
+  color: #fff;
+  text-transform: capitalize;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.medalla-oro {
+  background: linear-gradient(145deg, #0f4933, #21a572);
+}
+
+.medalla-plata {
+  background: linear-gradient(145deg, #016e8f, #03bff8);
+}
+
+.medalla-bronce {
+  background: linear-gradient(145deg, #cd3232, #b84333);
+}
+
+.medalla-mujer {
+  background: linear-gradient(145deg, #7c1a43, #f35a9a);
+}
+
+.medalla-premium {
+  background: linear-gradient(145deg, #6d1a7c, #b83bee);
+}
+
+.medalla-default {
+  background: linear-gradient(145deg, #546E7A, #6c8692);
 }
 </style>

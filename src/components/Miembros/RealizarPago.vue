@@ -2,64 +2,40 @@
   <div>
     <v-card>
       <v-card-title>
-        <span >Realizar pago para {{matricula}}</span>
+        <span>Realizar pago para {{ matricula }}</span>
       </v-card-title>
-      <v-alert
-      
-      shaped
-      prominent
-      type="error"
-      
-    >
-      Atencion! Revise atentamente la membresia seleccionada, una vez guardada no hay forma de ser modificada.
-    </v-alert>
+      <v-alert shaped prominent type="error">
+        Atencion! Revise atentamente la membresia seleccionada, una vez guardada no hay forma de ser modificada.
+      </v-alert>
       <v-card-text>
-          <v-container>
-            <v-select
-              v-model="membresiaSeleccionada"
-              :hint="`${membresiaSeleccionada.nombre} | $${membresiaSeleccionada.precio} | ${membresiaSeleccionada.duracion} Dias`"
-              :items="membresias"
-              item-text="nombre"
-              item-value="id"
-              label="Selecciona una membresía"
-              persistent-hint
-              return-object
-              single-line
-            >
-            </v-select>
-            <v-row justify="center mt-5">
-              <v-date-picker
-                v-model="fechaSeleccionada"
-                :first-day-of-week="1"
-                locale="es-se"
-              >
-              </v-date-picker>
-            </v-row>
-          </v-container>
+        <v-container>
+          <v-select v-model="membresiaSeleccionada"
+            :hint="`${membresiaSeleccionada.nombre} | $${membresiaSeleccionada.precio} | ${membresiaSeleccionada.duracion} Dias`"
+            :items="membresias" item-text="nombre" item-value="id" label="Selecciona una membresía" persistent-hint
+            return-object single-line>
+          </v-select>
+          <v-row class="mt-5 justify-center">
+            <v-date-picker v-model="fechaSeleccionada" :first-day-of-week="1" locale="es-se"
+              type="date"></v-date-picker>
+          </v-row>
+        </v-container>
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn color="primary" text @click="cerrarDialogo">
           Cerrar
         </v-btn>
-        <v-btn
-          color="white"
-          text
-          @click="realizarPago"
-        >
+        <v-btn color="white" text @click="realizarPago">
           Registrar
         </v-btn>
       </v-card-actions>
     </v-card>
     <v-overlay :value="cargando">
-      <v-progress-circular
-        indeterminate
-        size="64"
-    ></v-progress-circular>
+      <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay>
 
   </div>
-  
+
 </template>
 <script>
 import HttpService from '../../Servicios/HttpService'
@@ -67,7 +43,7 @@ export default {
   name: "RealizarPago",
   props: ["matricula"],
 
-  data:()=>({
+  data: () => ({
     membresiaSeleccionada: { id: "", nombre: "", precio: "", duracion: "" },
     fechaSeleccionada: new Date(
       Date.now() - new Date().getTimezoneOffset() * 60000
@@ -78,11 +54,11 @@ export default {
     cargando: false
   }),
 
-  mounted(){
+  mounted() {
     this.obtenerMembresias();
   },
 
-  methods:{
+  methods: {
     obtenerMembresias() {
       const payload = { metodo: "get" };
       HttpService.obtenerConDatos(payload, "membresias.php").then(
@@ -92,14 +68,18 @@ export default {
       );
     },
 
-    cerrarDialogo(){
+    cerrarDialogo() {
       this.$emit("cerrar", false)
     },
 
-    realizarPago(){
-      if(!this.membresiaSeleccionada) return
-      this.cargando = true
-      
+    realizarPago() {
+      if (!this.membresiaSeleccionada) return;
+      this.cargando = true;
+
+      // Asegura que la fecha esté en formato YYYY-MM-DD
+      let fecha = new Date(this.fechaSeleccionada);
+      let fechaFormateada = fecha.toISOString().substr(0, 10);
+
       let payload = {
         metodo: 'pagar',
         pago: {
@@ -107,22 +87,22 @@ export default {
           pago: this.membresiaSeleccionada.precio,
           idMembresia: this.membresiaSeleccionada.id,
           duracion: this.membresiaSeleccionada.duracion,
-          fecha: this.fechaSeleccionada,
+          fecha: fechaFormateada,
           idUsuario: localStorage.getItem('idUsuario')
         }
-      }
+      };
+      console.log('Fecha seleccionada:', this.fechaSeleccionada);
 
+      HttpService.registrar(payload, "miembros.php")
+        .then((registrado) => {
+          this.cargando = false;
+          if (registrado) {
+            this.$emit("pagado", registrado);
+            console.log(registrado);
+          }
+        });
 
-      HttpService.registrar(payload,"miembros.php")
-      .then(registrado => {
-        if(registrado){
-          this.cargando = false
-          this.$emit("pagado", registrado)
-          console.log(registrado)
-        }
-      })
-
-      console.log(payload)
+      console.log(payload);
     }
 
   }
