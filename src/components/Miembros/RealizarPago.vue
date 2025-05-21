@@ -76,19 +76,29 @@ export default {
       if (!this.membresiaSeleccionada) return;
       this.cargando = true;
 
-      // Obtener fecha seleccionada con hora actual
       const fechaSeleccionada = new Date(this.fechaSeleccionada);
       const ahora = new Date();
-      fechaSeleccionada.setHours(ahora.getHours());
-      fechaSeleccionada.setMinutes(ahora.getMinutes());
-      fechaSeleccionada.setSeconds(ahora.getSeconds());
 
-      // Formato: "YYYY-MM-DD HH:MM:SS" (hora local)
-      const formatDateTime = (date) => {
-        const pad = num => num.toString().padStart(2, '0');
-        return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ` +
-          `${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
+      const año = fechaSeleccionada.getFullYear();
+      const mes = fechaSeleccionada.getMonth();
+      const dia = fechaSeleccionada.getDate();
+
+      const fechaCompleta = new Date(año, mes, dia,
+        ahora.getHours(),
+        ahora.getMinutes(),
+        ahora.getSeconds());
+
+      const formatDateTimeMexico = () => {
+        const [year, month, day] = this.fechaSeleccionada.split('-');
+        const ahora = new Date();
+
+        const horas = String(ahora.getHours()).padStart(2, '0');
+        const minutos = String(ahora.getMinutes()).padStart(2, '0');
+        const segundos = String(ahora.getSeconds()).padStart(2, '0');
+
+        return `${year}-${month}-${day} ${horas}:${minutos}:${segundos}`;
       };
+
 
       let payload = {
         metodo: 'pagar',
@@ -97,10 +107,12 @@ export default {
           pago: this.membresiaSeleccionada.precio,
           idMembresia: this.membresiaSeleccionada.id,
           duracion: this.membresiaSeleccionada.duracion,
-          fecha: formatDateTime(fechaSeleccionada),
+          fecha: formatDateTimeMexico(),
           idUsuario: localStorage.getItem('idUsuario')
         }
       };
+
+      console.log('Fecha enviada:', payload.pago.fecha);
 
       HttpService.registrar(payload, "miembros.php")
         .then((registrado) => {

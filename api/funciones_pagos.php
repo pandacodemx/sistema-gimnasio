@@ -1,8 +1,8 @@
 <?php
 include_once "base_datos.php";
 
-
-function obtenerPagos($filtros){
+function obtenerPagos($filtros)
+{
     $fechaInicio = (isset($filtros->fechaInicio)) ? $filtros->fechaInicio : FECHA_HOY;
     $fechaFin = (isset($filtros->fechaFin)) ? $filtros->fechaFin : FECHA_HOY;
 
@@ -18,7 +18,8 @@ function obtenerPagos($filtros){
     return selectPrepare($sentencia, $parametros);
 }
 
-function obtenerTotalesPago($filtros){
+function obtenerTotalesPago($filtros)
+{
     $fechaInicio = (isset($filtros->fechaInicio)) ? $filtros->fechaInicio : FECHA_HOY;
     $fechaFin = (isset($filtros->fechaFin)) ? $filtros->fechaFin : FECHA_HOY;
 
@@ -27,7 +28,8 @@ function obtenerTotalesPago($filtros){
     return selectPrepare($sentencia, $parametros)[0]->totalPagos;
 }
 
-function obtenerTotalesMembresia($filtros){
+function obtenerTotalesMembresia($filtros)
+{
     $fechaInicio = (isset($filtros->fechaInicio)) ? $filtros->fechaInicio : FECHA_HOY;
     $fechaFin = (isset($filtros->fechaFin)) ? $filtros->fechaFin : FECHA_HOY;
 
@@ -40,7 +42,8 @@ function obtenerTotalesMembresia($filtros){
     return selectPrepare($sentencia, $parametros);
 }
 
-function obtenerTotalesPorUsuario($filtros){
+function obtenerTotalesPorUsuario($filtros)
+{
     $fechaInicio = (isset($filtros->fechaInicio)) ? $filtros->fechaInicio : FECHA_HOY;
     $fechaFin = (isset($filtros->fechaFin)) ? $filtros->fechaFin : FECHA_HOY;
 
@@ -53,7 +56,8 @@ function obtenerTotalesPorUsuario($filtros){
     return selectPrepare($sentencia, $parametros);
 }
 
-function obtenerTotalesPorMiembro($filtros){
+function obtenerTotalesPorMiembro($filtros)
+{
     $fechaInicio = (isset($filtros->fechaInicio)) ? $filtros->fechaInicio : FECHA_HOY;
     $fechaFin = (isset($filtros->fechaFin)) ? $filtros->fechaFin : FECHA_HOY;
 
@@ -66,4 +70,3 @@ function obtenerTotalesPorMiembro($filtros){
     $parametros = [$fechaInicio, $fechaFin];
     return selectPrepare($sentencia, $parametros);
 }
-
