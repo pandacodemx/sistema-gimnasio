@@ -76,9 +76,19 @@ export default {
       if (!this.membresiaSeleccionada) return;
       this.cargando = true;
 
-      // Asegura que la fecha esté en formato YYYY-MM-DD
-      let fecha = new Date(this.fechaSeleccionada);
-      let fechaFormateada = fecha.toISOString().substr(0, 10);
+      // Obtener fecha seleccionada con hora actual
+      const fechaSeleccionada = new Date(this.fechaSeleccionada);
+      const ahora = new Date();
+      fechaSeleccionada.setHours(ahora.getHours());
+      fechaSeleccionada.setMinutes(ahora.getMinutes());
+      fechaSeleccionada.setSeconds(ahora.getSeconds());
+
+      // Formato: "YYYY-MM-DD HH:MM:SS" (hora local)
+      const formatDateTime = (date) => {
+        const pad = num => num.toString().padStart(2, '0');
+        return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ` +
+          `${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
+      };
 
       let payload = {
         metodo: 'pagar',
@@ -87,22 +97,18 @@ export default {
           pago: this.membresiaSeleccionada.precio,
           idMembresia: this.membresiaSeleccionada.id,
           duracion: this.membresiaSeleccionada.duracion,
-          fecha: fechaFormateada,
+          fecha: formatDateTime(fechaSeleccionada),
           idUsuario: localStorage.getItem('idUsuario')
         }
       };
-      console.log('Fecha seleccionada:', this.fechaSeleccionada);
 
       HttpService.registrar(payload, "miembros.php")
         .then((registrado) => {
           this.cargando = false;
           if (registrado) {
             this.$emit("pagado", registrado);
-            console.log(registrado);
           }
         });
-
-      console.log(payload);
     }
 
   }
