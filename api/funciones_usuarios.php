@@ -38,7 +38,11 @@ function editarUsuario($usuario)
 
 function iniciarSesion($usuario)
 {
-    $sentencia = "SELECT id, usuario, password, id_rol FROM usuarios WHERE usuario = ?";
+    $sentencia = "SELECT u.id, u.usuario, u.password, u.id_rol, r.nombre AS nombre_rol
+  FROM usuarios u
+  JOIN roles r ON u.id_rol = r.id
+  WHERE u.usuario = ?";
+
     $parametros  = [$usuario->usuario];
 
     $resultado = selectPrepare($sentencia, $parametros)[0];
@@ -48,10 +52,11 @@ function iniciarSesion($usuario)
         if ($resultado && $passwordVerificada) {
             $usuario = [
                 "nombreUsuario" => $resultado->usuario,
-                "idUsuario" => $resultado->id
+                "idUsuario" => $resultado->id,
+                "idRol" => $resultado->id_rol,
+                "rol" => $resultado->nombre_rol
             ];
 
-            // Obtener los permisos del usuario
             $permisos = obtenerPermisosPorUsuario($resultado->id);
             $usuario["permisos"] = $permisos;
 

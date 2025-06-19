@@ -95,6 +95,7 @@ export default {
     mainItems: [
       { title: "Inicio", icon: "mdi-view-dashboard", link: "/" },
       { title: "Registrar visita", icon: "mdi-home-account", link: "/registrar-visita" },
+      { title: "Scanner", icon: "mdi-home-account", link: "/scanner" },
     ],
     registerItems: [
       { title: "Usuarios", icon: "mdi-account-box", link: "/usuarios" },

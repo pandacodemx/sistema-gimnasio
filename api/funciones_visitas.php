@@ -1,13 +1,17 @@
 <?php
 include_once "base_datos.php";
 
-function registrarVisista($visita){
+function registrarVisista($visita)
+{
     $sentencia =  "INSERT INTO visitas (idMiembro, idUsuario, idMembresia, fecha) VALUES (?,?,?,?)";
     $parametros = [$visita->idMiembro, $visita->idUsuario, $visita->idMembresia, date("Y-m-d H:i:s")];
     return insertar($sentencia, $parametros);
 }
 
-function obtenerVisitas($filtros) {
+
+
+function obtenerVisitas($filtros)
+{
     $fechaInicio = (isset($filtros->fechaInicio)) ? $filtros->fechaInicio : FECHA_HOY;
     $fechaFin = (isset($filtros->fechaFin)) ? $filtros->fechaFin : FECHA_HOY;
 
@@ -23,7 +27,8 @@ function obtenerVisitas($filtros) {
     return selectPrepare($sentencia, $parametros);
 }
 
-function obtenerTotalesMembresias($filtros){
+function obtenerTotalesMembresias($filtros)
+{
     $fechaInicio = (isset($filtros->fechaInicio)) ? $filtros->fechaInicio : FECHA_HOY;
     $fechaFin = (isset($filtros->fechaFin)) ? $filtros->fechaFin : FECHA_HOY;
 
@@ -39,7 +44,8 @@ function obtenerTotalesMembresias($filtros){
     return selectPrepare($sentencia, $parametros);
 }
 
-function obtenerTotalesPorUsuario($filtros){
+function obtenerTotalesPorUsuario($filtros)
+{
     $fechaInicio = (isset($filtros->fechaInicio)) ? $filtros->fechaInicio : FECHA_HOY;
     $fechaFin = (isset($filtros->fechaFin)) ? $filtros->fechaFin : FECHA_HOY;
 
@@ -52,7 +58,8 @@ function obtenerTotalesPorUsuario($filtros){
     return selectPrepare($sentencia, $parametros);
 }
 
-function obtenerTotalesPorMiembro($filtros){
+function obtenerTotalesPorMiembro($filtros)
+{
     $fechaInicio = (isset($filtros->fechaInicio)) ? $filtros->fechaInicio : FECHA_HOY;
     $fechaFin = (isset($filtros->fechaFin)) ? $filtros->fechaFin : FECHA_HOY;
 
@@ -66,7 +73,8 @@ function obtenerTotalesPorMiembro($filtros){
     return selectPrepare($sentencia, $parametros);
 }
 
-function registrarVisitaRegular($visita){
+function registrarVisitaRegular($visita)
+{
     $idUsuario = $visita->idUsuario;
     $monto = $visita->pago;
 
@@ -75,9 +83,7 @@ function registrarVisitaRegular($visita){
 
     $visita = insertar($sentenciaVisita, [$idUsuario, date("Y-m-d H:i:s")]);
 
-    $pago = insertar($sentenciaPago, ['0','0', $idUsuario, date("Y-m-d H:i:s"), $monto]);
+    $pago = insertar($sentenciaPago, ['0', '0', $idUsuario, date("Y-m-d H:i:s"), $monto]);
 
     return $visita && $pago;
-
 }
-

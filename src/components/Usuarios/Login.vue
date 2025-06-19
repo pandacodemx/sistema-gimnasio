@@ -100,10 +100,20 @@ export default {
       }
       HttpService.obtenerConDatos(payload, "usuarios.php")
         .then(resultado => {
-          if (resultado) {
-            this.$emit("logeado", resultado)
+          if (resultado && resultado.resultado) {
+            const datos = resultado.datos;
+            localStorage.setItem("usuario", JSON.stringify(datos));
+            this.$router.push("/dashboard").catch(err => {
+              if (err.name !== 'NavigationDuplicated') {
+                throw err;
+              }
+            });
+          } else {
+            this.mostrarMensaje = true;
+            this.mensaje.texto = "Usuario o contraseña incorrectos";
+            this.mensaje.color = "error";
           }
-        })
+        });
     },
     abrirSoporte() {
       this.mostrarMensaje = true;

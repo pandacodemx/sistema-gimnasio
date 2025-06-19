@@ -17,6 +17,7 @@ import MiPerfil from "../components/Usuarios/MiPerfil";
 import ProductosComponente from "../components/Productos/ProductosComponente.vue";
 import Ventas from "../components/Productos/Ventas.vue";
 import ReporteVentas from "../components/Productos/ReporteVentas.vue";
+import ScannerQE from "../components/Miembros/ScannerQR.vue";
 
 Vue.use(Router);
 
@@ -36,6 +37,11 @@ export default new Router({
       path: "/miembros",
       name: "Miembros",
       component: Miembros
+    },
+    {
+      path: "/scanner",
+      name: "ScannerQE",
+      component: ScannerQE
     },
     {
       path: "/nuevo-miembro",

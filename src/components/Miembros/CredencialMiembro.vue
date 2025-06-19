@@ -16,36 +16,42 @@
       <img :src="urlImagen(miembro.imagen)" alt="Foto" class="foto-miembro" />
       <h2 class="nombre-miembro">{{ miembro.nombre }}</h2>
       <p class="matricula">Matrícula: <b>{{ miembro.matricula }}</b></p>
-
-      <div class="info-miembro">
-        <p><b>Teléfono:</b> {{ miembro.telefono }}</p>
-        <p><b>Dirección:</b> {{ miembro.direccion }}</p>
-        <p><b>Miembro desde:</b> {{ miembro.fechaRegistro }}</p>
+      <div class="qr-container">
+        <img :src="qrCodeUrl" alt="QR de asistencia" width="120">
       </div>
     </div>
 
     <!-- Reverso -->
     <div class="credencial credencial-reverso" :class="colorTheme">
+      <div class="info-miembro">
+        <p><b>Teléfono:</b> {{ miembro.telefono }}</p>
+        <p><b>Dirección:</b> {{ miembro.direccion }}</p>
+        <p><b>Miembro desde:</b> {{ miembro.fechaRegistro }}</p>
+      </div>
+
+      <hr>
       <h3>En caso de emergencia</h3>
       <p><b>Nombre:</b> {{ miembro.nombreContacto }}</p>
       <p><b>Teléfono:</b> {{ miembro.telefonoContacto }}</p>
       <p><b>Enfermedad(es):</b> {{ miembro.enfermedad }}</p>
       <p><b>Seguro en:</b> {{ miembro.institucion }}</p>
-
-
     </div>
+
+
   </div>
 </template>
 
 <script>
 import Printd from "printd";
 import Utiles from '../../Servicios/Utiles'
+import QRCode from 'qrcode';
 const d = new Printd();
 export default {
   name: "CredencialMiembro",
   props: ["matricula", "miembro"],
 
   data: () => ({
+    qrCodeUrl: '',
     colorTheme: 'rojo',
     colorThemes: {
       rojo: {
@@ -198,8 +204,9 @@ export default {
     this.direccionGimnasio = localStorage.getItem("direccionGimnasio")
   },
 
-  mounted() {
+  async mounted() {
 
+    await this.generarQR();
 
     this.d = new Printd()
     const { contentWindow } = this.d.getIFrame();
@@ -210,12 +217,22 @@ export default {
       console.log("after print event!")
     );
 
-
-
-    this.imprimir()
+    this.imprimir();
   },
 
   methods: {
+    async generarQR() {
+      try {
+        const datosQR = {
+          miembroId: this.miembro.id,
+          gimnasioId: localStorage.getItem("idGimnasio"),
+          timestamp: Date.now() // Opcional: evita reutilización
+        };
+        this.qrCodeUrl = await QRCode.toDataURL(JSON.stringify(datosQR));
+      } catch (error) {
+        console.error("Error al generar QR:", error);
+      }
+    },
     urlImagen(imagen) {
       return Utiles.generarURL(imagen);
     },
@@ -229,6 +246,22 @@ export default {
 }
 </script>
 <style>
+.qr-container {
+  margin: 15px auto;
+  text-align: center;
+  padding: 10px;
+  background: white;
+  border-radius: 8px;
+  width: 140px;
+}
+
+.qr-container img {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 15px;
+}
+
 #credencial-wrapper {
   display: flex;
   gap: 20px;
