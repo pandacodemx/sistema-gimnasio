@@ -1,63 +1,33 @@
 <template>
     <div class="miembros">
         <h1>Usuarios</h1>
-        <v-btn 
-        fab dark x-large elevation="8" 
-        color="primary" 
-        fixed right bottom
-        to="/nuevo-usuario">
-        <v-icon dark>add</v-icon>
+        <v-btn fab dark x-large elevation="8" fixed right bottom to="/nuevo-usuario">
+            <v-icon dark>add</v-icon>
         </v-btn>
 
-        <v-data-table
-        :loading="cargando"
-        :headers="encabezadoTabla"
-        :items="usuarios"
-        sort-by="nombre"
-        class="elevation-1"
-        :footer-props="{itemsPerPageText: 'Por página'}"
-        >
-        <template v-slot:[`item.opciones`]="{ item }">
-            <v-btn
-                    color="secondary"
-                    small
-                    fab
-                    dark
-                    v-bind="attrs"
-                    v-on="on"
-                    @click="editar(item.id)"
-                    >
+        <v-data-table :loading="cargando" :headers="encabezadoTabla" :items="usuarios" sort-by="nombre"
+            class="elevation-1" :footer-props="{ itemsPerPageText: 'Por página' }">
+            <template v-slot:[`item.opciones`]="{ item }">
+                <v-btn color="secondary" small fab dark @click="editar(item.id)">
                     <v-icon>mdi-pencil-box-outline</v-icon>
-            </v-btn>
-            <v-btn
-                color="error"
-                small
-                fab
-                dark
-                v-bind="attrs"
-                v-on="on"
-                 @click="eliminar(item)"
-                >
-                <v-icon>mdi-delete</v-icon>
-            </v-btn>
-        </template>
+                </v-btn>
+                <v-btn color="error" small fab dark @click="eliminar(item)">
+                    <v-icon>mdi-delete</v-icon>
+                </v-btn>
+            </template>
         </v-data-table>
         <v-dialog v-model="mostrarDialogoEliminar" max-width="500px">
-            <dialogo-eliminar :nombre="itemSeleccionado" @cancelar="cerrarDialogoEliminar" @eliminar="confirmarEliminar"/>
+            <dialogo-eliminar :nombre="itemSeleccionado" @cancelar="cerrarDialogoEliminar"
+                @eliminar="confirmarEliminar" />
         </v-dialog>
-        <v-snackbar
-        v-model="mostrarMensaje"
-        :timeout="3000"
-        :color="primary"
-        top
-        >
+        <v-snackbar v-model="mostrarMensaje" :timeout="3000" top>
             {{ mensaje.texto }}
         </v-snackbar>
     </div>
 </template>
 <script>
 import DialogoEliminar from '../Dialogos/DialogoEliminar.vue'
-import HttpService from '../../Servicios/HttpService' 
+import HttpService from '../../Servicios/HttpService'
 
 export default ({
     name: "Usuarios",
@@ -69,11 +39,11 @@ export default ({
         usuario: {},
         usuarios: [],
         encabezadoTabla: [
-            {text: "Usuario", sortable: true, value: "usuario"},
-            {text: "Nombre", sortable: true, value: "nombre"},
-            {text: "telefono", value: "telefono"},
-            {text: 'Opciones', value: 'opciones', sortable: false },
-            ],
+            { text: "Usuario", sortable: true, value: "usuario" },
+            { text: "Nombre", sortable: true, value: "nombre" },
+            { text: "telefono", value: "telefono" },
+            { text: 'Opciones', value: 'opciones', sortable: false },
+        ],
         itemSeleccionado: "",
         mensaje: {
             texto: "",
@@ -82,69 +52,70 @@ export default ({
         mostrarMensaje: false
     }),
 
-    mounted(){
+    mounted() {
         this.obtenerUsuarios()
     },
 
-    methods:{
-        editar(idUsuario){
+    methods: {
+        editar(idUsuario) {
             this.$router.push({
                 name: "EditarUsuario",
                 params: { id: idUsuario },
             })
         },
 
-        eliminar(usuario){
+        eliminar(usuario) {
             this.itemSeleccionado = usuario.nombre
             this.usuario = usuario
             this.mostrarDialogoEliminar = true
         },
 
-        cerrarDialogoEliminar(){
+        cerrarDialogoEliminar() {
             this.mostrarDialogoEliminar = false
             this.usuario = {}
         },
 
-        confirmarEliminar(){
+        confirmarEliminar() {
             this.cargando = true
             let payload = {
                 metodo: "delete",
                 id: this.usuario.id
             }
             HttpService.eliminar("usuarios.php", payload)
-            .then(eliminado => {
-                if(eliminado){
-                    this.mostrarDialogoEliminar = false
-                    this.mostrarMensaje = true
-                    this.mensaje.texto = "Usuario eliminado"
-                    this.mensaje.color = "success"
-                    this.cargando = false
-                    this.obtenerUsuarios()
-                }
-            })
+                .then(eliminado => {
+                    if (eliminado) {
+                        this.mostrarDialogoEliminar = false
+                        this.mostrarMensaje = true
+                        this.mensaje.texto = "Usuario eliminado"
+                        this.mensaje.color = "success"
+                        this.cargando = false
+                        this.obtenerUsuarios()
+                    }
+                })
         },
 
 
 
-        obtenerUsuarios(){
+        obtenerUsuarios() {
             this.cargando = true
-            let payload = {metodo: "get"}
+            let payload = { metodo: "get" }
             HttpService.obtenerConDatos(payload, "usuarios.php")
-            .then(respuesta => {
-                this.usuarios = respuesta
-                this.cargando = false
-            })
+                .then(respuesta => {
+                    this.usuarios = respuesta
+                    this.cargando = false
+                })
         }
     }
 
-    
+
 })
 </script>
 <style>
 .miembros {
-  padding: 30px;
-  background-color: #1e1e1e;
-  border-radius: 12px;
-  min-height: 100vh;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-}</style>
+    padding: 30px;
+    background-color: #1e1e1e;
+    border-radius: 12px;
+    min-height: 100vh;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+</style>
