@@ -1,5 +1,6 @@
 import Vue from "vue";
 import Router from "vue-router";
+import store from "../store";
 import Membresias from "../components/Membresias/Membresias";
 import Miembros from "../components/Miembros/Miembros";
 import EditarMiembro from "../components/Miembros/EditarMiembro";
@@ -18,15 +19,27 @@ import ProductosComponente from "../components/Productos/ProductosComponente.vue
 import Ventas from "../components/Productos/Ventas.vue";
 import ReporteVentas from "../components/Productos/ReporteVentas.vue";
 import ScannerQE from "../components/Miembros/ScannerQR.vue";
+import Login from "../components/Usuarios/Login.vue";
 
 Vue.use(Router);
 
-export default new Router({
+const router = new Router({
   routes: [
+    {
+      path: "/login",
+      name: "Login",
+      component: Login
+    },
     {
       path: "/",
       name: "InicioComponent",
       component: InicioComponent
+    },
+    {
+      path: "/dashboard",
+      name: "Dashboard",
+      component: InicioComponent,
+      meta: { requiresAuth: true, roles: ["admin"] }
     },
     {
       path: "/membresias",
@@ -56,7 +69,8 @@ export default new Router({
     {
       path: "/usuarios",
       name: "Usuarios",
-      component: Usuarios
+      component: Usuarios,
+      meta: { requiresAuth: true, roles: ["admin"] }
     },
     {
       path: "/nuevo-usuario",
@@ -112,6 +126,38 @@ export default new Router({
       path: "/reporte-ventas",
       name: "ReporteVentas",
       component: ReporteVentas
+    },
+    {
+      path: "*",
+      redirect: "/login"
     }
   ]
 });
+
+router.beforeEach((to, from, next) => {
+  const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+  const isAuthenticated = store.getters.isLoggedIn;
+  const userRole = store.getters.userRole; // ejemplo: 'admin' o 'empleado'
+
+  if (requiresAuth && !isAuthenticated) {
+    next("/login");
+  } else if (to.path === "/login" && isAuthenticated) {
+    next("/dashboard");
+  } else if (requiresAuth) {
+    const allowedRoles = to.meta.roles; // ejemplo: ['admin']
+
+    if (allowedRoles && !allowedRoles.includes(userRole)) {
+      store.commit("mostrarSnackbar", {
+        mensaje: "No tienes permiso para acceder a este modulo.",
+        color: "error"
+      });
+      next("/");
+    } else {
+      next();
+    }
+  } else {
+    next();
+  }
+});
+
+export default router;

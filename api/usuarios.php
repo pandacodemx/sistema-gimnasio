@@ -14,6 +14,8 @@ $metodo = $payload->metodo;
 switch ($metodo) {
     case "registrar":
         echo json_encode(registrarUsuario($payload->usuario));
+        $payload = json_decode(file_get_contents("php://input"));
+        error_log("Payload recibido: " . print_r($payload, true));
         break;
     case "get";
         echo json_encode(obtenerUsuarios());

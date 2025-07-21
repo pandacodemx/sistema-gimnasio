@@ -4,9 +4,16 @@ define("PASS_DEFECTO", "GimHunter123");
 
 function registrarUsuario($usuario)
 {
+    error_log("Usuario a registrar: " . print_r($usuario, true));
     $usuario->password = password_hash(PASS_DEFECTO, PASSWORD_DEFAULT);
-    $sentencia = "INSERT INTO usuarios (usuario, nombre, telefono, password) VALUES (?,?,?,?)";
-    $parametros = [$usuario->usuario, $usuario->nombre, $usuario->telefono, $usuario->password];
+    $sentencia = "INSERT INTO usuarios (usuario, nombre, telefono, rol, password) VALUES (?,?,?,?,?)";
+    $parametros = [
+        $usuario['usuario'],
+        $usuario['nombre'],
+        $usuario['telefono'],
+        $usuario['rol'],
+        $usuario['password']
+    ];
     return insertar($sentencia, $parametros);
 }
 
@@ -24,24 +31,21 @@ function eliminarUsuario($id)
 
 function obtenerUsuarioPorId($id)
 {
-    $sentencia = "SELECT id, usuario, nombre, telefono FROM usuarios WHERE id = ?";
+    $sentencia = "SELECT id, usuario, nombre, rol, telefono FROM usuarios WHERE id = ?";
     $parametros = [$id];
     return selectPrepare($sentencia, $parametros)[0];
 }
 
 function editarUsuario($usuario)
 {
-    $sentencia = "UPDATE usuarios SET usuario = ?, nombre = ?, telefono = ? WHERE id = ?";
-    $parametros = [$usuario->usuario, $usuario->nombre, $usuario->telefono, $usuario->id];
+    $sentencia = "UPDATE usuarios SET usuario = ?, nombre = ?, telefono = ?, rol = ? WHERE id = ?";
+    $parametros = [$usuario->usuario, $usuario->nombre, $usuario->telefono, $usuario->rol, $usuario->id];
     return editar($sentencia, $parametros);
 }
 
 function iniciarSesion($usuario)
 {
-    $sentencia = "SELECT u.id, u.usuario, u.password, u.id_rol, r.nombre AS nombre_rol
-  FROM usuarios u
-  JOIN roles r ON u.id_rol = r.id
-  WHERE u.usuario = ?";
+    $sentencia = "SELECT id, usuario, password, rol FROM usuarios WHERE usuario = ?";
 
     $parametros  = [$usuario->usuario];
 
@@ -53,12 +57,13 @@ function iniciarSesion($usuario)
             $usuario = [
                 "nombreUsuario" => $resultado->usuario,
                 "idUsuario" => $resultado->id,
-                "idRol" => $resultado->id_rol,
-                "rol" => $resultado->nombre_rol
+                "rol" => $resultado->rol
             ];
 
-            $permisos = obtenerPermisosPorUsuario($resultado->id);
-            $usuario["permisos"] = $permisos;
+            $verificaPass = verificarPassword(PASS_DEFECTO, $resultado->id);
+            if ($verificaPass) {
+                return ["resultado" => "cambia", "datos" => $usuario];
+            }
 
             return ["resultado" => true, "datos" => $usuario];
         } else {
@@ -142,27 +147,4 @@ function obtenerPagosMes($idUsuario)
     $sentencia = "SELECT SUM(monto) AS total FROM pagos WHERE  MONTH(fecha) = MONTH(CURRENT_DATE())
         AND YEAR(fecha) = YEAR(CURRENT_DATE()) AND idUsuario = ?";
     return selectPrepare($sentencia, [$idUsuario])[0]->total;
-}
-function asignarRol($idUsuario, $idRol)
-{
-    $sentencia = "UPDATE usuarios SET id_rol = ? WHERE id = ?";
-    $parametros = [$idRol, $idUsuario];
-    return editar($sentencia, $parametros);
-}
-function asignarPermisoARol($idRol, $idPermiso)
-{
-    $sentencia = "INSERT INTO rol_permiso (id_rol, id_permiso) VALUES (?, ?)";
-    $parametros = [$idRol, $idPermiso];
-    return insertar($sentencia, $parametros);
-}
-function obtenerPermisosPorUsuario($idUsuario)
-{
-    $sentencia = "
-        SELECT p.nombre
-        FROM permisos p
-        INNER JOIN rol_permiso rp ON rp.id_permiso = p.id
-        INNER JOIN usuarios u ON u.id_rol = rp.id_rol
-        WHERE u.id = ?";
-    $parametros = [$idUsuario];
-    return selectPrepare($sentencia, $parametros);
 }

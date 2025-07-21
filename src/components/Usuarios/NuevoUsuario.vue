@@ -1,24 +1,14 @@
 <template>
     <div>
-        <v-progress-linear
-        :active="cargando"
-        :indeterminate="cargando"
-        absolute
-        top
-        color="primary accent-4"
-        ></v-progress-linear>
+        <v-progress-linear :active="cargando" :indeterminate="cargando" absolute top
+            color="primary accent-4"></v-progress-linear>
 
-        <v-snackbar
-        v-model="mostrarMensaje"
-        :timeout="3000"
-        :color="mensaje.color"
-        top
-        >
+        <v-snackbar v-model="mostrarMensaje" :timeout="3000" :color="mensaje.color" top>
             {{ mensaje.texto }}
         </v-snackbar>
 
         <h1>Registrar usuario</h1>
-        <form-usuario :usuario="usuario" @registrado="onRegistrado"/>
+        <form-usuario :usuario="usuario" @registrado="onRegistrado" />
     </div>
 </template>
 
@@ -30,14 +20,15 @@ export default {
     name: "NuevoUsuario",
     components: { FormUsuario },
 
-    data:() => ({
+    data: () => ({
         cargando: false,
         usuario: {
             usuario: "",
             nombre: "",
             telefono: "",
+            rol: ""
         },
-        mostrarMensaje: false, 
+        mostrarMensaje: false,
         mensaje: {
             texto: "",
             color: ""
@@ -54,7 +45,7 @@ export default {
             return password;
         },
 
-        onRegistrado(usuario){
+        onRegistrado(usuario) {
             this.cargando = true
             this.usuario = usuario
             console.log(this.usuario)
@@ -64,23 +55,25 @@ export default {
             let payload = {
                 metodo: "registrar",
                 usuario: this.usuario,
-                password: passwordTemporal, 
+                password: passwordTemporal,
+                rol: this.rol,
             }
 
             HttpService.registrar(payload, "usuarios.php")
-            .then(resultado => {
-                if(resultado){
-                    this.mostrarMensaje = true
-                    this.mensaje.texto = `Usuario registrado. Por favor cambiar la contraseña editando el usuario.`
-                    this.mensaje.color = "success"
-                    this.cargando = false
-                    this.usuario = {
-                        usuario: "",
-                        nombre: "",
-                        telefono: "",
+                .then(resultado => {
+                    if (resultado) {
+                        this.mostrarMensaje = true
+                        this.mensaje.texto = `Usuario registrado. Por favor cambiar la contraseña editando el usuario.`
+                        this.mensaje.color = "success"
+                        this.cargando = false
+                        this.usuario = {
+                            usuario: "",
+                            nombre: "",
+                            telefono: "",
+                            rol: ""
+                        }
                     }
-                }
-            })
+                })
         }
     }
 }

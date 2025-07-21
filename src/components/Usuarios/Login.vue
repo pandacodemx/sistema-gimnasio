@@ -77,37 +77,37 @@ export default {
     multiLine: true,
   }),
 
+  created() {
+    if (this.$store.getters.isLoggedIn) {
+      this.redireccionarPorRol(this.$store.getters.userRole);
+    }
+  },
+
   methods: {
     iniciarSesion() {
-      if (!this.usuario) {
-        this.mostrarMensaje = true
-        this.mensaje.texto = "Atencion! Campos vacios"
-        this.mensaje.color = "error"
-        return
+      if (!this.usuario || !this.password) {
+        this.mostrarMensaje = true;
+        this.mensaje.texto = !this.usuario
+          ? "Debes colocar el usuario"
+          : "Debes colocar la contraseña";
+        this.mensaje.color = "warning";
+        return;
       }
-      if (!this.password) {
-        this.mostrarMensaje = true
-        this.mensaje.texto = "Error! Ingresa la contraseña"
-        this.mensaje.color = "error"
-        return
-      }
-      let payload = {
+
+      const payload = {
         metodo: "login",
         usuario: {
           usuario: this.usuario,
-          password: this.password
-        }
-      }
+          password: this.password,
+        },
+      };
+
       HttpService.obtenerConDatos(payload, "usuarios.php")
-        .then(resultado => {
+        .then((resultado) => {
           if (resultado && resultado.resultado) {
-            const datos = resultado.datos;
-            localStorage.setItem("usuario", JSON.stringify(datos));
-            this.$router.push("/dashboard").catch(err => {
-              if (err.name !== 'NavigationDuplicated') {
-                throw err;
-              }
-            });
+            const rol = resultado.datos.rol.toLowerCase();
+            this.$store.commit("setUser", resultado.datos);
+            this.redireccionarPorRol(rol);
           } else {
             this.mostrarMensaje = true;
             this.mensaje.texto = "Usuario o contraseña incorrectos";
@@ -115,11 +115,29 @@ export default {
           }
         });
     },
+
+    redireccionarPorRol(rol) {
+      switch (rol) {
+        case "admin":
+        case "administrador":
+          this.$router.replace("/dashboard");
+          break;
+        case "empleado":
+          this.$router.replace("/registrar-visita");
+          break;
+        default:
+          this.mostrarMensaje = true;
+          this.mensaje.texto = "No tienes permisos para acceder.";
+          this.mensaje.color = "error";
+      }
+    },
+
     abrirSoporte() {
       this.mostrarMensaje = true;
       this.mensaje.texto = "Envíanos un mensaje a nava.saidalfredo@gmail.com";
       this.mensaje.color = "info";
     },
+
     abrirContacto() {
       this.mostrarMensaje = true;
       this.mensaje.texto = "Contáctanos en contacto@sistema.com";
@@ -128,6 +146,8 @@ export default {
   },
 };
 </script>
+
+
 <style scoped>
 .login-background {
   position: relative;
