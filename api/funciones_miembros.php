@@ -38,8 +38,6 @@ function generarMatricula()
     return date('Y') . '-' . $ultimoId;
 }
 
-
-
 function obtenerMiembros()
 {
     $sentencia = "SELECT miembros.*, membresias.nombre AS membresia 

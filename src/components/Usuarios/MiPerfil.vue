@@ -29,7 +29,7 @@ export default {
     components: { CartasPersonalizadas, SelectorTema, },
 
     data: () => ({
-        nombreUsuario: localStorage.getItem('nombreUsuario'),
+        nombreUsuario: localStorage.getItem('usuario'),
         datosVisitas: [],
         datosPagos: [],
     }),

@@ -33,7 +33,8 @@ const router = new Router({
     {
       path: "/",
       name: "InicioComponent",
-      component: InicioComponent
+      component: InicioComponent,
+      meta: { requiresAuth: true, roles: ["admin"] }
     },
     {
       path: "/dashboard",
@@ -90,7 +91,8 @@ const router = new Router({
     {
       path: "/pagos",
       name: "Pagos",
-      component: Pagos
+      component: Pagos,
+      meta: { requiresAuth: true, roles: ["admin"] }
     },
     {
       path: "/registrar-visita",
@@ -100,12 +102,14 @@ const router = new Router({
     {
       path: "/visitas",
       name: "Visitas",
-      component: Visitas
+      component: Visitas,
+      meta: { requiresAuth: true, roles: ["admin"] }
     },
     {
       path: "/configurar",
       name: "Configurar",
-      component: ConfiguracionComponent
+      component: ConfiguracionComponent,
+      meta: { requiresAuth: true, roles: ["admin"] }
     },
     {
       path: "/perfil",
@@ -125,7 +129,8 @@ const router = new Router({
     {
       path: "/reporte-ventas",
       name: "ReporteVentas",
-      component: ReporteVentas
+      component: ReporteVentas,
+      meta: { requiresAuth: true, roles: ["admin"] }
     },
     {
       path: "*",

@@ -65,7 +65,7 @@ export default {
 
   data: () => ({
     nombreGimnasio: "",
-    nombreUsuario: localStorage.getItem('nombreUsuario'),
+    nombreUsuario: localStorage.getItem('usuario'),
     logo: "",
     cargando: false,
     datosVisitas: [],

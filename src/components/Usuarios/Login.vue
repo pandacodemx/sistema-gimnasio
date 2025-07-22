@@ -106,6 +106,10 @@ export default {
         .then((resultado) => {
           if (resultado && resultado.resultado) {
             const rol = resultado.datos.rol.toLowerCase();
+            localStorage.setItem("idUsuario", resultado.datos.idUsuario);
+            localStorage.setItem("rol", resultado.datos.rol);
+            localStorage.setItem("usuario", resultado.datos.nombreUsuario);
+
             this.$store.commit("setUser", resultado.datos);
             this.redireccionarPorRol(rol);
           } else {

@@ -117,7 +117,7 @@ export default {
   }),
 
   mounted() {
-    this.nombreUsuario = localStorage.getItem("nombreUsuario")
+    this.nombreUsuario = localStorage.getItem("usuario")
     this.nombreGimnasio = localStorage.getItem("nombreGimnasio")
     this.logo = localStorage.getItem("logoGimnasio")
 

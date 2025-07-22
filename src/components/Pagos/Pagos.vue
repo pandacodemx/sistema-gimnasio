@@ -8,23 +8,29 @@
         <hr>
 
         <v-card class="mt-3">
-            <h1>Pagos totales: <span class="primary--text font-weight-bold display-1"> ${{ totalPagos }}</span></h1>
-            <v-card-title>
-                Pagos realizados:
-                <b v-if="!filtros.fechaInicio"> hoy</b>
-                <b v-if="filtros.fechaInicio"> &nbsp; {{ filtros.fechaInicio }} - {{ filtros.fechaFin }}</b>
-                <v-spacer></v-spacer>
-                <v-text-field v-model="busqueda" append-icon="mdi-magnify" label="Buscar" single-line
-                    hide-details></v-text-field>
+            <v-card-title class="d-flex flex-column align-start pa-6">
+                <h2 class="text-h5 font-weight-bold mb-2">Pagos totales</h2>
+                <span class="display-2 font-weight-black text--primary">${{ totalPagos }}</span>
             </v-card-title>
-            <v-btn color="error" @click="generarPDF">
-                <v-icon left>mdi-file-pdf-box</v-icon>
-                Descargar PDF
-            </v-btn>
-            <v-btn color="success" @click="generarExcel">
-                <v-icon left>mdi-file-excel</v-icon>
-                Descargar Excel
-            </v-btn>
+            <v-card-title class="px-6 d-flex align-center">
+                <span class="subtitle-1 font-weight-medium">Pagos realizados:</span>
+                <b v-if="!filtros.fechaInicio"> hoy</b>
+                <b v-else>&nbsp; {{ filtros.fechaInicio }} - {{ filtros.fechaFin }}</b>
+
+                <v-spacer></v-spacer>
+                <v-text-field v-model="busqueda" append-icon="mdi-magnify" label="Buscar" single-line hide-details dense
+                    outlined class="ml-4" style="max-width: 300px" />
+            </v-card-title>
+            <v-card-actions class="pa-4">
+                <v-btn color="error" class="ma-2" elevation="2" @click="generarPDF">
+                    <v-icon left>mdi-file-pdf-box</v-icon>
+                    Descargar PDF
+                </v-btn>
+                <v-btn color="success" class="ma-2" elevation="2" @click="generarExcel">
+                    <v-icon left>mdi-file-excel</v-icon>
+                    Descargar Excel
+                </v-btn>
+            </v-card-actions>
             <v-data-table :loading="cargando" :headers="encabezadoTabla" :items="pagos" :search="busqueda"
                 sort-by="nombre" class="elevation-1" :footer-props="{ itemsPerPageText: 'Por página' }">
                 <template v-slot:[`item.imagen`]="{ item }">
@@ -251,13 +257,10 @@ export default {
 </script>
 <style>
 .miembros {
-    font-weight: 400;
     padding: 30px;
-    background-color: #1e1e1e;
-    border-radius: 12px;
-    min-height: 100vh;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-
+    background: linear-gradient(145deg, #1e1e1e, #252525);
+    border-radius: 16px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
 }
 
 .medalla {
