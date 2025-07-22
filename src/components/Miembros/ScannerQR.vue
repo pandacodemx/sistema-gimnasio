@@ -1,36 +1,45 @@
 <template>
     <div class="miembros">
-        <v-card class="scanner-wrapper">
-            <v-card-title class="headline">
-                <v-icon left>mdi-qrcode-scan</v-icon>
-                Escáner de Asistencias
-            </v-card-title>
+        <v-fade-transition>
+            <v-card class="scanner-wrapper elevation-10 animate__animated animate__fadeIn">
+                <v-card-title class="headline d-flex align-center">
+                    <v-icon class="mr-2" color="deep-purple accent-4">mdi-qrcode-scan</v-icon>
+                    Escáner de Asistencias
+                </v-card-title>
 
-            <div class="scanner-container">
-                <video ref="video" width="100%" autoplay playsinline></video>
-                <canvas ref="canvas" style="display:none;"></canvas>
-            </div>
+                <v-alert type="info" class="mb-4" color="deep-purple accent-2" border="left" elevation="2"
+                    icon="mdi-hammer-wrench">
+                    Esta sección sigue en construcción. ¡Pronto habrá más funcionalidades!
+                </v-alert>
 
-            <v-card-actions>
-                <v-btn @click="startScanner" color="primary" :loading="loading" :disabled="isScanning">
-                    <v-icon left>mdi-camera</v-icon>
-                    {{ isScanning ? 'Escaneando...' : 'Iniciar Escáner' }}
-                </v-btn>
-                <v-btn @click="stopScanner" color="error" :disabled="!isScanning">
-                    <v-icon left>mdi-stop</v-icon>
-                    Detener
-                </v-btn>
-            </v-card-actions>
+                <div class="scanner-container">
+                    <video ref="video" width="100%" autoplay playsinline></video>
+                    <canvas ref="canvas" style="display:none;"></canvas>
+                </div>
 
-            <v-snackbar v-model="showAlert" :color="alertType" top>
-                {{ alertMessage }}
-                <template v-slot:action="{ attrs }">
-                    <v-btn text v-bind="attrs" @click="showAlert = false">Cerrar</v-btn>
-                </template>
-            </v-snackbar>
-        </v-card>
+                <v-card-actions class="justify-end">
+                    <v-btn @click="startScanner" color="primary" :loading="loading" :disabled="isScanning"
+                        elevation="2">
+                        <v-icon left>mdi-camera</v-icon>
+                        {{ isScanning ? 'Escaneando...' : 'Iniciar Escáner' }}
+                    </v-btn>
+                    <v-btn @click="stopScanner" color="error" :disabled="!isScanning" elevation="2">
+                        <v-icon left>mdi-stop</v-icon>
+                        Detener
+                    </v-btn>
+                </v-card-actions>
+
+                <v-snackbar v-model="showAlert" :color="alertType" top elevation="3">
+                    {{ alertMessage }}
+                    <template v-slot:action="{ attrs }">
+                        <v-btn text v-bind="attrs" @click="showAlert = false">Cerrar</v-btn>
+                    </template>
+                </v-snackbar>
+            </v-card>
+        </v-fade-transition>
     </div>
 </template>
+
 
 <script>
 import jsQR from 'jsqr';
@@ -159,25 +168,30 @@ export default {
 </script>
 
 <style scoped>
+@import 'https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css';
+
 .miembros {
     padding: 30px;
     background-color: #1e1e1e;
     border-radius: 12px;
     min-height: 100vh;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
 }
 
 .scanner-wrapper {
     max-width: 800px;
     margin: 20px auto;
-    padding: 20px;
+    padding: 24px;
+    background: linear-gradient(to right, #151d1f, #818181);
+    color: #fff;
+    border-radius: 16px;
 }
 
 .scanner-container {
     position: relative;
     margin: 20px 0;
-    border: 2px solid #eee;
-    border-radius: 8px;
+    border: 2px dashed #ccc;
+    border-radius: 12px;
     overflow: hidden;
     background: #000;
     min-height: 300px;
@@ -190,5 +204,6 @@ video {
     width: 100%;
     max-height: 500px;
     display: block;
+    border-radius: 8px;
 }
 </style>
