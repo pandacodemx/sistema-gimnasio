@@ -59,6 +59,7 @@ function editar($sentencia, $parametros)
     return $respuesta->execute($parametros);
 }
 
+
 function conectarBaseDatos()
 {
     $host = "localhost";

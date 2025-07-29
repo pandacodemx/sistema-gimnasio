@@ -32,6 +32,7 @@ export default {
         cargando: false,
         usuario: {},
         mostrarMensaje: false,
+        multiLine: false,
         mensaje: {
             texto: "",
             color: ""
@@ -54,29 +55,46 @@ export default {
 
     methods: {
         onRegistrado(usuario) {
-            this.cargando = true
-            this.usuario = usuario
-            console.log(this.usuario)
+            this.cargando = true;
+
+
+            const datosActualizacion = {
+                id: this.usuario.id,
+                usuario: usuario.usuario,
+                nombre: usuario.nombre,
+                telefono: usuario.telefono,
+                rol: usuario.rol
+            };
+
+            console.log("Datos a enviar al backend:", datosActualizacion);
+
             let payload = {
                 metodo: "put",
-                usuario: this.usuario
-            }
+                usuario: datosActualizacion
+            };
+
             HttpService.registrar(payload, "usuarios.php")
                 .then(resultado => {
                     if (resultado) {
-                        this.mostrarMensaje = true
-                        this.mensaje.texto = "Usuario actualizado"
-                        this.mensaje.color = "success"
-
-                        setTimeout(() =>
-                            this.$router.push({
-                                name: "Usuarios"
-                            }),
-                            3000
-                        )
-                        this.cargando = false
+                        this.mostrarMensaje = true;
+                        this.mensaje = {
+                            texto: "Usuario actualizado correctamente",
+                            color: "success"
+                        };
+                        setTimeout(() => this.$router.push({ name: "Usuarios" }), 1500);
                     }
                 })
+                .catch(error => {
+                    console.error("Error al actualizar:", error);
+                    this.mostrarMensaje = true;
+                    this.mensaje = {
+                        texto: "Error al actualizar el usuario",
+                        color: "error"
+                    };
+                })
+                .finally(() => {
+                    this.cargando = false;
+                });
         }
     }
 }

@@ -9,8 +9,9 @@
             hide-details="auto"></v-text-field>
           <v-text-field label="Teléfono" class="mb-10" v-model="usuario.telefono" :rules="reglas" required
             hide-details="auto"></v-text-field>
-          <v-select v-model="usuario.rol" :items="rolesDisponibles" label="Rol" required item-text="label"
-            item-value="value" outlined dense></v-select>
+          <v-select label="Rol" :items="rolesDisponibles" item-text="label" item-value="value" v-model="usuario.rol"
+            outlined dense color="teal" />
+
         </v-card-text>
         <v-card-actions>
           <v-btn text @click="$router.push({ name: 'Usuarios' })"> Cancelar </v-btn>
@@ -33,7 +34,7 @@ export default {
     reglas: [(value) => !!value || "Campo obligatorio."],
     rolesDisponibles: [
       { label: "Administrador", value: "admin" },
-      { label: "Recepción", value: "empleado" },
+      { label: "Empleado", value: "empleado" },
       { label: "Instructor", value: "instructor" },
       { label: "Ventas", value: "ventas" }
     ],
@@ -41,32 +42,48 @@ export default {
 
   mounted() {
     this.formValido = false;
+    if (this.usuario && !this.usuario.rol) {
+      this.$set(this.usuario, 'rol', '');
+    }
   },
 
   methods: {
     registrar() {
-      this.formHasErrors = false
+      this.formHasErrors = false;
 
-      Object.keys(this.form).forEach(f => {
-        if (!this.form[f]) this.formHasErrors = true
+      if (!this.usuario) {
+        console.error("🚨 this.usuario no está definido");
+        return;
+      }
 
-        //this.$refs[f].validate(true)
-      })
-      this.$emit("registrado", this.usuario);
-      this.formValido = false
-    },
+      const campos = this.form;
+      for (const campo in campos) {
+        if (!campos[campo]) {
+          this.formHasErrors = true;
+        }
+      }
+
+      if (!this.formHasErrors) {
+        console.log("✅ Usuario a registrar:", this.usuario);
+        this.$emit("registrado", this.usuario);
+        this.formValido = false;
+      } else {
+        console.warn("❌ Formulario con errores:", campos);
+      }
+    }
+    ,
   },
-
   computed: {
     form() {
       return {
-        usuario: this.usuario.usuario,
-        nombre: this.usuario.nombre,
-        telefono: this.usuario.telefono,
-        rol: this.usuario.rol
+        usuario: this.usuario && this.usuario.usuario ? this.usuario.usuario : '',
+        nombre: this.usuario && this.usuario.nombre ? this.usuario.nombre : '',
+        telefono: this.usuario && this.usuario.telefono ? this.usuario.telefono : '',
+        rol: this.usuario && this.usuario.rol ? this.usuario.rol : ''
       }
-    },
-  },
+    }
+
+  }
 };
 </script>
 <style>

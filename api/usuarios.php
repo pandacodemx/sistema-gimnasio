@@ -23,8 +23,13 @@ switch ($metodo) {
     case "delete";
         echo json_encode(eliminarUsuario($payload->id));
         break;
-    case "put";
-        echo json_encode(editarUsuario($payload->usuario));
+    case "put":
+        error_log("📥 Datos recibidos en PUT: " . print_r($payload, true));
+        $usuario = json_decode(json_encode($payload->usuario), true);
+        error_log("🔄 Datos convertidos: " . print_r($usuario, true));
+        $resultado = editarUsuario($usuario);
+        error_log("📤 Resultado de edición: " . print_r($resultado, true));
+        echo json_encode($resultado);
         break;
     case "un_usuario":
         echo json_encode(obtenerUsuarioPorId($payload->id));

@@ -38,10 +38,44 @@ function obtenerUsuarioPorId($id)
 
 function editarUsuario($usuario)
 {
-    $sentencia = "UPDATE usuarios SET usuario = ?, nombre = ?, telefono = ?, rol = ? WHERE id = ?";
-    $parametros = [$usuario->usuario, $usuario->nombre, $usuario->telefono, $usuario->rol, $usuario->id];
+    // Validación básica de campos requeridos
+    if (empty($usuario['usuario']) || empty($usuario['rol'])) {
+        error_log("❌ Campos requeridos faltantes");
+        return false;
+    }
+
+    // Lista de roles válidos
+    $rolesValidos = ['admin', 'empleado', 'instructor', 'ventas'];
+
+    // Validar que el rol sea válido
+    if (!in_array($usuario['rol'], $rolesValidos)) {
+        error_log("❌ Rol no válido: " . $usuario['rol']);
+        return false;
+    }
+
+    $sentencia = "UPDATE usuarios SET 
+                 usuario = ?, 
+                 nombre = ?, 
+                 telefono = ?, 
+                 rol = ? 
+                 WHERE id = ?";
+
+    $parametros = [
+        $usuario['usuario'],
+        $usuario['nombre'],
+        $usuario['telefono'],
+        $usuario['rol'], // Valor textual del rol
+        $usuario['id']
+    ];
+
+    error_log("🔧 Query: " . $sentencia);
+    error_log("📦 Parámetros: " . print_r($parametros, true));
+
     return editar($sentencia, $parametros);
 }
+
+
+
 
 function iniciarSesion($usuario)
 {
