@@ -47,4 +47,8 @@ switch ($metodo) {
     case "estado_cuenta_miembro":
         echo json_encode(obtenerEstadoCuentaMiembro($payload->matricula));
         break;
+
+    case "membresias_por_vencer":
+        echo json_encode(obtenerMembresiasPorVencer());
+        break;
 }

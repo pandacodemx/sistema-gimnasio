@@ -156,3 +156,16 @@ function obtenerEstadoCuentaMiembro($matricula)
 
     return selectPrepare($sentencia, [$matricula]);
 }
+
+function obtenerMembresiasPorVencer($dias = 7)
+{
+    $sentencia = "
+        SELECT m.matricula, m.nombre, m.telefono, m.fechaFin, me.nombre AS nombre_membresia
+        FROM miembros m
+        JOIN membresias me ON m.idMembresia = me.id
+        WHERE m.fechaFin IS NOT NULL 
+          AND m.fechaFin BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL ? DAY)
+        ORDER BY m.fechaFin ASC
+    ";
+    return selectPrepare($sentencia, [$dias]);
+}

@@ -9,7 +9,6 @@
           <small>Dashboard {{ nombreGimnasio }} </small>
         </div>
       </div>
-
     </div>
 
 
@@ -48,6 +47,43 @@
       <v-progress-circular size="64"></v-progress-circular>
     </v-overlay>
     <div class="mt-3"> <selector-tema /></div>
+
+
+
+    <v-dialog v-model="modalMembresiasPorVencer" max-width="800px">
+      <v-card>
+        <v-card-title>
+          <v-icon left>mdi-timer-alert</v-icon>
+          Membresías por vencer
+        </v-card-title>
+        <v-card-text>
+          <v-simple-table dense>
+            <thead>
+              <tr>
+                <th>Matrícula</th>
+                <th>Nombre</th>
+                <th>Membresía</th>
+                <th>Teléfono</th>
+                <th>Fecha Fin</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="m in membresiasPorVencer" :key="m.matricula">
+                <td>{{ m.matricula }}</td>
+                <td>{{ m.nombre }}</td>
+                <td>{{ m.nombre_membresia }}</td>
+                <td>{{ m.telefono }}</td>
+                <td>{{ m.fechaFin }}</td>
+              </tr>
+            </tbody>
+          </v-simple-table>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer />
+          <v-btn color="primary" @click="modalMembresiasPorVencer = false">Cerrar</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 
 </template>
@@ -82,6 +118,8 @@ export default {
     valoresPagosMes: [],
     etiquetasPagosMeses: [],
     valoresPagosMeses: [],
+    membresiasPorVencer: [],
+    modalMembresiasPorVencer: false,
   }),
 
   mounted() {
@@ -93,56 +131,62 @@ export default {
   methods: {
     obtenerDatos() {
       this.cargando = true;
-      HttpService.obtenerConDatos(
-        {
-          metodo: "obtener",
-        },
-        "inicio.php"
-      ).then((resultado) => {
-        this.crearCartas(resultado.datosVisitas, resultado.datosPagos);
-        this.etiquetasVisitasHora = Utiles.obtenerClaves(resultado.visitasHora);
-        this.valoresVisitasHora = Utiles.obtenerValores(resultado.visitasHora);
-        let visitasSemana = Utiles.cambiarDiaSemana(resultado.visitasSemana);
-        this.etiquetasVisitasSemana = Utiles.obtenerClaves(visitasSemana);
-        this.valoresVisitasSemana = Utiles.obtenerValores(visitasSemana);
-        this.etiquetasVisitasMes = Utiles.obtenerClaves(resultado.visitasMes);
-        this.valoresVisitasMes = Utiles.obtenerValores(resultado.visitasMes);
-        let pagosSemana = Utiles.cambiarDiaSemana(resultado.pagosSemana);
-        this.etiquetasPagosSemana = Utiles.obtenerClaves(pagosSemana);
-        this.valoresPagosSemana = Utiles.obtenerValoresPagos(pagosSemana);
-        this.etiquetasPagosMes = Utiles.obtenerClaves(resultado.pagosMes);
-        this.valoresPagosMes = Utiles.obtenerValoresPagos(resultado.pagosMes);
-        let pagosMeses = Utiles.cambiarNumeroANombreMes(resultado.pagosMeses);
-        this.etiquetasPagosMeses = Utiles.obtenerClaves(pagosMeses);
-        this.valoresPagosMeses = Utiles.obtenerValoresPagos(pagosMeses);
-        this.cargando = false;
-      });
+
+      HttpService.obtenerConDatos({ metodo: "membresias_por_vencer" }, "miembros.php")
+        .then(resultado => {
+          this.membresiasPorVencer = resultado;
+          HttpService.obtenerConDatos(
+            {
+              metodo: "obtener",
+            },
+            "inicio.php"
+          ).then((resultado) => {
+            this.crearCartas(resultado.datosVisitas, resultado.datosPagos);
+            this.etiquetasVisitasHora = Utiles.obtenerClaves(resultado.visitasHora);
+            this.valoresVisitasHora = Utiles.obtenerValores(resultado.visitasHora);
+            let visitasSemana = Utiles.cambiarDiaSemana(resultado.visitasSemana);
+            this.etiquetasVisitasSemana = Utiles.obtenerClaves(visitasSemana);
+            this.valoresVisitasSemana = Utiles.obtenerValores(visitasSemana);
+            this.etiquetasVisitasMes = Utiles.obtenerClaves(resultado.visitasMes);
+            this.valoresVisitasMes = Utiles.obtenerValores(resultado.visitasMes);
+            let pagosSemana = Utiles.cambiarDiaSemana(resultado.pagosSemana);
+            this.etiquetasPagosSemana = Utiles.obtenerClaves(pagosSemana);
+            this.valoresPagosSemana = Utiles.obtenerValoresPagos(pagosSemana);
+            this.etiquetasPagosMes = Utiles.obtenerClaves(resultado.pagosMes);
+            this.valoresPagosMes = Utiles.obtenerValoresPagos(resultado.pagosMes);
+            let pagosMeses = Utiles.cambiarNumeroANombreMes(resultado.pagosMeses);
+            this.etiquetasPagosMeses = Utiles.obtenerClaves(pagosMeses);
+            this.valoresPagosMeses = Utiles.obtenerValoresPagos(pagosMeses);
+            this.cargando = false;
+          });
+        });
     },
+
 
     crearCartas(visitas, pagos) {
       this.datosVisitas = [
-        {
+        /*{
           color: "purple darken-1",
           icono: "mdi-calendar-star",
           nombre: "Total visitas",
           total: visitas.totalVisitas,
-        },
+        },*/
         {
           color: "pink darken-1",
           icono: "mdi-calendar",
-          nombre: "Hoy",
+          nombre: "Visitas Hoy",
           total: visitas.visitasHoy,
         },
         {
           color: "red darken-1",
           icono: "mdi-calendar-range",
-          nombre: "Semana",
+          nombre: "VisitasSemana",
           total: visitas.visitasSemana,
         },
         {
           color: "indigo darken-1",
           icono: "mdi-calendar-month",
-          nombre: "Mes",
+          nombre: "Visitas Mes",
           total: visitas.visitasMes,
         },
       ];
@@ -172,7 +216,15 @@ export default {
           total: "$" + pagos.pagosMes,
         },
       ];
+      this.datosVisitas.push({
+        color: "orange darken-2",
+        icono: "mdi-clock-alert",
+        nombre: "Membresias - A vencer",
+        total: this.membresiasPorVencer.length,
+        accion: () => this.modalMembresiasPorVencer = true
+      });
     },
+
 
     urlImagen(imagen) {
       return Utiles.generarURL(imagen);
@@ -190,5 +242,31 @@ export default {
   border-radius: 10px;
   margin-bottom: 10px;
   padding: 30px;
+}
+
+
+.v-card--material-stats:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+}
+
+.v-card--material-stats {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+  opacity: 0;
+  animation: fadeInUp 1.5s forwards;
+  animation-delay: calc(var(--index) * 0.1s);
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 </style>

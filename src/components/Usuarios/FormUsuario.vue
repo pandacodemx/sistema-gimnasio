@@ -34,9 +34,9 @@ export default {
     reglas: [(value) => !!value || "Campo obligatorio."],
     rolesDisponibles: [
       { label: "Administrador", value: "admin" },
-      { label: "Empleado", value: "empleado" },
-      { label: "Instructor", value: "instructor" },
-      { label: "Ventas", value: "ventas" }
+      { label: "Empleado", value: "empleado" }
+      //{ label: "Instructor", value: "instructor" },
+      //{ label: "Ventas", value: "ventas" }
     ],
   }),
 
