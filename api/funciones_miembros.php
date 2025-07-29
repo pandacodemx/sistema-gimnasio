@@ -143,3 +143,16 @@ function obtenerHistorialPagos($matricula)
 
     return selectPrepare($sentencia, [$matricula]);
 }
+function obtenerEstadoCuentaMiembro($matricula)
+{
+    $sentencia = "
+        SELECT p.fecha, m.nombre AS nombre_membresia, p.monto, u.usuario AS cobrado_por
+        FROM pagos p
+        JOIN membresias m ON p.idMembresia = m.id
+        JOIN usuarios u ON p.idUsuario = u.id
+        WHERE p.matricula = ?
+        ORDER BY p.fecha DESC
+    ";
+
+    return selectPrepare($sentencia, [$matricula]);
+}

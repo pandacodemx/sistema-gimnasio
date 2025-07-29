@@ -144,8 +144,8 @@ export default {
 
     abrirContacto() {
       this.mostrarMensaje = true;
-      this.mensaje.texto = "Contáctanos en contacto@sistema.com";
-      this.mensaje.color = "info";
+      this.mensaje.texto = "Contáctanos mediante Whatsapp al 3531015780";
+      this.mensaje.color = "error";
     },
   },
 };

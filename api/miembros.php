@@ -43,4 +43,8 @@ switch ($metodo) {
     case ("obtener_historial"):
         echo json_encode(obtenerHistorialPagos($payload->matricula));
         break;
+
+    case "estado_cuenta_miembro":
+        echo json_encode(obtenerEstadoCuentaMiembro($payload->matricula));
+        break;
 }
