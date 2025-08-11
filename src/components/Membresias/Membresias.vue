@@ -2,7 +2,8 @@
     <div class="miembros">
         <v-progress-linear :active="cargando" :indeterminate="cargando" absolute top
             color="deep-purple accent-4"></v-progress-linear>
-        <h1>Membresías</h1>
+        <h1>🥈 Membresías</h1>
+        <br></br>
         <v-data-table :headers="encabezadoTabla" :items="membresias" sort-by="nombre" class="elevation-1"
             :footer-props="{ itemsPerPageText: 'Por página' }">
             <template v-slot:[`item.opciones`]="{ item }">

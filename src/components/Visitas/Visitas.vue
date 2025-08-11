@@ -4,7 +4,7 @@
         <cartas-totales v-if="visitas.length > 0" :totales="totalesMembresias"
             :titulo="'Visitas registradas por membresía'" :icono="'mdi-alarm'" :color="'error'" />
         <br>
-        <h1>Visitas total: <span class="secondary--text display-1"> {{ visitas.length }}</span></h1>
+        <h1>📆 Visitas total: <span class="secondary--text display-1"> {{ visitas.length }}</span></h1>
         <v-card class="mt-3">
             <v-card-title>
                 <b v-if="filtros.fechaInicio"> {{ filtros.fechaInicio }} al {{ filtros.fechaFin }}</b>
@@ -27,6 +27,10 @@
                     <v-avatar v-if="item.imagen">
                         <img :src="urlImagen(item.imagen)" alt="Foto">
                     </v-avatar>
+                </template>
+
+                <template v-slot:[`item.fecha`]="{ item }">
+                    {{ fechaFormateada(item.fecha) }}
                 </template>
 
                 <template slot="no-data">
@@ -64,6 +68,7 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable'
 import * as XLSX from 'xlsx'
 import { saveAs } from 'file-saver'
+import { formatearFechaHora } from '@/utils/fechas';
 
 export default {
     name: "Visitas",
@@ -77,7 +82,10 @@ export default {
             { text: "Imagen", sortable: true, value: "imagen" },
             { text: "Miembro", sortable: true, value: "nombre" },
             { text: "Matrícula", sortable: true, value: "matricula" },
-            { text: "Fecha", sortable: true, value: "fecha" },
+            {
+                text: "Fecha", sortable: true, value: "fecha",
+                formatter: (value) => this.fechaFormateada(value)
+            },
             { text: "Membresía ", sortable: true, value: "membresia" },
             { text: "Usuario", sortable: true, value: "usuario" },
         ],
@@ -95,6 +103,9 @@ export default {
     },
 
     methods: {
+        fechaFormateada(fecha) {
+            return formatearFechaHora(fecha);
+        },
         generarExcel() {
             const ws = XLSX.utils.json_to_sheet(this.visitas.map(visitas => ({
                 Miembro: visitas.nombre,

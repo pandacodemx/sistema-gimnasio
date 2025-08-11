@@ -73,7 +73,7 @@
                 <td>{{ m.nombre }}</td>
                 <td>{{ m.nombre_membresia }}</td>
                 <td>{{ m.telefono }}</td>
-                <td>{{ m.fechaFin }}</td>
+                <td>{{ fechaFormateada(m.fechaFin) }}</td>
               </tr>
             </tbody>
           </v-simple-table>
@@ -95,6 +95,7 @@ import Utiles from "../Servicios/Utiles";
 import CartasPersonalizadas from "./Dialogos/CartasPersonalizadas.vue";
 import SparklineComponent from "./Dialogos/SparklineComponent.vue";
 import SelectorTema from "@/components/SelectorTema.vue";
+import { formatearFechaHora } from '@/utils/fechas';
 export default {
   name: "InicioComponent",
   components: { CartasPersonalizadas, SparklineComponent, SelectorTema },
@@ -129,6 +130,9 @@ export default {
   },
 
   methods: {
+    fechaFormateada(fecha) {
+      return formatearFechaHora(fecha);
+    },
     obtenerDatos() {
       this.cargando = true;
 

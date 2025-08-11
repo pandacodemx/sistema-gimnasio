@@ -1,9 +1,21 @@
 <template>
   <div>
     <div class="miembros">
-      <h1>Listado de miembros</h1>
-      <v-data-table :loading="cargando" :headers="encabezadoTabla" :items="miembros" item-key="matricula" show-expand
-        class="elevation-1" :footer-props="{ itemsPerPageText: 'Por página' }">
+      <h1>💪🏻 Listado de miembros</h1>
+
+      <v-card class="mb-4">
+        <v-card-text>
+          <v-row>
+            <v-col cols="12" sm="6">
+              <v-text-field v-model="busqueda" label="Buscar por nombre" prepend-icon="mdi-magnify" clearable
+                @input="filtrarMiembros"></v-text-field>
+            </v-col>
+          </v-row>
+        </v-card-text>
+      </v-card>
+
+      <v-data-table :loading="cargando" :headers="encabezadoTabla" :items="miembrosFiltrados" item-key="matricula"
+        show-expand class="elevation-1" :footer-props="{ itemsPerPageText: 'Por página' }">
         <template v-slot:[`item.imagen`]="{ item }">
           <v-avatar>
             <img :src="urlImagen(item.imagen)" alt="Foto" />
@@ -15,6 +27,14 @@
             {{ item.estado }}
             <span v-if="!item.estado">SIN MEMBRESÍA</span>
           </v-chip>
+        </template>
+
+        <template v-slot:[`item.fechaInicio`]="{ item }">
+          {{ formatearFechaHora(item.fechaInicio) }}
+        </template>
+
+        <template v-slot:[`item.fechaFin`]="{ item }">
+          {{ formatearFechaHora(item.fechaFin) }}
         </template>
 
         <template v-slot:[`item.opciones`]="{ item }">
@@ -87,7 +107,7 @@
                   <tr>
                     <td>
                       <v-icon color="red "> mdi-calendar </v-icon>
-                      <b>Miembro desde: </b>{{ item.fechaRegistro }}
+                      <b>Miembro desde: </b>{{ formatearFechaHora(item.fechaRegistro) }}
                     </td>
                   </tr>
                   <tr>
@@ -189,7 +209,7 @@
             </thead>
             <tbody>
               <tr v-for="pago in datosCuenta" :key="pago.fecha">
-                <td>{{ pago.fecha }}</td>
+                <td>{{ formatearFechaHora(pago.fecha) }}</td>
                 <td>{{ pago.nombre_membresia }}</td>
                 <td>${{ pago.monto }}</td>
                 <td>{{ pago.cobrado_por }}</td>
@@ -224,6 +244,8 @@ export default {
   components: { RealizarPago, DialogoEliminar, CredencialMiembro },
 
   data: () => ({
+    busqueda: '',
+    miembrosOriginales: [],
     encabezadoTabla: [
       {
         text: "Imagen",
@@ -255,11 +277,13 @@ export default {
         text: "Inicio membresía",
         sortable: true,
         value: "fechaInicio",
+        formatter: (value) => this.formatearFechaHora(value)
       },
       {
         text: "Fin membresía",
         sortable: true,
         value: "fechaFin",
+        formatter: (value) => this.formatearFechaHora(value)
       },
       {
         text: "Membresía",
@@ -288,11 +312,34 @@ export default {
     cargando: false
   }),
 
+  computed: {
+    miembrosFiltrados() {
+      if (!this.busqueda) return this.miembros;
+      const termino = this.busqueda.toLowerCase();
+      return this.miembros.filter(miembro =>
+        miembro.nombre.toLowerCase().includes(termino)
+      );
+    }
+  },
+
   mounted() {
     this.obtenerMiembros();
   },
 
   methods: {
+
+    formatearFechaHora(fechaString) {
+      if (!fechaString) return 'Sin fecha';
+
+      const [fechaPart, horaPart] = fechaString.split(' ');
+      const [year, month, day] = fechaPart.split('-');
+      const [hours, minutes] = horaPart.split(':');
+      const meses = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+
+      return `${day} ${meses[parseInt(month) - 1]} ${year} ${hours}:${minutes}`;
+
+
+    },
     descargarEstadoCuenta() {
       const doc = new jsPDF();
 
@@ -448,6 +495,7 @@ export default {
       const payload = { metodo: "get" };
       HttpService.obtenerConDatos(payload, "miembros.php").then((resultado) => {
         this.miembros = resultado;
+        this.miembrosOriginales = [...resultado];
         this.cargando = false;
       });
     },
@@ -546,25 +594,31 @@ body {
 
 .medalla-oro {
   background: linear-gradient(145deg, #0f4933, #21a572);
+  font-size: 12px;
 }
 
 .medalla-plata {
   background: linear-gradient(145deg, #016e8f, #03bff8);
+  font-size: 12px;
 }
 
 .medalla-bronce {
   background: linear-gradient(145deg, #cd3232, #b84333);
+  font-size: 12px;
 }
 
 .medalla-mujer {
   background: linear-gradient(145deg, #7c1a43, #f35a9a);
+  font-size: 12px;
 }
 
 .medalla-premium {
   background: linear-gradient(145deg, #6d1a7c, #b83bee);
+  font-size: 12px;
 }
 
 .medalla-default {
   background: linear-gradient(145deg, #546E7A, #6c8692);
+  font-size: 12px;
 }
 </style>

@@ -1,6 +1,7 @@
 <template>
     <div class="miembros">
-        <h1>Usuarios</h1>
+        <h1>👨🏻‍💼 Usuarios</h1>
+        <br></br>
         <v-btn fab dark x-large elevation="8" fixed right bottom to="/nuevo-usuario">
             <v-icon dark>add</v-icon>
         </v-btn>

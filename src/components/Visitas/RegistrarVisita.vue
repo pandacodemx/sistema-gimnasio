@@ -53,7 +53,7 @@
                     {{ miembro.membresia }}
                   </v-list-item-title>
                   <v-list-item-subtitle>
-                    Fin membresía: <strong>{{ miembro.fechaFin }}</strong>
+                    Fin membresía: <strong>{{ fechaFormateada(miembro.fechaFin) }}</strong>
                   </v-list-item-subtitle>
                 </v-list-item-content>
               </v-list-item>
@@ -204,6 +204,8 @@ import BusquedaMiembro from "../Miembros/BusquedaMiembro.vue";
 import RealizarPago from "../Miembros/RealizarPago.vue";
 import Utiles from "../../Servicios/Utiles";
 import HttpService from "../../Servicios/HttpService";
+import { formatearFechaHora } from '@/utils/fechas';
+
 
 export default {
   name: "RegistrarVisita",
@@ -222,6 +224,9 @@ export default {
   }),
 
   methods: {
+    fechaFormateada(fecha) {
+      return formatearFechaHora(fecha);
+    },
     registrarVisitaRegular() {
       if (!this.pagoVisita) return
       console.log(this.pagoVisita)

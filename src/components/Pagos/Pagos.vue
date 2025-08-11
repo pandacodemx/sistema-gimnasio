@@ -9,7 +9,7 @@
 
         <v-card class="mt-3">
             <v-card-title class="d-flex flex-column align-start pa-6">
-                <h2 class="text-h5 font-weight-bold mb-2">Pagos totales</h2>
+                <h2 class="text-h5 font-weight-bold mb-2">💵💰 Pagos totales</h2>
                 <span class="display-2 font-weight-black text--primary">${{ totalPagos }}</span>
             </v-card-title>
             <v-card-title class="px-6 d-flex align-center">
@@ -37,6 +37,9 @@
                     <v-avatar v-if="item.imagen">
                         <img :src="urlImagen(item.imagen)" alt="Foto">
                     </v-avatar>
+                </template>
+                <template v-slot:[`item.fecha`]="{ item }">
+                    {{ fechaFormateada(item.fecha) }}
                 </template>
 
 
@@ -78,6 +81,7 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable'
 import * as XLSX from 'xlsx'
 import { saveAs } from 'file-saver'
+import { formatearFechaHora } from '@/utils/fechas';
 
 export default {
     name: "Pagos",
@@ -91,7 +95,10 @@ export default {
             { text: "Miembro", sortable: true, value: "nombre" },
             { text: "Matrícula", sortable: true, value: "matricula" },
             { text: "Membresía", sortable: true, value: "membresia" },
-            { text: "Fecha", sortable: true, value: "fecha" },
+            {
+                text: "Fecha", sortable: true, value: "fecha",
+                formatter: (value) => this.fechaFormateada(value)
+            },
             { text: "Monto pagado", sortable: true, value: "monto" },
             { text: "Cobró", sortable: true, value: "usuario" },
         ],
@@ -110,6 +117,9 @@ export default {
     },
 
     methods: {
+        fechaFormateada(fecha) {
+            return formatearFechaHora(fecha);
+        },
         generarExcel() {
             const datos = this.pagos.map(pago => ({
                 Miembro: pago.nombre,
