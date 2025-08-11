@@ -2,7 +2,7 @@
   <div class="login-background animated-bg">
     <!-- HEADER -->
     <v-app-bar flat dense class="blur-header">
-      <v-toolbar-title class="text-white txt-12">Sistema de Gimnasio V1.0</v-toolbar-title>
+      <v-toolbar-title class="text-white txt-12">Sistema de Gimnasio V1.5</v-toolbar-title>
       <v-spacer />
       <v-btn text icon color="white" @click="abrirSoporte">
         <v-icon>mdi mdi-cellphone</v-icon>
@@ -15,35 +15,44 @@
     <!-- CONTENIDO PRINCIPAL -->
     <v-container fluid class="fill-height pa-0 d-flex align-center justify-center">
       <transition name="fade-slide">
-        <v-card class="rounded-xl px-4 py-6" max-width="400">
-          <v-toolbar flat class="mb-4">
-            <v-toolbar-title class="text-white" color="teal">Iniciar Sesión</v-toolbar-title>
+        <v-card class="rounded-xl px-4 py-6" max-width="400"
+          style="background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(25px); border: 1px solid rgba(255, 255, 255, 0.2);">
+          <v-toolbar flat class="mb-4 transparent">
+            <v-toolbar-title class="text-white font-weight-bold" style="font-size: 1.5rem;">Iniciar
+              Sesión</v-toolbar-title>
           </v-toolbar>
 
           <div class="d-flex justify-center mb-4">
-            <v-img src="https://i.ibb.co/pBRCQvhh/Logotipo-Bonito.png" contain width="150" height="150"></v-img>
+            <v-img src="https://i.ibb.co/pBRCQvhh/Logotipo-Bonito.png" contain width="180" height="180"
+              class="elevation-3"></v-img>
           </div>
 
-          <v-card-text>
+          <v-card-text class=" px-4">
             <v-form>
               <v-text-field prepend-inner-icon="mdi-account" label="Usuario" v-model="usuario" outlined dense
-                color="teal" />
+                color="white" class="mb-3" background-color="rgba(255,255,255,0.1)" dark />
               <v-text-field prepend-inner-icon="mdi-lock" label="Contraseña" type="password" v-model="password" outlined
-                dense color="teal" />
+                dense color="white" background-color="rgba(255,255,255,0.1)" dark />
             </v-form>
           </v-card-text>
 
           <v-card-actions class="px-4 pb-2">
             <v-spacer />
-            <v-btn color="teal-darken-2" dark @click="iniciarSesion">Ingresar</v-btn>
+            <v-btn color="teal lighten-1" dark @click="iniciarSesion" large rounded class="px-6 font-weight-bold"
+              style="letter-spacing: 1px;">
+              Ingresar
+            </v-btn>
           </v-card-actions>
         </v-card>
       </transition>
     </v-container>
 
     <!-- FOOTER -->
-    <v-footer app padless class="blur-footer text-white d-flex justify-center">
-      <div class="txt-12 py-2 px-4">Desarrollado por PandaCode © {{ new Date().getFullYear() }}</div>
+    <v-footer app padless class="blur-footer text-white d-flex justify-center" style="height: 50px;">
+      <div class="txt-12 py-2 px-4 d-flex align-center">
+        <v-icon small class="mr-2">mdi-code-braces</v-icon>
+        Desarrollado por PandaCode © {{ new Date().getFullYear() }}
+      </div>
     </v-footer>
 
     <!-- Snackbar -->
@@ -157,11 +166,27 @@ export default {
   position: relative;
   height: 100vh;
   width: 100vw;
-  background-image: url("https://images.unsplash.com/photo-1571902943202-507ec2618e8f?fm=jpg&q=60&w=3000");
+  background-image: url("https://bonitogym.com.mx/api/uploads/bg_login.webp");
   background-size: cover;
   background-position: center;
   overflow: hidden;
   display: flex;
+}
+
+.v-btn:hover {
+  transform: translateY(-2px);
+  transition: all 0.3s ease;
+}
+
+.v-text-field:hover .v-input__control {
+  transform: scale(1.02);
+  transition: all 0.3s ease;
+}
+
+/* Efecto para los iconos de contacto */
+.v-app-bar .v-btn:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+  transform: rotate(10deg);
 }
 
 /* Animación */

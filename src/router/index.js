@@ -20,6 +20,7 @@ import Ventas from "../components/Productos/Ventas.vue";
 import ReporteVentas from "../components/Productos/ReporteVentas.vue";
 import ScannerQE from "../components/Miembros/ScannerQR.vue";
 import Login from "../components/Usuarios/Login.vue";
+import GestionClases from "../components/Clases/GestionClases.vue";
 
 Vue.use(Router);
 
@@ -114,7 +115,8 @@ const router = new Router({
     {
       path: "/perfil",
       name: "MiPerfil",
-      component: MiPerfil
+      component: MiPerfil,
+      meta: { requiresAuth: true, roles: ["admin"] }
     },
     {
       path: "/productos",
@@ -131,6 +133,11 @@ const router = new Router({
       name: "ReporteVentas",
       component: ReporteVentas,
       meta: { requiresAuth: true, roles: ["admin"] }
+    },
+    {
+      path: "/gestion-clases",
+      name: "GestionClases",
+      component: GestionClases
     },
     {
       path: "*",

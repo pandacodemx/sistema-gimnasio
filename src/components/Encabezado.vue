@@ -57,6 +57,14 @@
           </v-list-item-content>
         </v-list-item>
 
+        <!-- Sección Clases -->
+        <v-subheader class="white--text"><v-icon>mdi mdi-store </v-icon> Clases</v-subheader>
+        <v-list-item v-for="item in clasesItems" :key="item.title" link :to="item.link" class="white--text drawer-item">
+          <v-list-item-content>
+            <v-list-item-title>{{ item.title }}</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+
         <!-- Sección Reportes -->
         <v-subheader class="white--text"><v-icon>mdi-table-edit </v-icon> Reportes</v-subheader>
         <v-list-item v-for="item in reportItems" :key="item.title" link :to="item.link" class="white--text drawer-item">
@@ -101,6 +109,10 @@ export default {
       { title: "Usuarios", icon: "mdi-account-box", link: "/usuarios" },
       { title: "Miembros", icon: "mdi-weight-lifter", link: "/miembros" },
       { title: "Membresías", icon: "mdi-wallet-membership", link: "/membresias" },
+    ],
+    clasesItems: [
+      { title: "Gestion", icon: "mdi-account-box", link: "/gestion-clases" },
+
     ],
     reportItems: [
       { title: "Pagos", icon: "mdi-account-cash", link: "/pagos" },

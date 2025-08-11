@@ -82,6 +82,15 @@
             </template>
             <span>Adquirir membresia</span>
           </v-tooltip>
+
+          <v-tooltip bottom color="orange" v-if="item.estado && item.estado === 'ACTIVO'">
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn color="orange" small fab dark v-bind="attrs" v-on="on" @click="confirmarQuitarMembresia(item)">
+                <v-icon>mdi-account-cancel</v-icon>
+              </v-btn>
+            </template>
+            <span>Quitar membresía</span>
+          </v-tooltip>
         </template>
 
         <template v-slot:expanded-item="{ headers, item }">
@@ -170,6 +179,8 @@
       <v-btn fab dark x-large elevation="8" color="primary" fixed right bottom to="/nuevo-miembro">
         <v-icon dark>add</v-icon>
       </v-btn>
+
+
       <v-dialog v-model="mostrarRealizarPago" persistent max-width="600">
         <realizar-pago :matricula="matriculaSeleccionada" @cerrar="cerrarDialogoPago" @pagado="onPagado" />
       </v-dialog>
@@ -177,6 +188,8 @@
       <v-dialog v-model="mostrarDialogoEliminar" max-width="500px">
         <dialogo-eliminar :nombre="itemSeleccionado" @cancelar="cerrarDialogoEliminar" @eliminar="confirmarEliminar" />
       </v-dialog>
+
+
 
       <credencial-miembro :matricula="matriculaSeleccionada" :miembro="miembro" @impreso="onImpreso"
         v-if="mostrarCredencial" />
@@ -223,6 +236,30 @@
           <v-btn color="primary" @click="modalEstadoCuenta = false">Cerrar</v-btn>
         </v-card-actions>
         <v-btn class="ml-5 mb-5" color="success" @click="descargarEstadoCuenta">Descargar PDF</v-btn>
+      </v-card>
+    </v-dialog>
+
+    <v-dialog v-model="mostrarDialogoQuitarMembresia" max-width="500px" persistent>
+      <v-card>
+        <v-card-title class="headline ">
+          Quitar membresía
+        </v-card-title>
+
+        <v-card-text class="pt-4">
+          ¿Estás seguro de quitar la membresía a
+          <strong v-if="miembroSeleccionado">{{ miembroSeleccionado.nombre }}</strong>?
+
+        </v-card-text>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="grey" text @click="mostrarDialogoQuitarMembresia = false">
+            Cancelar
+          </v-btn>
+          <v-btn color="orange darken-2" text @click="quitarMembresia">
+            Confirmar
+          </v-btn>
+        </v-card-actions>
       </v-card>
     </v-dialog>
   </div>
@@ -309,7 +346,10 @@ export default {
     datosCuenta: [],
     miembroActual: {},
     modalEstadoCuenta: false,
-    cargando: false
+    cargando: false,
+    mostrarDialogoQuitarMembresia: false,
+    miembroSeleccionado: null,
+    motivoQuitarMembresia: ''
   }),
 
   computed: {
@@ -327,6 +367,54 @@ export default {
   },
 
   methods: {
+    confirmarQuitarMembresia(miembro) {
+      this.miembroSeleccionado = miembro;
+      this.motivoQuitarMembresia = '';
+      this.mostrarDialogoQuitarMembresia = true;
+    },
+
+    async quitarMembresia() {
+      this.cargando = true;
+
+      const payload = {
+        metodo: "quitar_membresia",
+        id: this.miembroSeleccionado.id,
+        motivo: this.motivoQuitarMembresia
+      };
+
+      try {
+        const resultado = await HttpService.eliminar("miembros.php", payload);
+
+        if (resultado) {
+          this.mostrarMensaje = true;
+          this.mensaje = {
+            color: "success",
+            texto: "Membresía quitada correctamente"
+          };
+
+          // Actualizar el estado localmente
+          const index = this.miembros.findIndex(m => m.id === this.miembroSeleccionado.id);
+          if (index !== -1) {
+            this.$set(this.miembros, index, {
+              ...this.miembros[index],
+              estado: null,
+              fechaInicio: null,
+              fechaFin: null,
+              membresia: null
+            });
+          }
+        }
+      } catch (error) {
+        this.mostrarMensaje = true;
+        this.mensaje = {
+          color: "error",
+          texto: "Error al quitar la membresía"
+        };
+      } finally {
+        this.mostrarDialogoQuitarMembresia = false;
+        this.cargando = false;
+      }
+    },
 
     formatearFechaHora(fechaString) {
       if (!fechaString) return 'Sin fecha';

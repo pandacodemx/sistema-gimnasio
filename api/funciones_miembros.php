@@ -169,3 +169,17 @@ function obtenerMembresiasPorVencer($dias = 7)
     ";
     return selectPrepare($sentencia, [$dias]);
 }
+
+function quitarMembresia($idMiembro)
+{
+
+    $sentencia = "UPDATE miembros SET 
+        idMembresia = NULL, 
+        estado = NULL, 
+        fechaInicio = NULL, 
+        fechaFin = NULL
+        WHERE id = ?";
+
+    $parametros = [$idMiembro];
+    return editar($sentencia, $parametros);
+}

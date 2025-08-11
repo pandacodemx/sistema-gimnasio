@@ -51,4 +51,8 @@ switch ($metodo) {
     case "membresias_por_vencer":
         echo json_encode(obtenerMembresiasPorVencer());
         break;
+
+    case "quitar_membresia":
+        echo json_encode(quitarMembresia($payload->id, $payload->motivo));
+        break;
 }
