@@ -32,6 +32,11 @@ export default new Vuex.Store({
     },
     ocultarSnackbar(state) {
       state.snackbar.mostrar = false;
+    },
+    mostrarMensaje(state, payload) {
+      state.snackbar.mostrar = true;
+      state.snackbar.mensaje = payload.texto || payload.mensaje;
+      state.snackbar.color = payload.color || "error";
     }
   },
   getters: {

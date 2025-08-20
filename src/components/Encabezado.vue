@@ -111,7 +111,7 @@ export default {
       { title: "Membresías", icon: "mdi-wallet-membership", link: "/membresias" },
     ],
     clasesItems: [
-      { title: "Gestion", icon: "mdi-account-box", link: "/gestion-clases" },
+      { title: "Gestion Clases", icon: "mdi-account-box", link: "/gestion-clases" },
 
     ],
     reportItems: [

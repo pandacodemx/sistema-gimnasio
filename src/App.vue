@@ -110,12 +110,12 @@ export default {
 
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
 
 /* Aplica la fuente a toda la app */
 body,
 .v-application {
-  font-family: 'Poppins', sans-serif !important;
+  font-family: "Rubik", sans-serif !important;
   margin: 0;
   padding: 0;
   background-color: #121212;
