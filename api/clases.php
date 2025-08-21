@@ -75,6 +75,21 @@ switch ($payload->metodo) {
     case "obtener_salas":
         echo json_encode(obtenerSalas());
         break;
+    case "obtener_miembros_inscritos":
+        echo json_encode(obtenerMiembrosInscritos($payload->id_horario));
+        break;
+
+    case "agregar_miembro_clase":
+        echo json_encode(agregarMiembroAClase($payload->inscripcion));
+        break;
+
+    case "eliminar_miembro_clase":
+        echo json_encode(eliminarMiembroDeClase($payload->id_inscripcion));
+        break;
+
+    case "verificar_reserva_usuario":
+        echo json_encode(verificarReservaUsuario($payload->id_horario, $payload->id_usuario));
+        break;
 
     default:
         http_response_code(404);

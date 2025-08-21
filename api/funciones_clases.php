@@ -352,3 +352,83 @@ function eliminarSala($id)
     $sentencia = "DELETE FROM salas WHERE id = ?";
     return eliminar($sentencia, [$id]);
 }
+
+function obtenerMiembrosInscritos($idHorario)
+{
+    $sentencia = "SELECT 
+        r.id as id_inscripcion,
+        m.id,
+        m.nombre,
+        m.email, 
+        m.telefono,
+        r.fecha_inscripcion,
+        r.monto_pagado,
+        r.estado
+    FROM reservas_clases r
+    INNER JOIN miembros m ON r.id_miembro = m.id
+    WHERE r.id_horario = ? AND r.estado = 'confirmada'
+    ORDER BY r.fecha_inscripcion DESC";
+
+    return selectPrepare($sentencia, [$idHorario]);
+}
+
+
+function agregarMiembroAClase($inscripcion)
+{
+
+    $verificarCupos = "SELECT 
+        (max_participantes - (SELECT COUNT(*) FROM reservas_clases WHERE id_horario = ? AND estado = 'confirmada')) as cupos_disponibles
+        FROM horarios_clases WHERE id = ?";
+
+    $cupos = selectPrepare($verificarCupos, [$inscripcion->id_horario, $inscripcion->id_horario]);
+
+    if (empty($cupos) || $cupos[0]['cupos_disponibles'] <= 0) {
+        return ['exito' => false, 'mensaje' => 'No hay cupos disponibles'];
+    }
+
+    $verificarInscrito = "SELECT id FROM reservas_clases 
+                         WHERE id_horario = ? AND id_miembro = ? AND estado = 'confirmada'";
+    $yaInscrito = selectPrepare($verificarInscrito, [$inscripcion->id_horario, $inscripcion->id_miembro]);
+
+    if (!empty($yaInscrito)) {
+        return ['exito' => false, 'mensaje' => 'El miembro ya está inscrito en esta clase'];
+    }
+
+
+    $sentencia = "INSERT INTO reservas_clases (id_horario, id_miembro, fecha_inscripcion, monto_pagado, estado) 
+                 VALUES (?, ?, ?, ?, 'confirmada')";
+
+    $resultado = insertar($sentencia, [
+        $inscripcion->id_horario,
+        $inscripcion->id_miembro,
+        $inscripcion->fecha_inscripcion,
+        $inscripcion->monto_pagado
+    ]);
+
+    return [
+        'exito' => $resultado['exito'],
+        'mensaje' => $resultado['exito'] ? 'Miembro agregado exitosamente' : 'Error al agregar miembro',
+        'id' => $resultado['id']
+    ];
+}
+
+
+function eliminarMiembroDeClase($idInscripcion)
+{
+    $sentencia = "DELETE FROM reservas_clases WHERE id = ?";
+    return eliminar($sentencia, [$idInscripcion]);
+}
+
+
+function verificarReservaUsuario($idHorario, $idUsuario)
+{
+    $sentencia = "SELECT * FROM reservas_clases 
+                 WHERE id_horario = ? AND id_miembro = ? AND estado = 'confirmada'";
+
+    $reserva = selectPrepare($sentencia, [$idHorario, $idUsuario]);
+
+    return [
+        'tiene_reserva' => !empty($reserva),
+        'reserva' => !empty($reserva) ? $reserva[0] : null
+    ];
+}

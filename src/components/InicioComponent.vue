@@ -184,7 +184,7 @@ export default {
         {
           color: "red darken-1",
           icono: "mdi-calendar-range",
-          nombre: "VisitasSemana",
+          nombre: "Visitas Semana",
           total: visitas.visitasSemana,
         },
         {

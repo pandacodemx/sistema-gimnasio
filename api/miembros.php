@@ -18,6 +18,9 @@ switch ($metodo) {
     case "get";
         echo json_encode(obtenerMiembros());
         break;
+    case "obtener_miembros_disponibles":
+        echo json_encode(obtenerMiembrosDisponibles());
+        break;
     case "eliminar";
         echo json_encode(eliminarMiembro($payload->id));
         break;

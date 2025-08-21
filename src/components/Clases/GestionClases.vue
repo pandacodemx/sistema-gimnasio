@@ -2,11 +2,7 @@
     <v-container>
         <!-- Barra de herramientas -->
         <v-row class="mb-4" align="center">
-            <v-col cols="12" md="6">
-                <v-alert type="info" class="mb-4" color="deep-purple accent-2" border="left" elevation="2"
-                    icon="mdi-hammer-wrench">
-                    Esta sección sigue en construcción. ¡Pronto habrá más funcionalidades!
-                </v-alert>
+            <v-col cols="12" md="12">
                 <v-btn color="primary" @click="dialogNuevaClase = true">
                     <v-icon left>mdi-plus</v-icon> Nueva Clase
                 </v-btn>
@@ -24,7 +20,7 @@
             </v-col>
             <v-col cols="12" md="6">
                 <!-- Selector de vista del calendario -->
-                <v-btn-toggle v-model="vistaCalendario" mandatory class="mr-4">
+                <v-btn-toggle v-model="vistaCalendario" mandatory class="mr-2 mb-2">
                     <v-btn small value="week">
                         <v-icon small>mdi-calendar-week</v-icon>
                         Semana
@@ -36,26 +32,28 @@
                 </v-btn-toggle>
 
                 <!-- Controles de navegación -->
-                <v-btn icon @click="navegarCalendario('prev')" class="mx-1">
-                    <v-icon>mdi-chevron-left</v-icon>
-                </v-btn>
-                <v-btn icon @click="hoy()" class="mx-1">
-                    Hoy
-                </v-btn>
-                <v-btn icon @click="navegarCalendario('next')" class="mx-1">
-                    <v-icon>mdi-chevron-right</v-icon>
-                </v-btn>
+                <div class="d-flex align-center mr-2 mb-2">
+                    <v-btn icon @click="navegarCalendario('prev')" class="mx-1">
+                        <v-icon>mdi-chevron-left</v-icon>
+                    </v-btn>
+                    <v-btn @click="hoy()" class="mx-1" small>
+                        Hoy
+                    </v-btn>
+                    <v-btn icon @click="navegarCalendario('next')" class="mx-1">
+                        <v-icon>mdi-chevron-right</v-icon>
+                    </v-btn>
+                </div>
 
                 <!-- Selector de rango de fechas -->
-                <v-menu ref="menuFecha" v-model="menuFecha" :close-on-content-click="false" class="ml-4">
+                <v-menu ref="menuFecha" v-model="menuFecha" :close-on-content-click="false" class="mb-2">
                     <template v-slot:activator="{ on, attrs }">
-                        <v-btn small v-bind="attrs" v-on="on">
+                        <v-btn small v-bind="attrs" v-on="on" class="ml-2">
                             <v-icon left>mdi-calendar</v-icon>
                             {{ rangoFechasTexto }}
                         </v-btn>
                     </template>
                     <v-date-picker v-model="rangoFechas" range no-title scrollable
-                        @input="menuFecha = false; cargarHorarios()"></v-date-picker>
+                        @input="menuFecha = false; actualizarCalendario()"></v-date-picker>
                 </v-menu>
             </v-col>
         </v-row>
@@ -291,7 +289,15 @@
                             </v-col>
                         </v-row>
 
-                        <v-color-picker v-model="nuevaClase.color_calendario" mode="hexa"></v-color-picker>
+                        <v-row>
+                            <v-col cols="12" md="6">
+                                <v-text-field v-model="nuevaClase.precio" label="Precio ($)" type="number" min="0"
+                                    step="0.01" prefix="$" required></v-text-field>
+                            </v-col>
+                            <v-col cols="12" md="6">
+                                <v-color-picker v-model="nuevaClase.color_calendario" mode="hexa"></v-color-picker>
+                            </v-col>
+                        </v-row>
                     </v-form>
                 </v-card-text>
                 <v-card-actions>
@@ -386,11 +392,13 @@
 
         <!-- Diálogo Detalle Clase -->
 
-        <v-dialog v-model="dialogDetalleClase" max-width="600px">
+        <v-dialog v-model="dialogDetalleClase" max-width="900px">
             <v-card>
                 <v-card-title class="headline"
                     :style="{ color: eventoSeleccionado.color, 'border-bottom': `3px solid ${eventoSeleccionado.color}` }">
-                    {{ eventoSeleccionado.name }}
+                    {{ eventoSeleccionado.name }} <v-chip small color="orange" text-color="white" class="ml-2">
+                        ${{ eventoSeleccionado.precio || 0 }}
+                    </v-chip>
                 </v-card-title>
 
                 <v-card-text class="pt-4">
@@ -456,22 +464,6 @@
                         <v-col cols="12" md="6">
                             <v-list-item>
                                 <v-list-item-icon>
-                                    <v-icon color="red">mdi-account-group</v-icon>
-                                </v-list-item-icon>
-                                <v-list-item-content>
-                                    <v-list-item-title>Cupos</v-list-item-title>
-                                    <v-list-item-subtitle class="font-weight-bold">
-                                        {{ eventoSeleccionado.cuposDisponibles }} / {{ eventoSeleccionado.cuposTotales
-                                        }}
-                                        disponibles
-                                    </v-list-item-subtitle>
-                                </v-list-item-content>
-                            </v-list-item>
-                        </v-col>
-
-                        <v-col cols="12" md="6">
-                            <v-list-item>
-                                <v-list-item-icon>
                                     <v-icon color="teal">mdi-chart-donut</v-icon>
                                 </v-list-item-icon>
                                 <v-list-item-content>
@@ -483,14 +475,105 @@
                             </v-list-item>
                         </v-col>
                     </v-row>
+                    <!-- Cupos disponibles -->
+                    <v-alert :type="eventoSeleccionado.cuposDisponibles > 0 ? 'info' : 'warning'" class="mt-3">
+                        <v-icon left>{{ eventoSeleccionado.cuposDisponibles > 0 ? 'mdi-information' : 'mdi-alert'
+                        }}</v-icon>
+                        {{ eventoSeleccionado.cuposDisponibles }} / {{ eventoSeleccionado.cuposTotales }} cupos
+                        disponibles
+                    </v-alert>
+
+                    <v-expansion-panels class="mt-3">
+                        <v-expansion-panel>
+                            <v-expansion-panel-header>
+                                <v-icon left>mdi-account-group</v-icon>
+                                Gestionar Miembros Inscritos ({{ miembrosInscritos.length }})
+                            </v-expansion-panel-header>
+                            <v-expansion-panel-content>
+                                <!-- Buscar miembros -->
+                                <v-text-field v-model="busquedaMiembro" label="Buscar miembro..."
+                                    prepend-icon="mdi-magnify" clearable class="mb-3"></v-text-field>
+
+                                <!-- Lista de miembros inscritos -->
+                                <v-list three-line dense v-if="miembrosInscritos.length > 0">
+                                    <v-list-item v-for="miembro in miembrosFiltrados" :key="miembro.id">
+                                        <v-list-item-avatar>
+                                            <v-icon>mdi-account</v-icon>
+                                        </v-list-item-avatar>
+                                        <v-list-item-content>
+                                            <v-list-item-title>{{ miembro.nombre }}</v-list-item-title>
+                                            <v-list-item-subtitle>{{ miembro.email }} • {{ miembro.telefono
+                                                }}</v-list-item-subtitle>
+                                            <v-list-item-subtitle>
+                                                Inscrito el: {{ formatoFecha(miembro.fecha_inscripcion) }}
+                                            </v-list-item-subtitle>
+                                        </v-list-item-content>
+                                        <v-list-item-action>
+                                            <v-btn icon small @click="confirmarEliminarMiembro(miembro)">
+                                                <v-icon small color="error">mdi-delete</v-icon>
+                                            </v-btn>
+                                        </v-list-item-action>
+                                    </v-list-item>
+                                </v-list>
+
+                                <v-alert v-else type="info">
+                                    No hay miembros inscritos en esta clase
+                                </v-alert>
+
+                                <!-- Agregar nuevo miembro -->
+                                <v-divider class="my-4"></v-divider>
+                                <v-form @submit.prevent="agregarMiembro" ref="formMiembro">
+                                    <v-row>
+                                        <v-col cols="12" md="6">
+                                            <v-autocomplete v-model="nuevoMiembro.id" :items="miembrosDisponibles"
+                                                item-text="nombre" item-value="id" label="Seleccionar Miembro"
+                                                :rules="[v => !!v || 'Seleccione un miembro']" required>
+                                                <template v-slot:item="{ item }">
+                                                    {{ item.nombre }} - {{ item.email }}
+                                                </template>
+                                            </v-autocomplete>
+                                        </v-col>
+                                        <v-col cols="12" md="4">
+                                            <v-text-field v-model="nuevoMiembro.monto_pagado" label="Monto Pagado ($)"
+                                                type="number" min="0" step="0.01" prefix="$"></v-text-field>
+                                        </v-col>
+                                        <v-col cols="12" md="2">
+                                            <v-btn color="primary" type="submit"
+                                                :disabled="eventoSeleccionado.cuposDisponibles <= 0" class="mt-3">
+                                                <v-icon left>mdi-plus</v-icon>
+                                                Agregar
+                                            </v-btn>
+                                        </v-col>
+                                    </v-row>
+                                </v-form>
+                            </v-expansion-panel-content>
+                        </v-expansion-panel>
+                    </v-expansion-panels>
                 </v-card-text>
+
+
 
                 <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn color="primary" @click="reservarClase" :disabled="eventoSeleccionado.cuposDisponibles <= 0">
-                        <v-icon left>mdi-bookmark</v-icon>
-                        Reservar Cupo
+                    <v-btn color="grey" text @click="dialogDetalleClase = false">
+                        Cerrar
                     </v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+
+        <v-dialog v-model="dialogEliminarMiembro" max-width="400px">
+            <v-card>
+                <v-card-title class="headline">Confirmar eliminación</v-card-title>
+                <v-card-text>
+                    ¿Estás seguro de eliminar a <strong v-if="miembroSeleccionado">{{ miembroSeleccionado.nombre
+                        }}</strong>
+                    <strong v-else>este miembro</strong>
+                </v-card-text>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn color="grey" text @click="dialogEliminarMiembro = false">Cancelar</v-btn>
+                    <v-btn color="red" text @click="eliminarMiembro">Eliminar</v-btn>
                 </v-card-actions>
             </v-card>
         </v-dialog>
@@ -505,7 +588,8 @@ export default {
     data: () => ({
         fechaActual: new Date().toISOString().substr(0, 10),
         vistaCalendario: 'week',
-        rangoFechas: [new Date().toISOString().substr(0, 10), new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().substr(0, 10)],
+        rangoFechas: [],
+        salaSeleccionada: [],
         menuFecha: false,
         dialogNuevaClase: false,
         dialogNuevoHorario: false,
@@ -564,7 +648,17 @@ export default {
             equipamiento: ''
         },
         salaEditando: null,
-        salaSeleccionado: null
+        salaSeleccionado: null,
+        //RESERVAS
+        miembrosInscritos: [],
+        miembrosDisponibles: [],
+        busquedaMiembro: '',
+        nuevoMiembro: {
+            id: null,
+            monto_pagado: 0
+        },
+        miembroSeleccionado: null,
+        dialogEliminarMiembro: false
     }),
 
     computed: {
@@ -576,64 +670,86 @@ export default {
                 const start = new Date(this.rangoFechas[0]);
                 const end = new Date(this.rangoFechas[1]);
 
-                // Si es la misma semana, mostrar formato semanal
-                const diffTime = Math.abs(end - start);
-                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-                if (diffDays <= 7) {
-                    return `Semana del ${start.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' })}`;
-                } else {
-                    return `${start.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' })} - ${end.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' })}`;
-                }
+                // Formatear para mostrar solo el rango de días
+                const options = { day: 'numeric', month: 'short' };
+                return `${start.toLocaleDateString('es-ES', options)} - ${end.toLocaleDateString('es-ES', options)}`;
             }
+        },
+        miembrosFiltrados() {
+            if (!this.busquedaMiembro) return this.miembrosInscritos;
+
+            return this.miembrosInscritos.filter(miembro =>
+                miembro.nombre.toLowerCase().includes(this.busquedaMiembro.toLowerCase()) ||
+                miembro.email.toLowerCase().includes(this.busquedaMiembro.toLowerCase())
+            );
         }
     },
     watch: {
         vistaCalendario(newVal) {
             this.ajustarRangoFechas(newVal);
-            this.cargarHorarios();
+        },
+        dialogDetalleClase(val) {
+            if (val && this.eventoSeleccionado.id) {
+                this.cargarMiembrosInscritos();
+                this.cargarMiembrosDisponibles();
+            }
         }
     },
 
 
     mounted() {
+
+        this.ajustarRangoFechas(this.vistaCalendario);
         this.cargarDatosIniciales();
         this.cargarHorarios();
     },
 
     methods: {
         navegarCalendario(direccion) {
-            const incremento = this.vistaCalendario === 'month' ? 30 : 7;
-            const factor = direccion === 'next' ? 1 : -1;
-
+            if (this.vistaCalendario === 'month') {
+                this.navegarMes(direccion);
+            } else {
+                this.navegarSemana(direccion);
+            }
+        },
+        navegarSemana(direccion) {
+            const factor = direccion === 'next' ? 7 : -7;
             const start = new Date(this.rangoFechas[0]);
             const end = new Date(this.rangoFechas[1]);
 
-            start.setDate(start.getDate() + (factor * incremento));
-            end.setDate(end.getDate() + (factor * incremento));
+            start.setDate(start.getDate() + factor);
+            end.setDate(end.getDate() + factor);
 
             this.rangoFechas = [
                 start.toISOString().substr(0, 10),
                 end.toISOString().substr(0, 10)
             ];
 
-            this.cargarHorarios();
+            this.actualizarCalendario();
+        },
+        navegarMes(direccion) {
+            const factor = direccion === 'next' ? 1 : -1;
+            const start = new Date(this.rangoFechas[0]);
+
+
+            start.setMonth(start.getMonth() + factor);
+
+
+            this.ajustarRangoFechas('month', start.toISOString().substr(0, 10));
         },
 
         hoy() {
-            const hoy = new Date().toISOString().substr(0, 10);
-            this.ajustarRangoFechas(this.vistaCalendario, hoy);
-            this.cargarHorarios();
+            this.ajustarRangoFechas(this.vistaCalendario, new Date().toISOString().substr(0, 10));
         },
 
-        ajustarRangoFechas(vista, fechaInicio = this.rangoFechas[0]) {
-            const start = new Date(fechaInicio);
+        ajustarRangoFechas(vista, fechaInicio = null) {
+            const fechaBase = fechaInicio ? new Date(fechaInicio) : new Date();
 
             if (vista === 'month') {
-                // Primer día del mes
-                const firstDay = new Date(start.getFullYear(), start.getMonth(), 1);
-                // Último día del mes
-                const lastDay = new Date(start.getFullYear(), start.getMonth() + 1, 0);
+
+                const firstDay = new Date(fechaBase.getFullYear(), fechaBase.getMonth(), 1);
+
+                const lastDay = new Date(fechaBase.getFullYear(), fechaBase.getMonth() + 1, 0);
 
                 this.rangoFechas = [
                     firstDay.toISOString().substr(0, 10),
@@ -641,10 +757,10 @@ export default {
                 ];
             } else {
                 // Vista semanal: encontrar lunes de esta semana
-                const dayOfWeek = start.getDay();
+                const dayOfWeek = fechaBase.getDay();
                 const diffToMonday = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
-                const monday = new Date(start);
-                monday.setDate(start.getDate() + diffToMonday);
+                const monday = new Date(fechaBase);
+                monday.setDate(fechaBase.getDate() + diffToMonday);
 
                 // Domingo de esta semana
                 const sunday = new Date(monday);
@@ -654,6 +770,18 @@ export default {
                     monday.toISOString().substr(0, 10),
                     sunday.toISOString().substr(0, 10)
                 ];
+            }
+
+            this.actualizarCalendario();
+        },
+        actualizarCalendario() {
+
+            this.fechaActual = this.rangoFechas[0];
+            this.cargarHorarios();
+
+
+            if (this.$refs.calendar && this.$refs.calendar.updateTimes) {
+                this.$refs.calendar.updateTimes();
             }
         },
         abrirGestionInstructores() {
@@ -890,7 +1018,6 @@ export default {
                 const respuesta = await HttpService.obtenerConDatos(payload, 'clases.php');
 
                 this.horarios = respuesta.map(horario => {
-
                     const start = this.crearFechaLocal(horario.fecha_hora_inicio);
                     const end = this.crearFechaLocal(horario.fecha_hora_fin);
 
@@ -901,8 +1028,6 @@ export default {
                         end: end,
                         color: horario.color_calendario || '#1976D2',
                         timed: true,
-
-
                         extendedProps: {
                             instructor: horario.nombre_instructor || 'Sin instructor',
                             sala: horario.nombre_sala || 'Sin sala',
@@ -981,7 +1106,7 @@ export default {
         formatoHora(fecha) {
             if (!fecha) return 'Hora no disponible';
 
-            // Asegurarse de que es un objeto Date
+
             const fechaObj = fecha instanceof Date ? fecha : new Date(fecha);
 
             if (isNaN(fechaObj.getTime())) return 'Hora inválida';
@@ -1188,6 +1313,119 @@ export default {
             } catch (error) {
                 console.error('Error realizando reserva:', error);
             }
+        },
+        async cargarMiembrosInscritos() {
+            try {
+                const payload = {
+                    metodo: 'obtener_miembros_inscritos',
+                    id_horario: this.eventoSeleccionado.id
+                };
+
+                this.miembrosInscritos = await HttpService.obtenerConDatos(payload, 'clases.php');
+            } catch (error) {
+                console.error('Error cargando miembros inscritos:', error);
+                this.miembrosInscritos = [];
+            }
+        },
+
+        async cargarMiembrosDisponibles() {
+            try {
+                const payload = {
+                    metodo: 'obtener_miembros_disponibles'
+                };
+
+                this.miembrosDisponibles = await HttpService.obtenerConDatos(payload, 'miembros.php');
+            } catch (error) {
+                console.error('Error cargando miembros disponibles:', error);
+                this.miembrosDisponibles = [];
+            }
+        },
+
+        async agregarMiembro() {
+            if (!this.$refs.formMiembro.validate()) return;
+
+            try {
+                const payload = {
+                    metodo: 'agregar_miembro_clase',
+                    inscripcion: {
+                        id_horario: this.eventoSeleccionado.id,
+                        id_miembro: this.nuevoMiembro.id,
+                        monto_pagado: this.nuevoMiembro.monto_pagado || 0,
+                        fecha_inscripcion: new Date().toISOString().substr(0, 10)
+                    }
+                };
+
+                const resultado = await HttpService.registrar(payload, 'clases.php');
+
+                if (resultado.exito) {
+                    this.$store.commit('mostrarMensaje', {
+                        texto: 'Miembro agregado exitosamente',
+                        color: 'success'
+                    });
+
+                    // Limpiar formulario
+                    this.nuevoMiembro = { id: null, monto_pagado: 0 };
+                    this.$refs.formMiembro.reset();
+
+                    // Recargar datos
+                    await this.cargarMiembrosInscritos();
+                    this.cargarHorarios(); // Actualizar cupos
+
+                } else {
+                    throw new Error(resultado.mensaje);
+                }
+
+            } catch (error) {
+                console.error('Error agregando miembro:', error);
+                this.$store.commit('mostrarMensaje', {
+                    texto: error.message || 'Error al agregar miembro',
+                    color: 'error'
+                });
+            }
+        },
+
+        confirmarEliminarMiembro(miembro) {
+            this.miembroSeleccionado = miembro;
+            this.dialogEliminarMiembro = true;
+        },
+
+        async eliminarMiembro() {
+            try {
+                const payload = {
+                    metodo: 'eliminar_miembro_clase',
+                    id_inscripcion: this.miembroSeleccionado.id_inscripcion
+                };
+
+                const resultado = await HttpService.eliminar('clases.php', payload);
+
+                if (resultado.exito) {
+                    this.$store.commit('mostrarMensaje', {
+                        texto: 'Miembro eliminado de la clase',
+                        color: 'success'
+                    });
+
+                    this.dialogEliminarMiembro = false;
+                    await this.cargarMiembrosInscritos();
+                    this.cargarHorarios(); // Actualizar cupos
+                }
+
+            } catch (error) {
+                console.error('Error eliminando miembro:', error);
+                this.$store.commit('mostrarMensaje', {
+                    texto: 'Error al eliminar miembro',
+                    color: 'error'
+                });
+            }
+        },
+
+        formatoFecha(fecha) {
+            if (!fecha) return '';
+            const fechaObj = new Date(fecha);
+            return fechaObj.toLocaleDateString('es-ES', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            });
         }
     }
 };
@@ -1252,6 +1490,17 @@ export default {
     .calendar-container.month-view {
         height: 700px;
     }
+
+    .v-col.md-6 {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .v-btn-toggle,
+    .d-flex {
+        margin-bottom: 8px;
+    }
 }
 
 /* Personalización del calendario */
@@ -1260,19 +1509,5 @@ export default {
     box-shadow: 0 3px 5px -1px rgba(0, 0, 0, 0.2),
         0 5px 8px 0 rgba(0, 0, 0, 0.14),
         0 1px 14px 0 rgba(0, 0, 0, 0.12);
-}
-
-/* Mejora la visualización de eventos */
-.v-event {
-    cursor: pointer;
-    font-size: 0.85rem;
-    padding: 2px 4px;
-    border-radius: 2px;
-}
-
-/* Botones de navegación */
-.v-btn-toggle {
-    border-radius: 4px;
-    overflow: hidden;
 }
 </style>

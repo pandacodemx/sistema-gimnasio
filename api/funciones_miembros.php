@@ -47,6 +47,17 @@ function obtenerMiembros()
     return verificarMembresia($miembros);
 }
 
+function obtenerMiembrosDisponibles()
+{
+    $sentencia = "SELECT miembros.*, membresias.nombre AS membresia 
+                 FROM miembros
+                 LEFT JOIN membresias ON membresias.id = miembros.idMembresia WHERE miembros.estado = 'activo' 
+                 ORDER BY miembros.nombre";
+
+    $miembros = selectPrepare($sentencia);
+    return verificarMembresia($miembros);
+}
+
 function obtenerMiembroNombreMatricula($busqueda)
 {
     $sentencia = "SELECT miembros.*, membresias.nombre AS membresia, membresias.id AS idMembresia 
