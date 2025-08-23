@@ -25,11 +25,37 @@
         <v-btn color="primary" text @click="cerrarDialogo">
           Cerrar
         </v-btn>
-        <v-btn color="white" text @click="realizarPago">
+        <v-btn color="white" text @click="confirmarPago">
           Registrar
         </v-btn>
       </v-card-actions>
     </v-card>
+    <!--DIALOGO DE CONFIRMAICON FECHA -->
+    <v-dialog v-model="mostrarConfirmacionFecha" max-width="500px" persistent>
+      <v-card>
+        <v-card-title class="headline error">
+          <v-icon color="warning" class="mr-2">mdi-alert</v-icon>
+          Confirmar fecha diferente
+        </v-card-title>
+
+        <v-card-text class="pt-4">
+          <p>Estás seleccionando una fecha diferente al día actual:</p>
+          <p><strong>Fecha seleccionada:</strong> {{ fechaSeleccionadaFormateada }}</p>
+          <p><strong>Fecha actual:</strong> {{ fechaActualFormateada }}</p>
+          <p class="red--text">¿Estás seguro de que deseas continuar?</p>
+        </v-card-text>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="grey" text @click="mostrarConfirmacionFecha = false">
+            Cancelar
+          </v-btn>
+          <v-btn color="primary" text @click="realizarPagoConfirmado">
+            Confirmar
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
     <v-overlay :value="cargando">
       <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay>
@@ -51,8 +77,29 @@ export default {
       .toISOString()
       .substr(0, 10),
     membresias: [],
-    cargando: false
+    cargando: false,
+    mostrarConfirmacionFecha: false,
   }),
+  computed: {
+    fechaSeleccionadaFormateada() {
+      if (!this.fechaSeleccionada) return '';
+      const fecha = new Date(this.fechaSeleccionada);
+      return fecha.toLocaleDateString('es-MX', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric'
+      });
+    },
+
+    fechaActualFormateada() {
+      return new Date().toLocaleDateString('es-MX', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric'
+      });
+    }
+  },
+
 
   mounted() {
     this.obtenerMembresias();
@@ -72,21 +119,29 @@ export default {
       this.$emit("cerrar", false)
     },
 
-    realizarPago() {
-      if (!this.membresiaSeleccionada) return;
-      this.cargando = true;
-
+    esFechaDiferente() {
       const fechaSeleccionada = new Date(this.fechaSeleccionada);
-      const ahora = new Date();
+      const fechaActual = new Date();
 
-      const año = fechaSeleccionada.getFullYear();
-      const mes = fechaSeleccionada.getMonth();
-      const dia = fechaSeleccionada.getDate();
+      return fechaActual.getDate() !== fechaSeleccionada.getDate() ||
+        fechaActual.getMonth() !== fechaSeleccionada.getMonth() ||
+        fechaActual.getFullYear() !== fechaSeleccionada.getFullYear();
+    },
 
-      const fechaCompleta = new Date(año, mes, dia,
-        ahora.getHours(),
-        ahora.getMinutes(),
-        ahora.getSeconds());
+
+    confirmarPago() {
+      if (!this.membresiaSeleccionada) return;
+
+      if (this.esFechaDiferente()) {
+        this.mostrarConfirmacionFecha = true;
+      } else {
+        this.realizarPagoConfirmado();
+      }
+    },
+
+    realizarPagoConfirmado() {
+      this.cargando = true;
+      this.mostrarConfirmacionFecha = false;
 
       const formatDateTimeMexico = () => {
         const [year, month, day] = this.fechaSeleccionada.split('-');
@@ -98,7 +153,6 @@ export default {
 
         return `${year}-${month}-${day} ${horas}:${minutos}:${segundos}`;
       };
-
 
       let payload = {
         metodo: 'pagar',
@@ -120,8 +174,13 @@ export default {
           if (registrado) {
             this.$emit("pagado", registrado);
           }
+        })
+        .catch((error) => {
+          this.cargando = false;
+          console.error('Error al realizar el pago:', error);
         });
     }
+
 
   }
 };

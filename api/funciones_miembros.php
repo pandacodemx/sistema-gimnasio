@@ -70,10 +70,42 @@ function obtenerMiembroNombreMatricula($busqueda)
 
 function registrarPago($pago)
 {
-    $sentencia = "INSERT INTO pagos (matricula, idMembresia, idUsuario, fecha, monto) VALUES (?,?,?,?,?)";
-    $parametros = [$pago->matricula, $pago->idMembresia, $pago->idUsuario, $pago->fecha, $pago->pago];
+    // Convertir a array si es objeto
+    if (is_object($pago)) {
+        $pago = (array) $pago;
+    }
+
+    // Determinar el tipo de pago
+    $tipo = (isset($pago['id_clase']) || isset($pago['id_horario'])) ? 'clase' : 'membresia';
+    $idMembresia = ($tipo === 'membresia') ? ($pago['idMembresia'] ?? null) : null;
+
+    $sentencia = "INSERT INTO pagos (matricula, idMembresia, id_clase, id_horario, idUsuario, fecha, monto, tipo) 
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+
+    $parametros = [
+        $pago['matricula'] ?? null,
+        $idMembresia,
+        $pago['id_clase'] ?? null,
+        $pago['id_horario'] ?? null,
+        $pago['idUsuario'] ?? 1,
+        $pago['fecha'] ?? date('Y-m-d'),
+        $pago['pago'] ?? 0,
+        $tipo
+    ];
+
     $pagoRegistrado = insertar($sentencia, $parametros);
-    if ($pagoRegistrado) return actualizarMembresia($pago->matricula, $pago->idMembresia, $pago->duracion, $pago->fecha);
+
+    // Si es membresía, actualizar la membresía del miembro
+    if ($pagoRegistrado && $tipo === 'membresia') {
+        return actualizarMembresia(
+            $pago['matricula'],
+            $pago['idMembresia'],
+            $pago['duracion'] ?? 30,
+            $pago['fecha'] ?? date('Y-m-d')
+        );
+    }
+
+    return $pagoRegistrado;
 }
 
 function actualizarMembresia($matricula, $idMembresia, $duracion, $fechaInicio)

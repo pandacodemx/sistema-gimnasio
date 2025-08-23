@@ -58,8 +58,9 @@
           <v-card class="login-form-card rounded-xl px-6 py-8" max-width="450"
             style="background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(25px); border: 1px solid rgba(255, 255, 255, 0.2);">
             <div class="logo-container mb-6 d-flex">
-              <v-img src="https://i.ibb.co/pBRCQvhh/Logotipo-Bonito.png" contain width="160" height="160"
-                class="elevation-3"></v-img>
+              <v-img
+                src="https://static.vecteezy.com/system/resources/thumbnails/044/812/143/small_2x/dynamic-fitness-gym-logo-on-transparent-background-png.png"
+                contain width="160" height="160" class="elevation-3"></v-img>
             </div>
             <v-toolbar flat class="mb-6 transparent">
               <v-toolbar-title class="text-white font-weight-bold" style="font-size: 1.8rem;">Iniciar
