@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 20-08-2025 a las 23:00:50
+-- Tiempo de generación: 01-09-2025 a las 23:54:13
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -39,7 +39,7 @@ CREATE TABLE `ajustes` (
 --
 
 INSERT INTO `ajustes` (`nombre`, `logo`, `direccion`, `telefono`) VALUES
-('Bonito GYM', './imagenes/682627d867412.png', 'Direccion Gimnasio', '1111111111');
+('Tu Nombre', './imagenes/68a78e74c1602.png', 'Direccion Gimnasio', '1111111111');
 
 -- --------------------------------------------------------
 
@@ -65,7 +65,8 @@ INSERT INTO `clases` (`id`, `nombre`, `descripcion`, `duracion_min`, `nivel_difi
 (1, 'Prueba Clse', 'Clase blabla', NULL, 'principiante', '#1976D2', NULL),
 (2, 'Clase Pilates asasa', 'asdasdas', 60, 'intermedio', '#1976D2', NULL),
 (3, 'Clase Yoga', 'Clase Yoga ', 120, 'intermedio', '#D219C4', NULL),
-(4, 'Clase Spinning', 'Clase spinning impartida por tal tal', 60, 'avanzado', '#BED219', NULL);
+(4, 'Clase Spinning', 'Clase spinning impartida por tal tal', 60, 'avanzado', '#BED219', NULL),
+(5, 'Clase Spinning Avanzada', '', 180, 'avanzado', '#BA4903', NULL);
 
 -- --------------------------------------------------------
 
@@ -112,7 +113,9 @@ INSERT INTO `horarios_clases` (`id`, `id_clase`, `id_instructor`, `id_sala`, `fe
 (15, 4, 2, 2, '2025-08-21 09:00:00', '2025-08-21 10:00:00', 'semanal', 5),
 (16, 4, 2, 2, '2025-08-28 09:00:00', '2025-08-28 10:00:00', 'semanal', 5),
 (17, 4, 2, 2, '2025-09-04 09:00:00', '2025-09-04 10:00:00', 'semanal', 5),
-(18, 4, 2, 2, '2025-09-11 09:00:00', '2025-09-11 10:00:00', 'semanal', 5);
+(18, 4, 2, 2, '2025-09-11 09:00:00', '2025-09-11 10:00:00', 'semanal', 5),
+(19, 5, 2, 2, '2025-08-22 10:30:00', '2025-08-22 13:30:00', 'mensual', 5),
+(20, 5, 2, 2, '2025-09-22 10:30:00', '2025-09-22 13:30:00', 'mensual', 5);
 
 -- --------------------------------------------------------
 
@@ -194,12 +197,12 @@ CREATE TABLE `miembros` (
 --
 
 INSERT INTO `miembros` (`id`, `matricula`, `nombre`, `telefono`, `direccion`, `edad`, `sufreEnfermedad`, `tieneSeguro`, `enfermedad`, `institucion`, `nombreContacto`, `telefonoContacto`, `imagen`, `estado`, `fechaRegistro`, `fechaInicio`, `fechaFin`, `idMembresia`, `afiliacion`) VALUES
-(14, '2025-1', 'Said1', '12312312312', 'dasdasdas', 18, 0, 0, '', '', 'asdasdasd', '1231212312312', './imagenes/usuario.png', 'VENCIDO', '2025-05-21 12:42:55', '2025-07-16 11:40:33', '2025-08-15 11:40:33', 2, ''),
-(15, '2025-15', 'fdsfsdfsdfsd', '324324324324', 'dfdsfsdfsdfsd', 18, 0, 0, '', '', 'sdfsdfsd', '32432423', './imagenes/usuario.png', 'VENCIDO', '2025-05-21 12:43:17', NULL, NULL, NULL, ''),
-(16, '2025-16', 'asdasdasdas', '12312312312', 'sadasdasda', 18, 0, 0, '', '', 'sadasdas', '21312312', './imagenes/usuario.png', 'ACTIVO', '2025-05-21 12:49:08', '2025-07-27 11:52:26', '2025-08-26 11:52:26', 4, ''),
-(17, '2025-17', 'adsdasdasd', '12312321', 'sdadsadas', 18, 0, 0, '', '', 'asdasdas', '21312312', './imagenes/usuario.png', 'ACTIVO', '2025-07-22 09:03:28', '2025-08-20 12:21:49', '2025-08-27 12:21:49', 5, ''),
-(18, '2025-18', 'Prueba Fech', '21312321', 'asddsa', 18, 0, 0, '', '', 'dasdas', '12321', './imagenes/usuario.png', 'VENCIDO', '2025-08-11 09:56:00', NULL, NULL, NULL, ''),
-(19, '2025-19', 'Prueba Valeria', '123456789', 'Valeria', 18, 0, 0, '', '', 'Baleria', '1234581248', './imagenes/usuario.png', 'VENCIDO', '2025-08-11 11:42:51', NULL, NULL, NULL, '');
+(14, '2025-1', 'Said1', '12312312312', 'dasdasdas', 18, 0, 0, '', '', 'asdasdasd', '1231212312312', './imagenes/usuario.png', 'ACTIVO', '2025-05-21 12:42:55', '2025-09-08 15:38:55', '2025-09-15 15:38:55', 5, ''),
+(15, '2025-15', 'Valeria Manzo', '324324324324', 'dfdsfsdfsdfsd', 18, 0, 0, '', '', 'sdfsdfsd', '32432423', './imagenes/usuario.png', 'VENCIDO', '2025-05-21 12:43:17', '2025-08-21 13:47:51', '2025-08-28 13:47:51', 5, ''),
+(16, '2025-16', 'asdasdasdas', '12312312312', 'sadasdasda', 18, 0, 0, '', '', 'sadasdas', '21312312', './imagenes/usuario.png', 'ACTIVO', '2025-05-21 12:49:08', '2025-08-26 10:53:26', '2025-09-25 10:53:26', 2, ''),
+(17, '2025-17', 'Jose Armando Baños', '12312321', 'sdadsadas', 18, 0, 0, '', '', 'asdasdas', '21312312', './imagenes/usuario.png', 'VENCIDO', '2025-07-22 09:03:28', '2025-08-20 12:21:49', '2025-08-27 12:21:49', 5, ''),
+(18, '2025-18', 'Martin Dom Salcedo', '21312321', 'asddsa', 18, 0, 0, '', '', 'dasdas', '12321', './imagenes/usuario.png', 'ACTIVO', '2025-08-11 09:56:00', '2025-08-24 12:07:54', '2025-09-23 12:07:54', 3, ''),
+(19, '2025-19', 'Prueba Valeria', '123456789', 'Valeria', 18, 0, 0, '', '', 'Baleria', '1234581248', './imagenes/usuario.png', 'ACTIVO', '2025-08-11 11:42:51', '2025-08-29 11:32:37', '2025-09-28 11:32:37', 3, '');
 
 -- --------------------------------------------------------
 
@@ -211,69 +214,86 @@ CREATE TABLE `pagos` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `matricula` varchar(50) NOT NULL,
   `idMembresia` bigint(20) NOT NULL,
+  `id_clase` int(11) DEFAULT NULL,
+  `id_horario` int(11) DEFAULT NULL,
   `idUsuario` bigint(20) NOT NULL,
   `fecha` datetime NOT NULL,
-  `monto` decimal(10,2) NOT NULL
+  `monto` decimal(10,2) NOT NULL,
+  `tipo` enum('membresia','clase') NOT NULL DEFAULT 'membresia'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `pagos`
 --
 
-INSERT INTO `pagos` (`id`, `matricula`, `idMembresia`, `idUsuario`, `fecha`, `monto`) VALUES
-(1, '0', 0, 1, '2025-05-15 12:57:21', 50.00),
-(2, '2025-1', 5, 1, '2025-05-15 00:00:00', 500.00),
-(3, '2025-2', 3, 1, '2025-04-05 00:00:00', 500.00),
-(4, '2025-3', 1, 1, '2025-07-03 00:00:00', 500.00),
-(5, '2025-4', 3, 1, '2025-04-04 00:00:00', 500.00),
-(6, '2025-5', 3, 1, '2025-05-01 00:00:00', 500.00),
-(7, '2025-4', 3, 1, '2025-04-03 00:00:00', 500.00),
-(8, '2025-7', 0, 4, '2025-05-21 00:00:00', 0.00),
-(9, '2025-8', 3, 4, '2025-05-22 00:00:00', 500.00),
-(10, '2025-9', 4, 4, '2025-05-20 18:07:51', 500.00),
-(11, '2025-10', 3, 4, '2025-05-20 18:08:38', 500.00),
-(12, '2025-11', 0, 4, '2025-05-20 12:13:23', 0.00),
-(13, '2025-12', 0, 4, '2025-04-30 12:15:40', 0.00),
-(14, '2025-11', 0, 4, '2025-05-20 12:16:00', 0.00),
-(15, '2025-11', 0, 4, '2025-05-01 12:17:19', 0.00),
-(16, '2025-11', 0, 4, '2025-05-20 12:19:34', 0.00),
-(17, '2025-11', 0, 4, '2025-05-20 12:19:42', 0.00),
-(18, '2025-11', 0, 4, '2025-05-20 12:20:42', 0.00),
-(19, '2025-11', 0, 4, '2025-05-20 12:21:02', 0.00),
-(20, '2025-11', 0, 4, '2025-05-20 12:23:46', 0.00),
-(21, '2025-11', 0, 4, '2025-05-20 12:26:39', 0.00),
-(22, '2025-11', 1, 4, '2025-05-20 12:26:49', 500.00),
-(23, '2025-4', 0, 4, '2025-05-20 12:27:07', 0.00),
-(24, '2025-4', 0, 4, '2025-05-20 12:31:12', 0.00),
-(25, '2025-12', 0, 4, '2025-05-21 12:31:31', 0.00),
-(26, '2025-7', 0, 4, '2025-05-20 12:31:52', 0.00),
-(27, '2025-12', 5, 4, '2025-05-20 12:32:14', 500.00),
-(28, '2025-4', 0, 4, '2025-05-20 12:35:29', 0.00),
-(29, '2025-4', 0, 4, '2025-05-20 12:35:54', 0.00),
-(30, '2025-4', 0, 4, '2025-05-20 12:39:05', 0.00),
-(31, '2025-4', 0, 4, '2025-05-20 12:39:18', 0.00),
-(32, '2025-4', 0, 4, '2025-05-21 12:41:00', 0.00),
-(33, '2025-7', 2, 4, '2025-05-01 12:41:27', 500.00),
-(34, '2025-4', 2, 4, '2025-05-21 12:41:44', 500.00),
-(35, '2025-13', 1, 4, '2025-05-21 12:42:12', 500.00),
-(36, '2025-1', 2, 4, '2025-05-21 12:43:04', 500.00),
-(37, '2025-15', 4, 4, '2025-05-14 12:43:30', 500.00),
-(38, '2025-16', 5, 4, '2025-05-21 12:49:19', 500.00),
-(39, '0', 0, 4, '2025-05-26 15:37:48', 50.00),
-(40, '0', 0, 1, '2025-05-26 15:39:44', 50.00),
-(41, '2025-1', 2, 4, '2025-07-16 11:40:33', 500.00),
-(42, '2025-15', 3, 1, '2025-07-21 11:50:42', 500.00),
-(43, '0', 0, 1, '2025-07-21 11:51:21', 50.00),
-(44, '2025-16', 4, 1, '2025-07-27 11:52:26', 500.00),
-(45, '2025-17', 2, 1, '2025-07-22 09:29:51', 500.00),
-(46, '0', 0, 1, '2025-07-22 09:30:02', 50.00),
-(47, '0', 0, 2, '2025-07-22 10:02:37', 70.00),
-(48, '0', 0, 1, '2025-07-29 10:06:45', 50.00),
-(49, '2025-18', 5, 1, '2025-08-11 10:17:20', 500.00),
-(50, '0', 0, 1, '2025-08-11 11:39:00', 50.00),
-(51, '2025-19', 5, 1, '2025-08-04 11:43:25', 500.00),
-(52, '2025-19', 5, 1, '2025-08-11 13:37:26', 500.00),
-(53, '2025-17', 5, 1, '2025-08-20 12:21:49', 500.00);
+INSERT INTO `pagos` (`id`, `matricula`, `idMembresia`, `id_clase`, `id_horario`, `idUsuario`, `fecha`, `monto`, `tipo`) VALUES
+(1, '0', 0, NULL, NULL, 1, '2025-05-15 12:57:21', 50.00, 'membresia'),
+(2, '2025-1', 5, NULL, NULL, 1, '2025-05-15 00:00:00', 500.00, 'membresia'),
+(3, '2025-2', 3, NULL, NULL, 1, '2025-04-05 00:00:00', 500.00, 'membresia'),
+(4, '2025-3', 1, NULL, NULL, 1, '2025-07-03 00:00:00', 500.00, 'membresia'),
+(5, '2025-4', 3, NULL, NULL, 1, '2025-04-04 00:00:00', 500.00, 'membresia'),
+(6, '2025-5', 3, NULL, NULL, 1, '2025-05-01 00:00:00', 500.00, 'membresia'),
+(7, '2025-4', 3, NULL, NULL, 1, '2025-04-03 00:00:00', 500.00, 'membresia'),
+(8, '2025-7', 0, NULL, NULL, 4, '2025-05-21 00:00:00', 0.00, 'membresia'),
+(9, '2025-8', 3, NULL, NULL, 4, '2025-05-22 00:00:00', 500.00, 'membresia'),
+(10, '2025-9', 4, NULL, NULL, 4, '2025-05-20 18:07:51', 500.00, 'membresia'),
+(11, '2025-10', 3, NULL, NULL, 4, '2025-05-20 18:08:38', 500.00, 'membresia'),
+(12, '2025-11', 0, NULL, NULL, 4, '2025-05-20 12:13:23', 0.00, 'membresia'),
+(13, '2025-12', 0, NULL, NULL, 4, '2025-04-30 12:15:40', 0.00, 'membresia'),
+(14, '2025-11', 0, NULL, NULL, 4, '2025-05-20 12:16:00', 0.00, 'membresia'),
+(15, '2025-11', 0, NULL, NULL, 4, '2025-05-01 12:17:19', 0.00, 'membresia'),
+(16, '2025-11', 0, NULL, NULL, 4, '2025-05-20 12:19:34', 0.00, 'membresia'),
+(17, '2025-11', 0, NULL, NULL, 4, '2025-05-20 12:19:42', 0.00, 'membresia'),
+(18, '2025-11', 0, NULL, NULL, 4, '2025-05-20 12:20:42', 0.00, 'membresia'),
+(19, '2025-11', 0, NULL, NULL, 4, '2025-05-20 12:21:02', 0.00, 'membresia'),
+(20, '2025-11', 0, NULL, NULL, 4, '2025-05-20 12:23:46', 0.00, 'membresia'),
+(21, '2025-11', 0, NULL, NULL, 4, '2025-05-20 12:26:39', 0.00, 'membresia'),
+(22, '2025-11', 1, NULL, NULL, 4, '2025-05-20 12:26:49', 500.00, 'membresia'),
+(23, '2025-4', 0, NULL, NULL, 4, '2025-05-20 12:27:07', 0.00, 'membresia'),
+(24, '2025-4', 0, NULL, NULL, 4, '2025-05-20 12:31:12', 0.00, 'membresia'),
+(25, '2025-12', 0, NULL, NULL, 4, '2025-05-21 12:31:31', 0.00, 'membresia'),
+(26, '2025-7', 0, NULL, NULL, 4, '2025-05-20 12:31:52', 0.00, 'membresia'),
+(27, '2025-12', 5, NULL, NULL, 4, '2025-05-20 12:32:14', 500.00, 'membresia'),
+(28, '2025-4', 0, NULL, NULL, 4, '2025-05-20 12:35:29', 0.00, 'membresia'),
+(29, '2025-4', 0, NULL, NULL, 4, '2025-05-20 12:35:54', 0.00, 'membresia'),
+(30, '2025-4', 0, NULL, NULL, 4, '2025-05-20 12:39:05', 0.00, 'membresia'),
+(31, '2025-4', 0, NULL, NULL, 4, '2025-05-20 12:39:18', 0.00, 'membresia'),
+(32, '2025-4', 0, NULL, NULL, 4, '2025-05-21 12:41:00', 0.00, 'membresia'),
+(33, '2025-7', 2, NULL, NULL, 4, '2025-05-01 12:41:27', 500.00, 'membresia'),
+(34, '2025-4', 2, NULL, NULL, 4, '2025-05-21 12:41:44', 500.00, 'membresia'),
+(35, '2025-13', 1, NULL, NULL, 4, '2025-05-21 12:42:12', 500.00, 'membresia'),
+(36, '2025-1', 2, NULL, NULL, 4, '2025-05-21 12:43:04', 500.00, 'membresia'),
+(37, '2025-15', 4, NULL, NULL, 4, '2025-05-14 12:43:30', 500.00, 'membresia'),
+(38, '2025-16', 5, NULL, NULL, 4, '2025-05-21 12:49:19', 500.00, 'membresia'),
+(39, '0', 0, NULL, NULL, 4, '2025-05-26 15:37:48', 50.00, 'membresia'),
+(40, '0', 0, NULL, NULL, 1, '2025-05-26 15:39:44', 50.00, 'membresia'),
+(41, '2025-1', 2, NULL, NULL, 4, '2025-07-16 11:40:33', 500.00, 'membresia'),
+(42, '2025-15', 3, NULL, NULL, 1, '2025-07-21 11:50:42', 500.00, 'membresia'),
+(43, '0', 0, NULL, NULL, 1, '2025-07-21 11:51:21', 50.00, 'membresia'),
+(44, '2025-16', 4, NULL, NULL, 1, '2025-07-27 11:52:26', 500.00, 'membresia'),
+(45, '2025-17', 2, NULL, NULL, 1, '2025-07-22 09:29:51', 500.00, 'membresia'),
+(46, '0', 0, NULL, NULL, 1, '2025-07-22 09:30:02', 50.00, 'membresia'),
+(47, '0', 0, NULL, NULL, 2, '2025-07-22 10:02:37', 70.00, 'membresia'),
+(48, '0', 0, NULL, NULL, 1, '2025-07-29 10:06:45', 50.00, 'membresia'),
+(49, '2025-18', 5, NULL, NULL, 1, '2025-08-11 10:17:20', 500.00, 'membresia'),
+(50, '0', 0, NULL, NULL, 1, '2025-08-11 11:39:00', 50.00, 'membresia'),
+(51, '2025-19', 5, NULL, NULL, 1, '2025-08-04 11:43:25', 500.00, 'membresia'),
+(52, '2025-19', 5, NULL, NULL, 1, '2025-08-11 13:37:26', 500.00, 'membresia'),
+(53, '2025-17', 5, NULL, NULL, 1, '2025-08-20 12:21:49', 500.00, 'membresia'),
+(54, '2025-18', 3, NULL, NULL, 1, '2025-08-24 12:07:54', 500.00, 'membresia'),
+(55, '2025-15', 5, NULL, NULL, 1, '2025-08-21 13:47:51', 500.00, 'membresia'),
+(56, '0', 0, NULL, NULL, 1, '2025-08-21 13:48:28', 50.00, 'membresia'),
+(57, '0', 0, NULL, NULL, 1, '2025-08-21 14:17:03', 50.00, 'membresia'),
+(58, '2025-1', 5, NULL, NULL, 1, '2025-08-21 14:17:24', 500.00, 'membresia'),
+(59, '0', 0, NULL, NULL, 1, '2025-08-21 14:40:51', 50.00, 'membresia'),
+(60, '2025-16', 0, NULL, NULL, 1, '2025-08-24 10:53:07', 0.00, 'membresia'),
+(61, '2025-16', 2, NULL, NULL, 1, '2025-08-26 10:53:26', 500.00, 'membresia'),
+(62, '2025-19', 0, NULL, NULL, 1, '2025-08-28 11:10:09', 0.00, 'membresia'),
+(63, '2025-19', 3, NULL, NULL, 1, '2025-08-29 11:11:45', 500.00, 'membresia'),
+(64, '2025-19', 3, NULL, NULL, 1, '2025-08-24 11:19:54', 500.00, 'membresia'),
+(65, '2025-19', 3, NULL, NULL, 1, '2025-08-29 11:32:37', 500.00, 'membresia'),
+(66, '2025-1', 0, NULL, NULL, 1, '2025-08-29 09:03:44', 0.00, 'membresia'),
+(67, '2025-1', 5, NULL, NULL, 1, '2025-09-08 15:38:55', 500.00, 'membresia');
 
 -- --------------------------------------------------------
 
@@ -410,7 +430,8 @@ CREATE TABLE `salas` (
 
 INSERT INTO `salas` (`id`, `nombre`, `capacidad`, `equipamiento`) VALUES
 (1, 'Sala Yoga', 25, 'Tapetes, balones, maquina correr'),
-(2, 'Sala Spinning', 5, 'Bicicletas, tapetes, cronometros');
+(2, 'Sala Spinning', 5, 'Bicicletas, tapetes, cronometros'),
+(3, 'Sala Pilates', 20, 'Pesas, tapetes, pelotas');
 
 -- --------------------------------------------------------
 
@@ -505,7 +526,12 @@ INSERT INTO `visitas` (`id`, `idMiembro`, `idUsuario`, `idMembresia`, `fecha`) V
 (17, 16, 1, 4, '2025-07-29 12:38:47'),
 (18, NULL, 1, NULL, '2025-08-11 11:39:00'),
 (19, 16, 1, 4, '2025-08-11 11:39:11'),
-(20, 19, 1, 5, '2025-08-11 11:43:48');
+(20, 19, 1, 5, '2025-08-11 11:43:48'),
+(21, NULL, 1, NULL, '2025-08-21 13:48:28'),
+(22, NULL, 1, NULL, '2025-08-21 14:17:03'),
+(23, NULL, 1, NULL, '2025-08-21 14:40:51'),
+(24, 15, 1, 5, '2025-08-21 14:40:56'),
+(25, 14, 1, 5, '2025-09-01 15:52:02');
 
 --
 -- Índices para tablas volcadas
@@ -636,7 +662,7 @@ ALTER TABLE `visitas`
 -- AUTO_INCREMENT de la tabla `clases`
 --
 ALTER TABLE `clases`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de la tabla `gastos`
@@ -648,7 +674,7 @@ ALTER TABLE `gastos`
 -- AUTO_INCREMENT de la tabla `horarios_clases`
 --
 ALTER TABLE `horarios_clases`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT de la tabla `instructores`
@@ -672,7 +698,7 @@ ALTER TABLE `miembros`
 -- AUTO_INCREMENT de la tabla `pagos`
 --
 ALTER TABLE `pagos`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=68;
 
 --
 -- AUTO_INCREMENT de la tabla `permisos`
@@ -708,7 +734,7 @@ ALTER TABLE `roles`
 -- AUTO_INCREMENT de la tabla `salas`
 --
 ALTER TABLE `salas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `usuarios`
@@ -732,7 +758,7 @@ ALTER TABLE `ventas_productos`
 -- AUTO_INCREMENT de la tabla `visitas`
 --
 ALTER TABLE `visitas`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- Restricciones para tablas volcadas
