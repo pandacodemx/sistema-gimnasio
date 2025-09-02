@@ -3,11 +3,11 @@
         <!-- Barra de herramientas -->
         <v-row class="mb-4" align="center">
             <v-col cols="12" md="12">
-                <v-btn color="primary" @click="dialogNuevaClase = true">
-                    <v-icon left>mdi-plus</v-icon> Nueva Clase
-                </v-btn>
                 <v-btn color="secondary" @click="dialogNuevoHorario = true" class="ml-2">
                     <v-icon left>mdi-clock</v-icon> Programar Horario
+                </v-btn>
+                <v-btn color="primary" @click="dialogNuevaClase = true">
+                    <v-icon left>mdi-plus</v-icon> Nueva Clase
                 </v-btn>
                 <v-btn color="indigo" dark @click="abrirGestionInstructores" class="ml-2">
                     <v-icon left>mdi-account-tie</v-icon>
@@ -505,7 +505,7 @@
                                             <v-list-item-subtitle>{{ miembro.email }} • {{ miembro.telefono
                                                 }}</v-list-item-subtitle>
                                             <v-list-item-subtitle>
-                                                Inscrito el: {{ formatoFecha(miembro.fecha_inscripcion) }}
+                                                Inscrito el: {{ formatoFecha(miembro.fecha_reserva) }}
                                             </v-list-item-subtitle>
                                         </v-list-item-content>
                                         <v-list-item-action>
@@ -1398,21 +1398,29 @@ export default {
 
                 const resultado = await HttpService.eliminar('clases.php', payload);
 
-                if (resultado.exito) {
+                // Manejar diferentes formatos de respuesta
+                const exito = (resultado.exito === true) || (resultado === true);
+
+                if (exito) {
                     this.$store.commit('mostrarMensaje', {
-                        texto: 'Miembro eliminado de la clase',
+                        texto: resultado.mensaje || 'Miembro eliminado de la clase',
                         color: 'success'
                     });
 
                     this.dialogEliminarMiembro = false;
+
+                    // Recargar datos
                     await this.cargarMiembrosInscritos();
-                    this.cargarHorarios(); // Actualizar cupos
+                    await this.cargarHorarios();
+
+                } else {
+                    throw new Error(resultado.mensaje || 'Error al eliminar miembro');
                 }
 
             } catch (error) {
                 console.error('Error eliminando miembro:', error);
                 this.$store.commit('mostrarMensaje', {
-                    texto: 'Error al eliminar miembro',
+                    texto: error.message || 'Error al eliminar miembro',
                     color: 'error'
                 });
             }

@@ -18,6 +18,7 @@ switch ($metodo) {
             "totalPagos" => obtenerTotalesPago($payload->filtros),
             "pagos" => obtenerPagos($payload->filtros),
             "totalesMembresias" => obtenerTotalesMembresia($payload->filtros),
+            "totalesClases" => obtenerTotalesClases($payload->filtros),
             "totalesUsuario" => obtenerTotalesPorUsuario($payload->filtros),
             "totalesMiembros" => obtenerTotalesPorMiembro($payload->filtros),
         ]);

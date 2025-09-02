@@ -48,7 +48,7 @@
           <template v-slot:activator>
             <v-list-item-title class="section-title">Principal</v-list-item-title>
           </template>
-          <v-list-item v-for="item in mainItems" :key="item.title" link :to="item.link" class="drawer-item">
+          <v-list-item v-for="item in mainItems" :key="item.title" link :to="item.link" class="drawer-item ml-5">
             <v-list-item-icon>
               <v-icon small>{{ item.icon }}</v-icon>
             </v-list-item-icon>
@@ -63,7 +63,7 @@
           <template v-slot:activator>
             <v-list-item-title class="section-title">Registros</v-list-item-title>
           </template>
-          <v-list-item v-for="item in registerItems" :key="item.title" link :to="item.link" class="drawer-item">
+          <v-list-item v-for="item in registerItems" :key="item.title" link :to="item.link" class="drawer-item ml-5">
             <v-list-item-icon>
               <v-icon small>{{ item.icon }}</v-icon>
             </v-list-item-icon>
@@ -78,7 +78,7 @@
           <template v-slot:activator>
             <v-list-item-title class="section-title">Tienda</v-list-item-title>
           </template>
-          <v-list-item v-for="item in pruductosItems" :key="item.title" link :to="item.link" class="drawer-item">
+          <v-list-item v-for="item in pruductosItems" :key="item.title" link :to="item.link" class="drawer-item ml-5">
             <v-list-item-icon>
               <v-icon small>{{ item.icon }}</v-icon>
             </v-list-item-icon>
@@ -93,7 +93,7 @@
           <template v-slot:activator>
             <v-list-item-title class="section-title">Clases</v-list-item-title>
           </template>
-          <v-list-item v-for="item in clasesItems" :key="item.title" link :to="item.link" class="drawer-item">
+          <v-list-item v-for="item in clasesItems" :key="item.title" link :to="item.link" class="drawer-item ml-5">
             <v-list-item-icon>
               <v-icon small>{{ item.icon }}</v-icon>
             </v-list-item-icon>
@@ -108,7 +108,7 @@
           <template v-slot:activator>
             <v-list-item-title class="section-title">Reportes</v-list-item-title>
           </template>
-          <v-list-item v-for="item in reportItems" :key="item.title" link :to="item.link" class="drawer-item">
+          <v-list-item v-for="item in reportItems" :key="item.title" link :to="item.link" class="drawer-item ml-5">
             <v-list-item-icon>
               <v-icon small>{{ item.icon }}</v-icon>
             </v-list-item-icon>
@@ -123,7 +123,7 @@
           <template v-slot:activator>
             <v-list-item-title class="section-title">Configuración</v-list-item-title>
           </template>
-          <v-list-item v-for="item in configItems" :key="item.title" link :to="item.link" class="drawer-item">
+          <v-list-item v-for="item in configItems" :key="item.title" link :to="item.link" class="drawer-item ml-5">
             <v-list-item-icon>
               <v-icon small>{{ item.icon }}</v-icon>
             </v-list-item-icon>

@@ -359,59 +359,64 @@ function obtenerMiembrosInscritos($idHorario)
         r.id as id_inscripcion,
         m.id,
         m.nombre,
-        m.email, 
         m.telefono,
-        r.fecha_inscripcion,
-        r.monto_pagado,
+        r.fecha_reserva,
         r.estado
     FROM reservas_clases r
     INNER JOIN miembros m ON r.id_miembro = m.id
     WHERE r.id_horario = ? AND r.estado = 'confirmada'
-    ORDER BY r.fecha_inscripcion DESC";
+    ORDER BY r.fecha_reserva DESC";
 
     return selectPrepare($sentencia, [$idHorario]);
 }
 
-
 function agregarMiembroAClase($inscripcion)
 {
-
+    // Convertir a array de manera segura
     if (is_object($inscripcion)) {
-        $inscripcion = (array) $inscripcion;
-    }
-    error_log("Datos de inscripción recibidos: " . print_r($inscripcion, true));
-    if (!isset($inscripcion['id_horario']) || !isset($inscripcion['id_miembro']) || !isset($inscripcion['fecha_inscripcion'])) {
-        return ['exito' => false, 'mensaje' => 'Datos incompletos para la inscripción'];
+        $inscripcion = json_decode(json_encode($inscripcion), true);
     }
 
+    // Verificar que los datos necesarios estén presentes
+    $camposRequeridos = ['id_horario', 'id_miembro'];
+    foreach ($camposRequeridos as $campo) {
+        if (!isset($inscripcion[$campo])) {
+
+            return ['exito' => false, 'mensaje' => "Datos incompletos para la inscripción. Falta: $campo"];
+        }
+    }
+
+    // Asignar fecha_reserva con la fecha actual si no se proporciona
+    if (!isset($inscripcion['fecha_reserva']) || empty($inscripcion['fecha_reserva'])) {
+        $inscripcion['fecha_reserva'] = date('Y-m-d H:i:s');
+    }
+
+    // Primero verificar cupos disponibles - CONSULTA MÁS SEGURA
     $verificarCupos = "SELECT max_participantes FROM horarios_clases WHERE id = ?";
     $cupos = selectPrepare($verificarCupos, [$inscripcion['id_horario']]);
-    error_log("Resultado de consulta de cupos: " . print_r($cupos, true));
+
 
     if ($cupos === false) {
-        error_log("Error en consulta de cupos");
+
         return ['exito' => false, 'mensaje' => 'Error al verificar cupos disponibles'];
     }
 
     if (empty($cupos)) {
-        error_log("Horario no encontrado: " . $inscripcion['id_horario']);
+
         return ['exito' => false, 'mensaje' => 'No se encontró el horario especificado'];
     }
-
+    // Verificar reservas existentes
     $verificarReservas = "SELECT COUNT(*) as reservas_actuales FROM reservas_clases 
                          WHERE id_horario = ? AND estado = 'confirmada'";
     $reservas = selectPrepare($verificarReservas, [$inscripcion['id_horario']]);
 
-    error_log("Reservas actuales: " . print_r($reservas, true));
-
     $reservasActuales = 0;
-    if (!empty($reservas)) {
-        $reservasActuales = (int) $reservas[0]['reservas_actuales'];
+    if (!empty($reservas) && isset($reservas[0]->reservas_actuales)) {
+        $reservasActuales = (int) $reservas[0]->reservas_actuales;
     }
 
-    $cuposDisponibles = (int) $cupos[0]['max_participantes'] - $reservasActuales;
-
-    error_log("Cupos disponibles calculados: " . $cuposDisponibles);
+    $maxParticipantes = (int) $cupos[0]->max_participantes;
+    $cuposDisponibles = $maxParticipantes - $reservasActuales;
 
     if ($cuposDisponibles <= 0) {
         return ['exito' => false, 'mensaje' => 'No hay cupos disponibles'];
@@ -430,64 +435,115 @@ function agregarMiembroAClase($inscripcion)
         return ['exito' => false, 'mensaje' => 'El miembro ya está inscrito en esta clase'];
     }
 
-    // Insertar la reserva
-    $sentencia = "INSERT INTO reservas_clases (id_horario, id_miembro, fecha_inscripcion, estado) 
+    $sentencia = "INSERT INTO reservas_clases (id_horario, id_miembro, fecha_reserva, estado) 
                  VALUES (?, ?, ?, 'confirmada')";
+
+    error_log("Sentencia SQL: " . $sentencia);
+    error_log("Parámetros: " . print_r([
+        $inscripcion['id_horario'],
+        $inscripcion['id_miembro'],
+        $inscripcion['fecha_reserva']
+    ], true));
 
     $resultado = insertar($sentencia, [
         $inscripcion['id_horario'],
         $inscripcion['id_miembro'],
-        $inscripcion['fecha_inscripcion']
+        $inscripcion['fecha_reserva']
     ]);
 
-    // VERIFICACIÓN DEL RESULTADO CORREGIDA
     if ($resultado === false) {
+
         return ['exito' => false, 'mensaje' => 'Error al insertar la reserva'];
     }
 
-    // Registrar el pago si se especificó un monto
-    if (($resultado['exito'] ?? false) && isset($inscripcion['monto_pagado']) && $inscripcion['monto_pagado'] > 0) {
-        // Incluir el archivo donde está registrarPago()
+    $exito = false;
+    $id = null;
+
+    if (is_array($resultado)) {
+        $exito = $resultado['exito'] ?? false;
+        $id = $resultado['id'] ?? null;
+    } elseif (is_object($resultado)) {
+        $exito = $resultado->exito ?? false;
+        $id = $resultado->id ?? null;
+    } elseif (is_bool($resultado)) {
+        $exito = $resultado;
+    } elseif (is_numeric($resultado)) {
+        $exito = true;
+        $id = $resultado;
+    }
+
+    if (!$exito && $resultado !== false) {
+
+        $verificarInsercion = "SELECT id FROM reservas_clases 
+                              WHERE id_horario = ? AND id_miembro = ? AND estado = 'confirmada' 
+                              ORDER BY id DESC LIMIT 1";
+
+        $registroInsertado = selectPrepare($verificarInsercion, [
+            $inscripcion['id_horario'],
+            $inscripcion['id_miembro']
+        ]);
+
+        if (!empty($registroInsertado)) {
+            $exito = true;
+            $id = is_object($registroInsertado[0]) ? $registroInsertado[0]->id : $registroInsertado[0]['id'];
+        }
+    }
+
+    if ($exito && isset($inscripcion['monto_pagado']) && $inscripcion['monto_pagado'] > 0) {
+
         include_once "funciones_miembros.php";
 
-        // Obtener el ID de la clase desde el horario
-        $idClase = obtenerIdClaseDeHorario($inscripcion['id_horario']);
+        $consultaIdClase = "SELECT id_clase FROM horarios_clases WHERE id = ?";
+        $resultadoIdClase = selectPrepare($consultaIdClase, [$inscripcion['id_horario']]);
+        $idClase = null;
+        if (!empty($resultadoIdClase)) {
+            if (is_object($resultadoIdClase[0])) {
+                $idClase = $resultadoIdClase[0]->id_clase;
+            } else {
+                $idClase = $resultadoIdClase[0]['id_clase'];
+            }
+        }
 
-        $pagoData = [
-            'matricula' => $inscripcion['id_miembro'],
-            'id_clase' => $idClase,
-            'id_horario' => $inscripcion['id_horario'],
-            'idUsuario' => $inscripcion['id_usuario_registro'] ?? 1,
-            'fecha' => $inscripcion['fecha_inscripcion'],
-            'pago' => $inscripcion['monto_pagado']
-        ];
-
-        // Convertir a objeto para registrarPago si es necesario
-        $pagoObj = (object) $pagoData;
-
-        // Llamar a la función existente registrarPago()
-        registrarPago($pagoObj);
+        if ($idClase) {
+            $pagoData = [
+                'matricula' => $inscripcion['id_miembro'],
+                'id_clase' => $idClase,
+                'id_horario' => $inscripcion['id_horario'],
+                'idUsuario' => $inscripcion['id_usuario_registro'] ?? 1,
+                'fecha' => $inscripcion['fecha_reserva'],
+                'pago' => $inscripcion['monto_pagado']
+            ];
+            error_log("Datos para pago: " . print_r($pagoData, true));
+            $pagoObj = (object) $pagoData;
+            $resultadoPago = registrarPago($pagoObj);
+            error_log("Resultado del pago: " . print_r($resultadoPago, true));
+        } else {
+            error_log("Error: No se pudo obtener el ID de la clase del horario " . $inscripcion['id_horario']);
+        }
     }
 
     return [
-        'exito' => $resultado['exito'] ?? false,
-        'mensaje' => ($resultado['exito'] ?? false) ? 'Miembro agregado exitosamente' : 'Error al agregar miembro',
-        'id' => $resultado['id'] ?? null
+        'exito' => $exito,
+        'mensaje' => $exito ? 'Miembro agregado exitosamente' : 'Error al agregar miembro',
+        'id' => $id
     ];
 }
 
-function obtenerIdClaseDeHorario($idHorario)
-{
-    $sentencia = "SELECT id_clase FROM horarios_clases WHERE id = ?";
-    $resultado = selectPrepare($sentencia, [$idHorario]);
-    return !empty($resultado) ? $resultado[0]['id_clase'] : null;
-}
-
-
 function eliminarMiembroDeClase($idInscripcion)
 {
+
+
     $sentencia = "DELETE FROM reservas_clases WHERE id = ?";
-    return eliminar($sentencia, [$idInscripcion]);
+    $resultado = eliminar($sentencia, $idInscripcion);
+
+
+    if ($resultado === true) {
+        return ['exito' => true, 'mensaje' => 'Inscripción eliminada correctamente'];
+    } elseif (is_array($resultado) && isset($resultado['exito'])) {
+        return $resultado;
+    } else {
+        return ['exito' => false, 'mensaje' => 'Error al eliminar la inscripción'];
+    }
 }
 
 

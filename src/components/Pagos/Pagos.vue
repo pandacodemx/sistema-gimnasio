@@ -4,6 +4,8 @@
 
         <cartas-totales v-if="pagos.length > 0" :totales="totalesMembresias" :titulo="'Pagos realizados membresías'"
             :icono="'mdi-cash-multiple'" :color="'secondary'" />
+        <cartas-totales v-if="pagosClases.length > 0" :totales="totalesClases" :titulo="'Pagos de Clases'"
+            :icono="'mdi-dumbbell'" :color="'green'" />
         <br>
         <hr>
 
@@ -11,6 +13,16 @@
             <v-card-title class="d-flex flex-column align-start pa-6">
                 <h2 class="text-h5 font-weight-bold mb-2">💵💰 Pagos totales</h2>
                 <span class="display-2 font-weight-black text--primary">${{ totalPagos }}</span>
+                <div class="d-flex mt-2">
+                    <v-chip class="mr-2" color="primary" small>
+                        <v-icon small left>mdi-account-card-details</v-icon>
+                        Membresías: ${{ totalMembresias }}
+                    </v-chip>
+                    <v-chip color="green" small text-color="white">
+                        <v-icon small left>mdi-dumbbell</v-icon>
+                        Clases: ${{ totalClases }}
+                    </v-chip>
+                </div>
             </v-card-title>
             <v-card-title class="px-6 d-flex align-center">
                 <span class="subtitle-1 font-weight-medium">Pagos realizados:</span>
@@ -43,6 +55,23 @@
                 </template>
 
 
+
+                <template v-slot:[`item.tipo`]="{ item }">
+                    <v-chip small :color="colorTipoPago(item.tipo)" text-color="white">
+                        <v-icon left small>{{ iconoTipoPago(item.tipo) }}</v-icon>
+                        {{ textoTipoPago(item.tipo) }}
+                    </v-chip>
+                </template>
+
+
+                <template v-slot:[`item.detalle_clase`]="{ item }">
+                    <span v-if="item.tipo === 'clase'">
+                        {{ item.nombre_clase || 'Clase' }}
+                    </span>
+                    <span v-else>-</span>
+                </template>
+
+
                 <template slot="no-data">
                     <v-alert :value="true" color="error" icon="warning">
                         No se han encontrado datos :(
@@ -50,10 +79,15 @@
                 </template>
 
                 <template v-slot:[`item.membresia`]="{ item }">
-                    <div class="medalla" :class="claseMembresia(item.membresia)">
+                    <div v-if="item.tipo === 'membresia'" class="medalla" :class="claseMembresia(item.membresia)">
                         <v-icon left small>{{ iconoMembresia(item.membresia) }}</v-icon>
                         {{ item.membresia }}
                     </div>
+                    <span v-else-if="item.tipo === 'clase' && item.nombre_clase" class="clase-chip">
+                        <v-icon small color="green">mdi-dumbbell</v-icon>
+                        {{ item.nombre_clase }}
+                    </span>
+                    <span v-else>-</span>
                 </template>
             </v-data-table>
 
@@ -82,6 +116,7 @@ import autoTable from 'jspdf-autotable'
 import * as XLSX from 'xlsx'
 import { saveAs } from 'file-saver'
 import { formatearFechaHora } from '@/utils/fechas';
+import { computed } from 'vue';
 
 export default {
     name: "Pagos",
@@ -94,7 +129,9 @@ export default {
             { text: "Fotografia", sortable: true, value: "imagen" },
             { text: "Miembro", sortable: true, value: "nombre" },
             { text: "Matrícula", sortable: true, value: "matricula" },
-            { text: "Membresía", sortable: true, value: "membresia" },
+            { text: "Tipo", sortable: true, value: "tipo" },
+            { text: "Membresía/Clase", sortable: true, value: "membresia" },
+            { text: "Detalle Clase", sortable: true, value: "detalle_clase" },
             {
                 text: "Fecha", sortable: true, value: "fecha",
                 formatter: (value) => this.fechaFormateada(value)
@@ -108,6 +145,7 @@ export default {
         },
         totalPagos: 0,
         totalesMembresias: [],
+
         totalesUsuarios: [],
         totalesMiembros: []
     }),
@@ -115,8 +153,48 @@ export default {
     mounted() {
         this.obtenerPagos()
     },
+    computed: {
+        pagosMembresias() {
+            return this.pagos.filter(pago => pago.tipo === 'membresia');
+        },
+        pagosClases() {
+            return this.pagos.filter(pago => pago.tipo === 'clase');
+        },
+        totalMembresias() {
+            return this.pagosMembresias.reduce((sum, pago) => sum + parseFloat(pago.monto || 0), 0);
+        },
+        totalClases() {
+            return this.pagosClases.reduce((sum, pago) => sum + parseFloat(pago.monto || 0), 0);
+        }
+    },
 
     methods: {
+        colorTipoPago(tipo) {
+            const colores = {
+                membresia: 'blue',
+                clase: 'green',
+                default: 'grey'
+            };
+            return colores[tipo] || colores.default;
+        },
+
+        iconoTipoPago(tipo) {
+            const iconos = {
+                membresia: 'mdi-badge-account',
+                clase: 'mdi-dumbbell',
+                default: 'mdi-cash'
+            };
+            return iconos[tipo] || iconos.default;
+        },
+
+        textoTipoPago(tipo) {
+            const textos = {
+                membresia: 'Membresía',
+                clase: 'Clase',
+                default: 'Pago'
+            };
+            return textos[tipo] || textos.default;
+        },
         fechaFormateada(fecha) {
             return formatearFechaHora(fecha);
         },
@@ -124,7 +202,9 @@ export default {
             const datos = this.pagos.map(pago => ({
                 Miembro: pago.nombre,
                 Matrícula: pago.matricula,
-                Membresía: pago.membresia,
+                Tipo: this.textoTipoPago(pago.tipo),
+                'Membresía/Clase': pago.tipo === 'membresia' ? pago.membresia : (pago.nombre_clase || 'Clase'),
+                'Detalle Clase': pago.tipo === 'clase' ? `${pago.nombre_instructor || ''}` : '-',
                 Fecha: pago.fecha,
                 'Monto pagado': pago.monto,
                 Usuario: pago.usuario,
@@ -168,7 +248,9 @@ export default {
             const columnas = [
                 { header: 'Miembro', dataKey: 'nombre' },
                 { header: 'Matrícula', dataKey: 'matricula' },
-                { header: 'Membresía', dataKey: 'membresia' },
+                { header: 'Tipo', dataKey: 'tipo' },
+                { header: 'Membresía/Clase', dataKey: 'membresia_clase' },
+                { header: 'Detalle Clase', dataKey: 'detalle_clase' },
                 { header: 'Fecha', dataKey: 'fecha' },
                 { header: 'Monto', dataKey: 'monto' },
                 { header: 'Cobró', dataKey: 'usuario' },
@@ -180,7 +262,9 @@ export default {
                 body: this.pagos.map(item => [
                     item.nombre,
                     item.matricula,
-                    item.membresia,
+                    this.textoTipoPago(item.tipo),
+                    item.tipo === 'membresia' ? item.membresia : (item.nombre_clase || 'Clase'),
+                    item.tipo === 'clase' ? `${item.nombre_instructor || ''}` : '-',
                     item.fecha,
                     `$${item.monto}`,
                     item.usuario
@@ -234,10 +318,24 @@ export default {
                 .then(respuesta => {
                     this.pagos = respuesta.pagos
                     this.totalPagos = respuesta.totalPagos
-                    this.totalesMembresias = respuesta.totalesMembresias
+                    this.totalesMembresias = respuesta.totalesMembresias.map(item => ({
+                        ...item,
+                        total: parseFloat(item.total) || 0
+                    }));
+
+                    this.totalesClases = respuesta.totalesClases.map(item => ({
+                        ...item,
+                        total: parseFloat(item.total) || 0
+                    }));
+
                     this.totalesUsuarios = respuesta.totalesUsuario
                     this.totalesMiembros = respuesta.totalesMiembros
-                    console.log(respuesta)
+
+                    console.log("Totales convertidos:", {
+                        membresias: this.totalesMembresias,
+                        clases: this.totalesClases
+                    });
+
                     this.cargando = false
                 })
 
@@ -263,6 +361,7 @@ export default {
         }
 
     }
+
 }
 </script>
 <style>
@@ -277,12 +376,21 @@ export default {
     display: inline-flex;
     align-items: center;
     padding: 6px 12px;
-    border-radius: 999px;
-    font-weight: bold;
-    font-size: 14px;
+    border-radius: 16px;
+    font-size: 0.875rem;
     color: #fff;
-    text-transform: capitalize;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.clase-chip {
+    background-color: #f7e99e;
+    color: #574107;
+    padding: 4px 8px;
+    border-radius: 16px;
+    font-size: 0.875rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
 }
 
 .medalla-oro {

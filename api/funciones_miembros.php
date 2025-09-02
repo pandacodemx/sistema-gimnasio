@@ -70,12 +70,11 @@ function obtenerMiembroNombreMatricula($busqueda)
 
 function registrarPago($pago)
 {
-    // Convertir a array si es objeto
+
     if (is_object($pago)) {
         $pago = (array) $pago;
     }
 
-    // Determinar el tipo de pago
     $tipo = (isset($pago['id_clase']) || isset($pago['id_horario'])) ? 'clase' : 'membresia';
     $idMembresia = ($tipo === 'membresia') ? ($pago['idMembresia'] ?? null) : null;
 

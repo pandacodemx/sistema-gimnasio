@@ -6,16 +6,26 @@ function obtenerPagos($filtros)
     $fechaInicio = (isset($filtros->fechaInicio)) ? $filtros->fechaInicio : FECHA_HOY;
     $fechaFin = (isset($filtros->fechaFin)) ? $filtros->fechaFin : FECHA_HOY;
 
-    $sentencia = "SELECT pagos.fecha, pagos.monto, miembros.nombre, miembros.imagen, miembros.matricula, usuarios.usuario,
-    IFNULL(membresias.nombre, 'VISITA REGULAR') AS membresia 
+    $sentencia = "SELECT 
+        pagos.*,
+        miembros.nombre,
+        miembros.imagen,
+        miembros.matricula,
+        usuarios.usuario,
+        IFNULL(membresias.nombre, 'Visita Regular') AS membresia,
+        clases.nombre AS nombre_clase
     FROM pagos
-    LEFT JOIN membresias ON membresias.id = pagos.idMembresia
-    LEFT JOIN miembros ON miembros.matricula = pagos.matricula
+    LEFT JOIN miembros ON miembros.matricula = pagos.matricula 
     LEFT JOIN usuarios ON usuarios.id = pagos.idUsuario
-    WHERE DATE(pagos.fecha) >= ? AND DATE(pagos.fecha) <= ? ";
-    $parametros = [$fechaInicio, $fechaFin];
+    LEFT JOIN membresias ON membresias.id = pagos.idMembresia
+    LEFT JOIN clases ON clases.id = pagos.id_clase
+    WHERE DATE(pagos.fecha) >= ? AND DATE(pagos.fecha) <= ?
+    ORDER BY pagos.fecha DESC";
 
-    return selectPrepare($sentencia, $parametros);
+    $parametros = [$fechaInicio, $fechaFin];
+    $resultado = selectPrepare($sentencia, $parametros);
+
+    return $resultado;
 }
 
 function obtenerTotalesPago($filtros)
@@ -33,11 +43,39 @@ function obtenerTotalesMembresia($filtros)
     $fechaInicio = (isset($filtros->fechaInicio)) ? $filtros->fechaInicio : FECHA_HOY;
     $fechaFin = (isset($filtros->fechaFin)) ? $filtros->fechaFin : FECHA_HOY;
 
-    $sentencia  = "SELECT SUM(pagos.monto) AS total, IFNULL(membresias.nombre, 'Visitas regular') AS nombre FROM pagos
-    LEFT  JOIN membresias ON membresias.id = pagos.idMembresia
-    WHERE DATE(pagos.fecha) >= ? AND DATE(pagos.fecha) <= ? 
+    $sentencia  = "SELECT 
+        SUM(pagos.monto) AS total, 
+        COUNT(pagos.id) AS cantidad,
+        IFNULL(membresias.nombre, 'Visita regular') AS nombre 
+    FROM pagos
+    LEFT JOIN membresias ON membresias.id = pagos.idMembresia
+    WHERE DATE(pagos.fecha) >= ? 
+    AND DATE(pagos.fecha) <= ? 
+    AND pagos.tipo = 'membresia'  
     GROUP BY pagos.idMembresia
     ORDER BY total DESC";
+
+    $parametros = [$fechaInicio, $fechaFin];
+    return selectPrepare($sentencia, $parametros);
+}
+
+function obtenerTotalesClases($filtros)
+{
+    $fechaInicio = (isset($filtros->fechaInicio)) ? $filtros->fechaInicio : FECHA_HOY;
+    $fechaFin = (isset($filtros->fechaFin)) ? $filtros->fechaFin : FECHA_HOY;
+
+    $sentencia  = "SELECT 
+        SUM(pagos.monto) AS total, 
+        COUNT(pagos.id) AS cantidad,
+        IFNULL(clases.nombre, 'Clase general') AS nombre
+    FROM pagos
+    LEFT JOIN clases ON clases.id = pagos.id_clase
+    WHERE DATE(pagos.fecha) >= ? 
+    AND DATE(pagos.fecha) <= ? 
+    AND pagos.tipo = 'clase' 
+    GROUP BY pagos.id_clase
+    ORDER BY total DESC";
+
     $parametros = [$fechaInicio, $fechaFin];
     return selectPrepare($sentencia, $parametros);
 }
