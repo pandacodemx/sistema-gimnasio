@@ -1,590 +1,610 @@
 <template>
-    <v-container>
-        <!-- Barra de herramientas -->
-        <v-row class="mb-4" align="center">
-            <v-col cols="12" md="12">
-                <v-btn color="secondary" @click="dialogNuevoHorario = true" class="ml-2">
-                    <v-icon left>mdi-clock</v-icon> Programar Horario
-                </v-btn>
-                <v-btn color="primary" @click="dialogNuevaClase = true">
-                    <v-icon left>mdi-plus</v-icon> Nueva Clase
-                </v-btn>
-                <v-btn color="indigo" dark @click="abrirGestionInstructores" class="ml-2">
-                    <v-icon left>mdi-account-tie</v-icon>
-                    Instructores
-                </v-btn>
-                <v-btn color="deep-purple" dark @click="abrirGestionSalas" class="ml-2">
-                    <v-icon left>mdi-door-open</v-icon>
-                    Salas
-                </v-btn>
-            </v-col>
-            <v-col cols="12" md="6">
-                <!-- Selector de vista del calendario -->
-                <v-btn-toggle v-model="vistaCalendario" mandatory class="mr-2 mb-2">
-                    <v-btn small value="week">
-                        <v-icon small>mdi-calendar-week</v-icon>
-                        Semana
+    <div class="miembros">
+        <v-container>
+            <!-- Barra de herramientas -->
+            <v-row class="mb-4" align="center">
+                <v-col cols="12" md="12">
+                    <v-btn color="secondary" @click="dialogNuevoHorario = true" class="ml-2">
+                        <v-icon left>mdi-clock</v-icon> Programar Horario
                     </v-btn>
-                    <v-btn small value="month">
-                        <v-icon small>mdi-calendar-month</v-icon>
-                        Mes
+                    <v-btn color="primary" @click="dialogNuevaClase = true">
+                        <v-icon left>mdi-plus</v-icon> Nueva Clase
                     </v-btn>
-                </v-btn-toggle>
-
-                <!-- Controles de navegación -->
-                <div class="d-flex align-center mr-2 mb-2">
-                    <v-btn icon @click="navegarCalendario('prev')" class="mx-1">
-                        <v-icon>mdi-chevron-left</v-icon>
+                    <v-btn color="indigo" dark @click="abrirGestionInstructores" class="ml-2">
+                        <v-icon left>mdi-account-tie</v-icon>
+                        Instructores
                     </v-btn>
-                    <v-btn @click="hoy()" class="mx-1" small>
-                        Hoy
+                    <v-btn color="deep-purple" dark @click="abrirGestionSalas" class="ml-2">
+                        <v-icon left>mdi-door-open</v-icon>
+                        Salas
                     </v-btn>
-                    <v-btn icon @click="navegarCalendario('next')" class="mx-1">
-                        <v-icon>mdi-chevron-right</v-icon>
-                    </v-btn>
-                </div>
-
-                <!-- Selector de rango de fechas -->
-                <v-menu ref="menuFecha" v-model="menuFecha" :close-on-content-click="false" class="mb-2">
-                    <template v-slot:activator="{ on, attrs }">
-                        <v-btn small v-bind="attrs" v-on="on" class="ml-2">
-                            <v-icon left>mdi-calendar</v-icon>
-                            {{ rangoFechasTexto }}
+                </v-col>
+                <v-col cols="12" md="6">
+                    <!-- Selector de vista del calendario -->
+                    <v-btn-toggle v-model="vistaCalendario" mandatory class="mr-2 mb-2">
+                        <v-btn small value="week">
+                            <v-icon small>mdi-calendar-week</v-icon>
+                            Semana
                         </v-btn>
-                    </template>
-                    <v-date-picker v-model="rangoFechas" range no-title scrollable
-                        @input="menuFecha = false; actualizarCalendario()"></v-date-picker>
-                </v-menu>
-            </v-col>
-        </v-row>
+                        <v-btn small value="month">
+                            <v-icon small>mdi-calendar-month</v-icon>
+                            Mes
+                        </v-btn>
+                    </v-btn-toggle>
 
-        <!-- Calendario de Clases -->
-        <div class="calendar-container" :class="{ 'month-view': vistaCalendario === 'month' }">
-            <v-calendar ref="calendar" v-model="fechaActual" :events="horarios" :event-color="getEventColor"
-                :event-margin-bottom="3" @click:event="mostrarDetalleEvento" @click:date="mostrarDisponibilidadFecha"
-                :type="vistaCalendario" :start="rangoFechas[0]" :end="rangoFechas[1]"></v-calendar>
-        </div>
+                    <!-- Controles de navegación -->
+                    <div class="d-flex align-center mr-2 mb-2">
+                        <v-btn icon @click="navegarCalendario('prev')" class="mx-1">
+                            <v-icon>mdi-chevron-left</v-icon>
+                        </v-btn>
+                        <v-btn @click="hoy()" class="mx-1" small>
+                            Hoy
+                        </v-btn>
+                        <v-btn icon @click="navegarCalendario('next')" class="mx-1">
+                            <v-icon>mdi-chevron-right</v-icon>
+                        </v-btn>
+                    </div>
 
-        <!-- MODAL GESTIÓN DE SALAS -->
-        <v-dialog v-model="dialogGestionSalas" max-width="800px" persistent>
-            <v-card>
-                <v-card-title class="headline">
-                    <v-icon left>mdi-door-open</v-icon>
-                    Gestión de Salas
-                </v-card-title>
+                    <!-- Selector de rango de fechas -->
+                    <v-menu ref="menuFecha" v-model="menuFecha" :close-on-content-click="false" class="mb-2">
+                        <template v-slot:activator="{ on, attrs }">
+                            <v-btn small v-bind="attrs" v-on="on" class="ml-2">
+                                <v-icon left>mdi-calendar</v-icon>
+                                {{ rangoFechasTexto }}
+                            </v-btn>
+                        </template>
+                        <v-date-picker v-model="rangoFechas" range no-title scrollable
+                            @input="menuFecha = false; actualizarCalendario()"></v-date-picker>
+                    </v-menu>
+                </v-col>
+            </v-row>
 
-                <v-card-text>
-                    <v-tabs v-model="tabSalas" grow>
-                        <v-tab>Lista de Salas</v-tab>
-                        <v-tab>{{ salaEditando ? 'Editar' : 'Nueva' }} Sala</v-tab>
-                    </v-tabs>
 
-                    <v-tabs-items v-model="tabSalas">
-                        <!-- Pestaña 1: Lista de Salas -->
-                        <v-tab-item>
-                            <v-simple-table class="mt-4">
-                                <template v-slot:default>
-                                    <thead>
-                                        <tr>
-                                            <th>Nombre</th>
-                                            <th>Capacidad</th>
-                                            <th>Equipamiento</th>
-                                            <th>Acciones</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr v-for="sala in salas" :key="sala.id">
-                                            <td>{{ sala.nombre }}</td>
-                                            <td>{{ sala.capacidad }} personas</td>
-                                            <td>{{ sala.equipamiento || 'N/A' }}</td>
-                                            <td>
-                                                <v-btn icon small @click="editarSala(sala)">
-                                                    <v-icon small>mdi-pencil</v-icon>
+            <lista-clases-programadas @ver-detalle="mostrarDetallesDesdeLista" v-if="mostrarListaClases" />
+            <v-btn @click="mostrarListaClases = !mostrarListaClases" color="primary" class="mb-4">
+                <v-icon left>
+                    {{ mostrarListaClases ? 'mdi-calendar' : 'mdi-format-list-bulleted' }}
+                </v-icon>
+                {{ mostrarListaClases ? 'Ver Calendario' : 'Ver clases de la semana' }}
+            </v-btn>
+
+            <!-- Calendario de Clases -->
+            <div class="calendar-container" :class="{ 'month-view': vistaCalendario === 'month' }">
+                <v-calendar ref="calendar" v-model="fechaActual" :events="horarios" :event-color="getEventColor"
+                    :event-margin-bottom="3" @click:event="mostrarDetalleEvento"
+                    @click:date="mostrarDisponibilidadFecha" :type="vistaCalendario" :start="rangoFechas[0]"
+                    :end="rangoFechas[1]"></v-calendar>
+            </div>
+
+
+            <!-- MODAL GESTIÓN DE SALAS -->
+            <v-dialog v-model="dialogGestionSalas" max-width="800px" persistent>
+                <v-card>
+                    <v-card-title class="headline">
+                        <v-icon left>mdi-door-open</v-icon>
+                        Gestión de Salas
+                    </v-card-title>
+
+                    <v-card-text>
+                        <v-tabs v-model="tabSalas" grow>
+                            <v-tab>Lista de Salas</v-tab>
+                            <v-tab>{{ salaEditando ? 'Editar' : 'Nueva' }} Sala</v-tab>
+                        </v-tabs>
+
+                        <v-tabs-items v-model="tabSalas">
+                            <!-- Pestaña 1: Lista de Salas -->
+                            <v-tab-item>
+                                <v-simple-table class="mt-4">
+                                    <template v-slot:default>
+                                        <thead>
+                                            <tr>
+                                                <th>Nombre</th>
+                                                <th>Capacidad</th>
+                                                <th>Equipamiento</th>
+                                                <th>Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr v-for="sala in salas" :key="sala.id">
+                                                <td>{{ sala.nombre }}</td>
+                                                <td>{{ sala.capacidad }} personas</td>
+                                                <td>{{ sala.equipamiento || 'N/A' }}</td>
+                                                <td>
+                                                    <v-btn icon small @click="editarSala(sala)">
+                                                        <v-icon small>mdi-pencil</v-icon>
+                                                    </v-btn>
+                                                    <v-btn icon small @click="confirmarEliminarSala(sala)">
+                                                        <v-icon small color="error">mdi-delete</v-icon>
+                                                    </v-btn>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </template>
+                                </v-simple-table>
+                            </v-tab-item>
+
+                            <!-- Pestaña 2: Formulario -->
+                            <v-tab-item>
+                                <v-form ref="formSala" class="mt-4">
+                                    <v-text-field v-model="nuevaSala.nombre" label="Nombre de la sala"
+                                        :rules="[v => !!v || 'El nombre es requerido']" required></v-text-field>
+
+                                    <v-text-field v-model="nuevaSala.capacidad" label="Capacidad" type="number" min="1"
+                                        :rules="[v => !!v || 'La capacidad es requerida']" required></v-text-field>
+
+                                    <v-textarea v-model="nuevaSala.equipamiento" label="Equipamiento"
+                                        placeholder="Ej: Pesas, máquinas cardiovasculares, espejos..."
+                                        rows="2"></v-textarea>
+                                </v-form>
+                            </v-tab-item>
+                        </v-tabs-items>
+                    </v-card-text>
+
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn color="grey" text @click="cerrarDialogoSalas">
+                            Cancelar
+                        </v-btn>
+
+                        <v-btn color="primary" text @click="guardarSala" v-if="tabSalas === 1">
+                            {{ salaEditando ? 'Actualizar' : 'Guardar' }}
+                        </v-btn>
+
+                        <v-btn color="primary" text @click="tabSalas = 1" v-if="tabSalas === 0">
+                            <v-icon left>mdi-plus</v-icon>
+                            Nueva Sala
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
+
+            <!-- MODAL de confirmación para eliminar sala -->
+            <v-dialog v-model="dialogEliminarSala" max-width="400px">
+                <v-card>
+                    <v-card-title class="headline">Confirmar eliminación</v-card-title>
+                    <v-card-text>
+                        ¿Estás seguro de eliminar la sala
+                        <strong v-if="salaSeleccionada">{{ salaSeleccionada.nombre }}</strong>
+                        <span v-else>esta sala</span>?
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn color="grey" text @click="dialogEliminarSala = false">Cancelar</v-btn>
+                        <v-btn color="red" text @click="eliminarSala">Eliminar</v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
+
+            <!-- MODAL NUEVO INSTRUCTOR -->
+            <v-dialog v-model="dialogGestionInstructores" max-width="800px" persistent>
+                <v-card>
+                    <v-card-title class="headline">
+                        <v-icon left>mdi-account-tie</v-icon>
+                        Gestión de Instructores
+                    </v-card-title>
+
+                    <v-card-text>
+                        <v-tabs v-model="tabInstructores" grow>
+                            <v-tab>Lista de Instructores</v-tab>
+                            <v-tab>{{ instructorEditando ? 'Editar' : 'Nuevo' }} Instructor</v-tab>
+                        </v-tabs>
+
+                        <v-tabs-items v-model="tabInstructores">
+                            <!-- Pestaña 1: Lista de Instructores -->
+                            <v-tab-item>
+                                <v-list two-line class="mt-4">
+                                    <v-list-item-group>
+                                        <v-list-item v-for="instructor in instructores" :key="instructor.id">
+                                            <v-list-item-content>
+                                                <v-list-item-title class="font-weight-bold">
+                                                    {{ instructor.nombre }}
+                                                </v-list-item-title>
+                                                <v-list-item-subtitle>
+                                                    <v-icon small>mdi-certificate</v-icon>
+                                                    {{ instructor.especialidad || 'Sin especialidad' }}
+                                                </v-list-item-subtitle>
+                                                <v-list-item-subtitle>
+                                                    <v-icon small>mdi-email</v-icon>
+                                                    {{ instructor.email || 'Sin email' }}
+                                                </v-list-item-subtitle>
+                                                <v-list-item-subtitle>
+                                                    <v-icon small>mdi-phone</v-icon>
+                                                    {{ instructor.telefono || 'Sin teléfono' }}
+                                                </v-list-item-subtitle>
+                                            </v-list-item-content>
+
+                                            <v-list-item-action>
+                                                <v-btn icon @click="editarInstructor(instructor)">
+                                                    <v-icon color="blue">mdi-pencil</v-icon>
                                                 </v-btn>
-                                                <v-btn icon small @click="confirmarEliminarSala(sala)">
+                                                <v-btn icon @click="confirmarEliminarInstructor(instructor)">
+                                                    <v-icon color="red">mdi-delete</v-icon>
+                                                </v-btn>
+                                            </v-list-item-action>
+                                        </v-list-item>
+                                    </v-list-item-group>
+                                </v-list>
+                            </v-tab-item>
+
+                            <!-- Pestaña 2: Formulario -->
+                            <v-tab-item>
+                                <v-form ref="formInstructor" class="mt-4">
+                                    <v-text-field v-model="nuevoInstructor.nombre" label="Nombre completo"
+                                        :rules="[v => !!v || 'El nombre es requerido']" required></v-text-field>
+
+                                    <v-text-field v-model="nuevoInstructor.especialidad" label="Especialidad"
+                                        placeholder="Ej: Yoga, Crossfit, Spinning"></v-text-field>
+
+                                    <v-text-field v-model="nuevoInstructor.email" label="Email" type="email"
+                                        :rules="[v => !v || /.+@.+\..+/.test(v) || 'Email debe ser válido']"></v-text-field>
+
+                                    <v-text-field v-model="nuevoInstructor.telefono" label="Teléfono"
+                                        type="tel"></v-text-field>
+                                </v-form>
+                            </v-tab-item>
+                        </v-tabs-items>
+                    </v-card-text>
+
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn color="grey" text @click="cerrarDialogoInstructores">
+                            Cancelar
+                        </v-btn>
+
+                        <v-btn color="primary" text @click="guardarInstructor" v-if="tabInstructores === 1">
+                            {{ instructorEditando ? 'Actualizar' : 'Guardar' }}
+                        </v-btn>
+
+                        <v-btn color="primary" text @click="tabInstructores = 1" v-if="tabInstructores === 0">
+                            <v-icon left>mdi-plus</v-icon>
+                            Nuevo Instructor
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
+
+            <v-dialog v-model="dialogEliminarInstructor" max-width="400px">
+                <v-card>
+                    <v-card-title class="headline">Confirmar eliminación</v-card-title>
+                    <v-card-text>
+                        ¿Estás seguro de eliminar al instructor
+                        <strong v-if="instructorSeleccionado">{{ instructorSeleccionado.nombre }}</strong>
+                        <span v-else>este instructor</span>?
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn color="grey" text @click="dialogEliminarInstructor = false">Cancelar</v-btn>
+                        <v-btn color="red" text @click="eliminarInstructor">Eliminar</v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
+
+
+            <!-- MODAL NUEVA CLASE -->
+            <v-dialog v-model="dialogNuevaClase" max-width="600px">
+                <v-card>
+                    <v-card-title>Crear Nueva Clase</v-card-title>
+                    <v-card-text>
+                        <v-form ref="formClase">
+                            <v-text-field v-model="nuevaClase.nombre" label="Nombre" required></v-text-field>
+
+                            <v-textarea v-model="nuevaClase.descripcion" label="Descripción"></v-textarea>
+
+                            <v-row>
+                                <v-col cols="12" md="6">
+                                    <v-select v-model="nuevaClase.nivel_dificultad" :items="nivelesDificultad"
+                                        label="Nivel de Dificultad"></v-select>
+                                </v-col>
+                                <v-col cols="12" md="6">
+                                    <v-text-field v-model="nuevaClase.duracion_min" label="Duración (minutos)"
+                                        type="number" min="15" max="180" required></v-text-field>
+                                </v-col>
+                            </v-row>
+
+                            <v-row>
+                                <v-col cols="12" md="6">
+                                    <v-text-field v-model="nuevaClase.precio" label="Precio ($)" type="number" min="0"
+                                        step="0.01" prefix="$" required></v-text-field>
+                                </v-col>
+                                <v-col cols="12" md="6">
+                                    <v-color-picker v-model="nuevaClase.color_calendario" mode="hexa"></v-color-picker>
+                                </v-col>
+                            </v-row>
+                        </v-form>
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn color="blue darken-1" text @click="dialogNuevaClase = false">
+                            Cancelar
+                        </v-btn>
+                        <v-btn color="blue darken-1" text @click="guardarClase">
+                            Guardar
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
+
+            <!-- MODAL NUEVO HORARIO -->
+            <v-dialog v-model="dialogNuevoHorario" max-width="800px">
+                <v-card>
+                    <v-card-title>Programar Nueva Clase</v-card-title>
+                    <v-card-text>
+                        <v-form ref="formHorario">
+                            <v-row>
+                                <v-col cols="12" md="4">
+                                    <v-select v-model="nuevoHorario.id_clase" :items="clases" item-text="nombre"
+                                        item-value="id" label="Clase" required></v-select>
+                                </v-col>
+                                <v-col cols="12" md="4">
+                                    <v-select v-model="nuevoHorario.id_instructor" :items="instructores"
+                                        item-text="nombre" item-value="id" label="Instructor" required></v-select>
+                                </v-col>
+                                <v-col cols="12" md="4">
+                                    <v-select v-model="nuevoHorario.id_sala" :items="salas" item-text="nombre"
+                                        item-value="id" label="Sala" required></v-select>
+                                </v-col>
+                            </v-row>
+
+                            <v-row>
+                                <v-col cols="12" md="6">
+                                    <v-menu ref="menuFechaHorario" v-model="menuFechaHorario"
+                                        :close-on-content-click="false" transition="scale-transition" offset-y
+                                        min-width="auto">
+                                        <template v-slot:activator="{ on, attrs }">
+                                            <v-text-field v-model="nuevoHorario.fecha" label="Fecha de la clase"
+                                                prepend-icon="mdi-calendar" readonly v-bind="attrs"
+                                                v-on="on"></v-text-field>
+                                        </template>
+                                        <v-date-picker v-model="nuevoHorario.fecha" no-title
+                                            :min="new Date().toISOString().substr(0, 10)"></v-date-picker>
+                                    </v-menu>
+                                </v-col>
+
+                                <v-col cols="12" md="6">
+                                    <v-menu ref="menuHoraInicio" v-model="menuHoraInicio"
+                                        :close-on-content-click="false" transition="scale-transition" offset-y
+                                        max-width="290px" min-width="290px">
+                                        <template v-slot:activator="{ on, attrs }">
+                                            <v-text-field v-model="nuevoHorario.hora_inicio" label="Hora de inicio"
+                                                prepend-icon="mdi-clock-time-four-outline" readonly v-bind="attrs"
+                                                v-on="on"></v-text-field>
+                                        </template>
+                                        <v-time-picker v-model="nuevoHorario.hora_inicio" format="24hr"
+                                            full-width></v-time-picker>
+                                    </v-menu>
+                                </v-col>
+                            </v-row>
+                            <v-row>
+                                <v-col cols="12" md="6">
+                                    <v-text-field v-model="nuevoHorario.max_participantes" label="Cupos máximos"
+                                        type="number" min="1" max="50"></v-text-field>
+                                </v-col>
+                            </v-row>
+
+                            <v-row>
+                                <v-col cols="12">
+                                    <v-select v-model="nuevoHorario.repeticion" :items="opcionesRepeticion"
+                                        label="Repetición"></v-select>
+                                </v-col>
+                            </v-row>
+                            <v-row v-if="nuevoHorario.repeticion !== 'ninguna'">
+                                <v-col cols="12">
+                                    <v-text-field v-model="nuevoHorario.veces" label="Número de repeticiones"
+                                        type="number" min="1" max="52" hint="¿Cuántas veces se repetirá?"
+                                        persistent-hint></v-text-field>
+                                </v-col>
+                            </v-row>
+                        </v-form>
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn color="grey" text @click="dialogNuevoHorario = false">Cancelar</v-btn>
+                        <v-btn color="primary" text @click="guardarHorario">Programar</v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
+
+            <!-- MODAL Detalle Clase -->
+
+            <v-dialog v-model="dialogDetalleClase" max-width="900px">
+                <v-card>
+                    <v-card-title class="headline"
+                        :style="{ color: eventoSeleccionado.color, 'border-bottom': `3px solid ${eventoSeleccionado.color}` }">
+                        {{ eventoSeleccionado.name }} <v-chip small color="orange" text-color="white" class="ml-2">
+                            ${{ eventoSeleccionado.precio || 0 }}
+                        </v-chip>
+                    </v-card-title>
+
+                    <v-card-text class="pt-4">
+                        <v-row dense>
+                            <v-col cols="12" md="6">
+                                <v-list-item>
+                                    <v-list-item-icon>
+                                        <v-icon color="blue">mdi-account-tie</v-icon>
+                                    </v-list-item-icon>
+                                    <v-list-item-content>
+                                        <v-list-item-title>Instructor</v-list-item-title>
+                                        <v-list-item-subtitle class="font-weight-bold">{{ eventoSeleccionado.instructor
+                                            }}</v-list-item-subtitle>
+                                    </v-list-item-content>
+                                </v-list-item>
+                            </v-col>
+
+                            <v-col cols="12" md="6">
+                                <v-list-item>
+                                    <v-list-item-icon>
+                                        <v-icon color="green">mdi-map-marker</v-icon>
+                                    </v-list-item-icon>
+                                    <v-list-item-content>
+                                        <v-list-item-title>Sala</v-list-item-title>
+                                        <v-list-item-subtitle class="font-weight-bold">{{ eventoSeleccionado.sala
+                                            }}</v-list-item-subtitle>
+                                    </v-list-item-content>
+                                </v-list-item>
+                            </v-col>
+                        </v-row>
+
+                        <v-row dense>
+                            <v-col cols="12" md="6">
+                                <v-list-item>
+                                    <v-list-item-icon>
+                                        <v-icon color="orange">mdi-clock</v-icon>
+                                    </v-list-item-icon>
+                                    <v-list-item-content>
+                                        <v-list-item-title>Horario</v-list-item-title>
+                                        <v-list-item-subtitle class="font-weight-bold">
+                                            {{ formatoHora(eventoSeleccionado.start) }} - {{
+                                                formatoHora(eventoSeleccionado.end) }}
+                                        </v-list-item-subtitle>
+                                    </v-list-item-content>
+                                </v-list-item>
+                            </v-col>
+
+                            <v-col cols="12" md="6">
+                                <v-list-item>
+                                    <v-list-item-icon>
+                                        <v-icon color="purple">mdi-timer</v-icon>
+                                    </v-list-item-icon>
+                                    <v-list-item-content>
+                                        <v-list-item-title>Duración</v-list-item-title>
+                                        <v-list-item-subtitle class="font-weight-bold">{{ eventoSeleccionado.duracion }}
+                                            minutos</v-list-item-subtitle>
+                                    </v-list-item-content>
+                                </v-list-item>
+                            </v-col>
+                        </v-row>
+
+                        <v-row dense>
+                            <v-col cols="12" md="6">
+                                <v-list-item>
+                                    <v-list-item-icon>
+                                        <v-icon color="teal">mdi-chart-donut</v-icon>
+                                    </v-list-item-icon>
+                                    <v-list-item-content>
+                                        <v-list-item-title>Nivel</v-list-item-title>
+                                        <v-list-item-subtitle class="font-weight-bold text-capitalize">
+                                            {{ eventoSeleccionado.nivel }}
+                                        </v-list-item-subtitle>
+                                    </v-list-item-content>
+                                </v-list-item>
+                            </v-col>
+                        </v-row>
+                        <!-- Cupos disponibles -->
+                        <v-alert :type="eventoSeleccionado.cuposDisponibles > 0 ? 'info' : 'warning'" class="mt-3">
+                            <v-icon left>{{ eventoSeleccionado.cuposDisponibles > 0 ? 'mdi-information' : 'mdi-alert'
+                                }}</v-icon>
+                            {{ eventoSeleccionado.cuposDisponibles }} / {{ eventoSeleccionado.cuposTotales }} cupos
+                            disponibles
+                        </v-alert>
+
+                        <v-expansion-panels class="mt-3">
+                            <v-expansion-panel>
+                                <v-expansion-panel-header>
+                                    <v-icon left>mdi-account-group</v-icon>
+                                    Gestionar Miembros Inscritos ({{ miembrosInscritos.length }})
+                                </v-expansion-panel-header>
+                                <v-expansion-panel-content>
+                                    <!-- Buscar miembros -->
+                                    <v-text-field v-model="busquedaMiembro" label="Buscar miembro..."
+                                        prepend-icon="mdi-magnify" clearable class="mb-3"></v-text-field>
+
+                                    <!-- Lista de miembros inscritos -->
+                                    <v-list three-line dense v-if="miembrosInscritos.length > 0">
+                                        <v-list-item v-for="miembro in miembrosFiltrados" :key="miembro.id">
+                                            <v-list-item-avatar>
+                                                <v-icon>mdi-account</v-icon>
+                                            </v-list-item-avatar>
+                                            <v-list-item-content>
+                                                <v-list-item-title>{{ miembro.nombre }}</v-list-item-title>
+                                                <v-list-item-subtitle>{{ miembro.email }} • {{ miembro.telefono
+                                                    }}</v-list-item-subtitle>
+                                                <v-list-item-subtitle>
+                                                    Inscrito el: {{ formatoFecha(miembro.fecha_reserva) }}
+                                                </v-list-item-subtitle>
+                                            </v-list-item-content>
+                                            <v-list-item-action>
+                                                <v-btn icon small @click="confirmarEliminarMiembro(miembro)">
                                                     <v-icon small color="error">mdi-delete</v-icon>
                                                 </v-btn>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </template>
-                            </v-simple-table>
-                        </v-tab-item>
+                                            </v-list-item-action>
+                                        </v-list-item>
+                                    </v-list>
 
-                        <!-- Pestaña 2: Formulario -->
-                        <v-tab-item>
-                            <v-form ref="formSala" class="mt-4">
-                                <v-text-field v-model="nuevaSala.nombre" label="Nombre de la sala"
-                                    :rules="[v => !!v || 'El nombre es requerido']" required></v-text-field>
+                                    <v-alert v-else type="info">
+                                        No hay miembros inscritos en esta clase
+                                    </v-alert>
 
-                                <v-text-field v-model="nuevaSala.capacidad" label="Capacidad" type="number" min="1"
-                                    :rules="[v => !!v || 'La capacidad es requerida']" required></v-text-field>
-
-                                <v-textarea v-model="nuevaSala.equipamiento" label="Equipamiento"
-                                    placeholder="Ej: Pesas, máquinas cardiovasculares, espejos..."
-                                    rows="2"></v-textarea>
-                            </v-form>
-                        </v-tab-item>
-                    </v-tabs-items>
-                </v-card-text>
-
-                <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn color="grey" text @click="cerrarDialogoSalas">
-                        Cancelar
-                    </v-btn>
-
-                    <v-btn color="primary" text @click="guardarSala" v-if="tabSalas === 1">
-                        {{ salaEditando ? 'Actualizar' : 'Guardar' }}
-                    </v-btn>
-
-                    <v-btn color="primary" text @click="tabSalas = 1" v-if="tabSalas === 0">
-                        <v-icon left>mdi-plus</v-icon>
-                        Nueva Sala
-                    </v-btn>
-                </v-card-actions>
-            </v-card>
-        </v-dialog>
-
-        <!-- Diálogo de confirmación para eliminar sala -->
-        <v-dialog v-model="dialogEliminarSala" max-width="400px">
-            <v-card>
-                <v-card-title class="headline">Confirmar eliminación</v-card-title>
-                <v-card-text>
-                    ¿Estás seguro de eliminar la sala
-                    <strong v-if="salaSeleccionada">{{ salaSeleccionada.nombre }}</strong>
-                    <span v-else>esta sala</span>?
-                </v-card-text>
-                <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn color="grey" text @click="dialogEliminarSala = false">Cancelar</v-btn>
-                    <v-btn color="red" text @click="eliminarSala">Eliminar</v-btn>
-                </v-card-actions>
-            </v-card>
-        </v-dialog>
-
-        <!-- MODAL NUEVO INSTRUCTOR -->
-        <v-dialog v-model="dialogGestionInstructores" max-width="800px" persistent>
-            <v-card>
-                <v-card-title class="headline">
-                    <v-icon left>mdi-account-tie</v-icon>
-                    Gestión de Instructores
-                </v-card-title>
-
-                <v-card-text>
-                    <v-tabs v-model="tabInstructores" grow>
-                        <v-tab>Lista de Instructores</v-tab>
-                        <v-tab>{{ instructorEditando ? 'Editar' : 'Nuevo' }} Instructor</v-tab>
-                    </v-tabs>
-
-                    <v-tabs-items v-model="tabInstructores">
-                        <!-- Pestaña 1: Lista de Instructores -->
-                        <v-tab-item>
-                            <v-list two-line class="mt-4">
-                                <v-list-item-group>
-                                    <v-list-item v-for="instructor in instructores" :key="instructor.id">
-                                        <v-list-item-content>
-                                            <v-list-item-title class="font-weight-bold">
-                                                {{ instructor.nombre }}
-                                            </v-list-item-title>
-                                            <v-list-item-subtitle>
-                                                <v-icon small>mdi-certificate</v-icon>
-                                                {{ instructor.especialidad || 'Sin especialidad' }}
-                                            </v-list-item-subtitle>
-                                            <v-list-item-subtitle>
-                                                <v-icon small>mdi-email</v-icon>
-                                                {{ instructor.email || 'Sin email' }}
-                                            </v-list-item-subtitle>
-                                            <v-list-item-subtitle>
-                                                <v-icon small>mdi-phone</v-icon>
-                                                {{ instructor.telefono || 'Sin teléfono' }}
-                                            </v-list-item-subtitle>
-                                        </v-list-item-content>
-
-                                        <v-list-item-action>
-                                            <v-btn icon @click="editarInstructor(instructor)">
-                                                <v-icon color="blue">mdi-pencil</v-icon>
-                                            </v-btn>
-                                            <v-btn icon @click="confirmarEliminarInstructor(instructor)">
-                                                <v-icon color="red">mdi-delete</v-icon>
-                                            </v-btn>
-                                        </v-list-item-action>
-                                    </v-list-item>
-                                </v-list-item-group>
-                            </v-list>
-                        </v-tab-item>
-
-                        <!-- Pestaña 2: Formulario -->
-                        <v-tab-item>
-                            <v-form ref="formInstructor" class="mt-4">
-                                <v-text-field v-model="nuevoInstructor.nombre" label="Nombre completo"
-                                    :rules="[v => !!v || 'El nombre es requerido']" required></v-text-field>
-
-                                <v-text-field v-model="nuevoInstructor.especialidad" label="Especialidad"
-                                    placeholder="Ej: Yoga, Crossfit, Spinning"></v-text-field>
-
-                                <v-text-field v-model="nuevoInstructor.email" label="Email" type="email"
-                                    :rules="[v => !v || /.+@.+\..+/.test(v) || 'Email debe ser válido']"></v-text-field>
-
-                                <v-text-field v-model="nuevoInstructor.telefono" label="Teléfono"
-                                    type="tel"></v-text-field>
-                            </v-form>
-                        </v-tab-item>
-                    </v-tabs-items>
-                </v-card-text>
-
-                <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn color="grey" text @click="cerrarDialogoInstructores">
-                        Cancelar
-                    </v-btn>
-
-                    <v-btn color="primary" text @click="guardarInstructor" v-if="tabInstructores === 1">
-                        {{ instructorEditando ? 'Actualizar' : 'Guardar' }}
-                    </v-btn>
-
-                    <v-btn color="primary" text @click="tabInstructores = 1" v-if="tabInstructores === 0">
-                        <v-icon left>mdi-plus</v-icon>
-                        Nuevo Instructor
-                    </v-btn>
-                </v-card-actions>
-            </v-card>
-        </v-dialog>
-
-        <v-dialog v-model="dialogEliminarInstructor" max-width="400px">
-            <v-card>
-                <v-card-title class="headline">Confirmar eliminación</v-card-title>
-                <v-card-text>
-                    ¿Estás seguro de eliminar al instructor
-                    <strong v-if="instructorSeleccionado">{{ instructorSeleccionado.nombre }}</strong>
-                    <span v-else>este instructor</span>?
-                </v-card-text>
-                <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn color="grey" text @click="dialogEliminarInstructor = false">Cancelar</v-btn>
-                    <v-btn color="red" text @click="eliminarInstructor">Eliminar</v-btn>
-                </v-card-actions>
-            </v-card>
-        </v-dialog>
-
-
-        <!-- MODAL NUEVA CLASE -->
-        <v-dialog v-model="dialogNuevaClase" max-width="600px">
-            <v-card>
-                <v-card-title>Crear Nueva Clase</v-card-title>
-                <v-card-text>
-                    <v-form ref="formClase">
-                        <v-text-field v-model="nuevaClase.nombre" label="Nombre" required></v-text-field>
-
-                        <v-textarea v-model="nuevaClase.descripcion" label="Descripción"></v-textarea>
-
-                        <v-row>
-                            <v-col cols="12" md="6">
-                                <v-select v-model="nuevaClase.nivel_dificultad" :items="nivelesDificultad"
-                                    label="Nivel de Dificultad"></v-select>
-                            </v-col>
-                            <v-col cols="12" md="6">
-                                <v-text-field v-model="nuevaClase.duracion_min" label="Duración (minutos)" type="number"
-                                    min="15" max="180" required></v-text-field>
-                            </v-col>
-                        </v-row>
-
-                        <v-row>
-                            <v-col cols="12" md="6">
-                                <v-text-field v-model="nuevaClase.precio" label="Precio ($)" type="number" min="0"
-                                    step="0.01" prefix="$" required></v-text-field>
-                            </v-col>
-                            <v-col cols="12" md="6">
-                                <v-color-picker v-model="nuevaClase.color_calendario" mode="hexa"></v-color-picker>
-                            </v-col>
-                        </v-row>
-                    </v-form>
-                </v-card-text>
-                <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn color="blue darken-1" text @click="dialogNuevaClase = false">
-                        Cancelar
-                    </v-btn>
-                    <v-btn color="blue darken-1" text @click="guardarClase">
-                        Guardar
-                    </v-btn>
-                </v-card-actions>
-            </v-card>
-        </v-dialog>
-
-        <!-- MODAL NUEVO HORARIO -->
-        <v-dialog v-model="dialogNuevoHorario" max-width="800px">
-            <v-card>
-                <v-card-title>Programar Nueva Clase</v-card-title>
-                <v-card-text>
-                    <v-form ref="formHorario">
-                        <v-row>
-                            <v-col cols="12" md="4">
-                                <v-select v-model="nuevoHorario.id_clase" :items="clases" item-text="nombre"
-                                    item-value="id" label="Clase" required></v-select>
-                            </v-col>
-                            <v-col cols="12" md="4">
-                                <v-select v-model="nuevoHorario.id_instructor" :items="instructores" item-text="nombre"
-                                    item-value="id" label="Instructor" required></v-select>
-                            </v-col>
-                            <v-col cols="12" md="4">
-                                <v-select v-model="nuevoHorario.id_sala" :items="salas" item-text="nombre"
-                                    item-value="id" label="Sala" required></v-select>
-                            </v-col>
-                        </v-row>
-
-                        <v-row>
-                            <v-col cols="12" md="6">
-                                <v-menu ref="menuFechaHorario" v-model="menuFechaHorario"
-                                    :close-on-content-click="false" transition="scale-transition" offset-y
-                                    min-width="auto">
-                                    <template v-slot:activator="{ on, attrs }">
-                                        <v-text-field v-model="nuevoHorario.fecha" label="Fecha de la clase"
-                                            prepend-icon="mdi-calendar" readonly v-bind="attrs"
-                                            v-on="on"></v-text-field>
-                                    </template>
-                                    <v-date-picker v-model="nuevoHorario.fecha" no-title
-                                        :min="new Date().toISOString().substr(0, 10)"></v-date-picker>
-                                </v-menu>
-                            </v-col>
-
-                            <v-col cols="12" md="6">
-                                <v-menu ref="menuHoraInicio" v-model="menuHoraInicio" :close-on-content-click="false"
-                                    transition="scale-transition" offset-y max-width="290px" min-width="290px">
-                                    <template v-slot:activator="{ on, attrs }">
-                                        <v-text-field v-model="nuevoHorario.hora_inicio" label="Hora de inicio"
-                                            prepend-icon="mdi-clock-time-four-outline" readonly v-bind="attrs"
-                                            v-on="on"></v-text-field>
-                                    </template>
-                                    <v-time-picker v-model="nuevoHorario.hora_inicio" format="24hr"
-                                        full-width></v-time-picker>
-                                </v-menu>
-                            </v-col>
-                        </v-row>
-                        <v-row>
-                            <v-col cols="12" md="6">
-                                <v-text-field v-model="nuevoHorario.max_participantes" label="Cupos máximos"
-                                    type="number" min="1" max="50"></v-text-field>
-                            </v-col>
-                        </v-row>
-
-                        <v-row>
-                            <v-col cols="12">
-                                <v-select v-model="nuevoHorario.repeticion" :items="opcionesRepeticion"
-                                    label="Repetición"></v-select>
-                            </v-col>
-                        </v-row>
-                        <v-row v-if="nuevoHorario.repeticion !== 'ninguna'">
-                            <v-col cols="12">
-                                <v-text-field v-model="nuevoHorario.veces" label="Número de repeticiones" type="number"
-                                    min="1" max="52" hint="¿Cuántas veces se repetirá?" persistent-hint></v-text-field>
-                            </v-col>
-                        </v-row>
-                    </v-form>
-                </v-card-text>
-                <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn color="grey" text @click="dialogNuevoHorario = false">Cancelar</v-btn>
-                    <v-btn color="primary" text @click="guardarHorario">Programar</v-btn>
-                </v-card-actions>
-            </v-card>
-        </v-dialog>
-
-        <!-- Diálogo Detalle Clase -->
-
-        <v-dialog v-model="dialogDetalleClase" max-width="900px">
-            <v-card>
-                <v-card-title class="headline"
-                    :style="{ color: eventoSeleccionado.color, 'border-bottom': `3px solid ${eventoSeleccionado.color}` }">
-                    {{ eventoSeleccionado.name }} <v-chip small color="orange" text-color="white" class="ml-2">
-                        ${{ eventoSeleccionado.precio || 0 }}
-                    </v-chip>
-                </v-card-title>
-
-                <v-card-text class="pt-4">
-                    <v-row dense>
-                        <v-col cols="12" md="6">
-                            <v-list-item>
-                                <v-list-item-icon>
-                                    <v-icon color="blue">mdi-account-tie</v-icon>
-                                </v-list-item-icon>
-                                <v-list-item-content>
-                                    <v-list-item-title>Instructor</v-list-item-title>
-                                    <v-list-item-subtitle class="font-weight-bold">{{ eventoSeleccionado.instructor
-                                    }}</v-list-item-subtitle>
-                                </v-list-item-content>
-                            </v-list-item>
-                        </v-col>
-
-                        <v-col cols="12" md="6">
-                            <v-list-item>
-                                <v-list-item-icon>
-                                    <v-icon color="green">mdi-map-marker</v-icon>
-                                </v-list-item-icon>
-                                <v-list-item-content>
-                                    <v-list-item-title>Sala</v-list-item-title>
-                                    <v-list-item-subtitle class="font-weight-bold">{{ eventoSeleccionado.sala
-                                    }}</v-list-item-subtitle>
-                                </v-list-item-content>
-                            </v-list-item>
-                        </v-col>
-                    </v-row>
-
-                    <v-row dense>
-                        <v-col cols="12" md="6">
-                            <v-list-item>
-                                <v-list-item-icon>
-                                    <v-icon color="orange">mdi-clock</v-icon>
-                                </v-list-item-icon>
-                                <v-list-item-content>
-                                    <v-list-item-title>Horario</v-list-item-title>
-                                    <v-list-item-subtitle class="font-weight-bold">
-                                        {{ formatoHora(eventoSeleccionado.start) }} - {{
-                                            formatoHora(eventoSeleccionado.end) }}
-                                    </v-list-item-subtitle>
-                                </v-list-item-content>
-                            </v-list-item>
-                        </v-col>
-
-                        <v-col cols="12" md="6">
-                            <v-list-item>
-                                <v-list-item-icon>
-                                    <v-icon color="purple">mdi-timer</v-icon>
-                                </v-list-item-icon>
-                                <v-list-item-content>
-                                    <v-list-item-title>Duración</v-list-item-title>
-                                    <v-list-item-subtitle class="font-weight-bold">{{ eventoSeleccionado.duracion }}
-                                        minutos</v-list-item-subtitle>
-                                </v-list-item-content>
-                            </v-list-item>
-                        </v-col>
-                    </v-row>
-
-                    <v-row dense>
-                        <v-col cols="12" md="6">
-                            <v-list-item>
-                                <v-list-item-icon>
-                                    <v-icon color="teal">mdi-chart-donut</v-icon>
-                                </v-list-item-icon>
-                                <v-list-item-content>
-                                    <v-list-item-title>Nivel</v-list-item-title>
-                                    <v-list-item-subtitle class="font-weight-bold text-capitalize">
-                                        {{ eventoSeleccionado.nivel }}
-                                    </v-list-item-subtitle>
-                                </v-list-item-content>
-                            </v-list-item>
-                        </v-col>
-                    </v-row>
-                    <!-- Cupos disponibles -->
-                    <v-alert :type="eventoSeleccionado.cuposDisponibles > 0 ? 'info' : 'warning'" class="mt-3">
-                        <v-icon left>{{ eventoSeleccionado.cuposDisponibles > 0 ? 'mdi-information' : 'mdi-alert'
-                        }}</v-icon>
-                        {{ eventoSeleccionado.cuposDisponibles }} / {{ eventoSeleccionado.cuposTotales }} cupos
-                        disponibles
-                    </v-alert>
-
-                    <v-expansion-panels class="mt-3">
-                        <v-expansion-panel>
-                            <v-expansion-panel-header>
-                                <v-icon left>mdi-account-group</v-icon>
-                                Gestionar Miembros Inscritos ({{ miembrosInscritos.length }})
-                            </v-expansion-panel-header>
-                            <v-expansion-panel-content>
-                                <!-- Buscar miembros -->
-                                <v-text-field v-model="busquedaMiembro" label="Buscar miembro..."
-                                    prepend-icon="mdi-magnify" clearable class="mb-3"></v-text-field>
-
-                                <!-- Lista de miembros inscritos -->
-                                <v-list three-line dense v-if="miembrosInscritos.length > 0">
-                                    <v-list-item v-for="miembro in miembrosFiltrados" :key="miembro.id">
-                                        <v-list-item-avatar>
-                                            <v-icon>mdi-account</v-icon>
-                                        </v-list-item-avatar>
-                                        <v-list-item-content>
-                                            <v-list-item-title>{{ miembro.nombre }}</v-list-item-title>
-                                            <v-list-item-subtitle>{{ miembro.email }} • {{ miembro.telefono
-                                                }}</v-list-item-subtitle>
-                                            <v-list-item-subtitle>
-                                                Inscrito el: {{ formatoFecha(miembro.fecha_reserva) }}
-                                            </v-list-item-subtitle>
-                                        </v-list-item-content>
-                                        <v-list-item-action>
-                                            <v-btn icon small @click="confirmarEliminarMiembro(miembro)">
-                                                <v-icon small color="error">mdi-delete</v-icon>
-                                            </v-btn>
-                                        </v-list-item-action>
-                                    </v-list-item>
-                                </v-list>
-
-                                <v-alert v-else type="info">
-                                    No hay miembros inscritos en esta clase
-                                </v-alert>
-
-                                <!-- Agregar nuevo miembro -->
-                                <v-divider class="my-4"></v-divider>
-                                <v-form @submit.prevent="agregarMiembro" ref="formMiembro">
-                                    <v-row>
-                                        <v-col cols="12" md="6">
-                                            <v-autocomplete v-model="nuevoMiembro.id" :items="miembrosDisponibles"
-                                                item-text="nombre" item-value="id" label="Seleccionar Miembro"
-                                                :rules="[v => !!v || 'Seleccione un miembro']" required>
-                                                <template v-slot:item="{ item }">
-                                                    {{ item.nombre }} - {{ item.email }}
-                                                </template>
-                                            </v-autocomplete>
-                                        </v-col>
-                                        <v-col cols="12" md="4">
-                                            <v-text-field v-model="nuevoMiembro.monto_pagado" label="Monto Pagado ($)"
-                                                type="number" min="0" step="0.01" prefix="$"></v-text-field>
-                                        </v-col>
-                                        <v-col cols="12" md="2">
-                                            <v-btn color="primary" type="submit"
-                                                :disabled="eventoSeleccionado.cuposDisponibles <= 0" class="mt-3">
-                                                <v-icon left>mdi-plus</v-icon>
-                                                Agregar
-                                            </v-btn>
-                                        </v-col>
-                                    </v-row>
-                                </v-form>
-                            </v-expansion-panel-content>
-                        </v-expansion-panel>
-                    </v-expansion-panels>
-                </v-card-text>
+                                    <!-- Agregar nuevo miembro -->
+                                    <v-divider class="my-4"></v-divider>
+                                    <v-form @submit.prevent="agregarMiembro" ref="formMiembro">
+                                        <v-row>
+                                            <v-col cols="12" md="6">
+                                                <v-autocomplete v-model="nuevoMiembro.id" :items="miembrosDisponibles"
+                                                    item-text="nombre" item-value="id" label="Seleccionar Miembro"
+                                                    :rules="[v => !!v || 'Seleccione un miembro']" required>
+                                                    <template v-slot:item="{ item }">
+                                                        {{ item.nombre }} - {{ item.email }}
+                                                    </template>
+                                                </v-autocomplete>
+                                            </v-col>
+                                            <v-col cols="12" md="4">
+                                                <v-text-field v-model="nuevoMiembro.monto_pagado"
+                                                    label="Monto Pagado ($)" type="number" min="0" step="0.01"
+                                                    prefix="$"></v-text-field>
+                                            </v-col>
+                                            <v-col cols="12" md="2">
+                                                <v-btn color="primary" type="submit"
+                                                    :disabled="eventoSeleccionado.cuposDisponibles <= 0" class="mt-3">
+                                                    <v-icon left>mdi-plus</v-icon>
+                                                    Agregar
+                                                </v-btn>
+                                            </v-col>
+                                        </v-row>
+                                    </v-form>
+                                </v-expansion-panel-content>
+                            </v-expansion-panel>
+                        </v-expansion-panels>
+                    </v-card-text>
 
 
 
-                <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn color="grey" text @click="dialogDetalleClase = false">
-                        Cerrar
-                    </v-btn>
-                </v-card-actions>
-            </v-card>
-        </v-dialog>
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn color="grey" text @click="dialogDetalleClase = false">
+                            Cerrar
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
 
-        <v-dialog v-model="dialogEliminarMiembro" max-width="400px">
-            <v-card>
-                <v-card-title class="headline">Confirmar eliminación</v-card-title>
-                <v-card-text>
-                    ¿Estás seguro de eliminar a <strong v-if="miembroSeleccionado">{{ miembroSeleccionado.nombre
-                        }}</strong>
-                    <strong v-else>este miembro</strong>
-                </v-card-text>
-                <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn color="grey" text @click="dialogEliminarMiembro = false">Cancelar</v-btn>
-                    <v-btn color="red" text @click="eliminarMiembro">Eliminar</v-btn>
-                </v-card-actions>
-            </v-card>
-        </v-dialog>
-    </v-container>
+            <v-dialog v-model="dialogEliminarMiembro" max-width="400px">
+                <v-card>
+                    <v-card-title class="headline">Confirmar eliminación</v-card-title>
+                    <v-card-text>
+                        ¿Estás seguro de eliminar a <strong v-if="miembroSeleccionado">{{ miembroSeleccionado.nombre
+                            }}</strong>
+                        <strong v-else>este miembro</strong>
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn color="grey" text @click="dialogEliminarMiembro = false">Cancelar</v-btn>
+                        <v-btn color="red" text @click="eliminarMiembro">Eliminar</v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
+        </v-container>
+    </div>
 </template>
 
 <script>
 import HttpService from '../../Servicios/HttpService';
+import ListaClasesProgramadas from './ListaClasesProgramadas.vue';
 
 export default {
     name: 'GestionClases',
+    components: {
+        ListaClasesProgramadas
+    },
     data: () => ({
         fechaActual: new Date().toISOString().substr(0, 10),
         vistaCalendario: 'week',
@@ -658,7 +678,8 @@ export default {
             monto_pagado: 0
         },
         miembroSeleccionado: null,
-        dialogEliminarMiembro: false
+        dialogEliminarMiembro: false,
+        mostrarListaClases: false,
     }),
 
     computed: {
@@ -705,6 +726,27 @@ export default {
     },
 
     methods: {
+        mostrarDetallesDesdeLista(clase) {
+
+            this.eventoSeleccionado = {
+                id: clase.id,
+                name: clase.nombre_clase,
+                start: new Date(clase.fecha_hora_inicio),
+                end: new Date(clase.fecha_hora_fin),
+                color: clase.color_calendario || '#1976D2',
+                extendedProps: {
+                    instructor: clase.nombre_instructor,
+                    sala: clase.nombre_sala,
+                    cuposDisponibles: clase.cupos_disponibles,
+                    cuposTotales: clase.max_participantes,
+                    duracion: clase.duracion_min,
+                    nivel: clase.nivel_dificultad
+                }
+            };
+
+            this.dialogDetalleClase = true;
+        },
+
         navegarCalendario(direccion) {
             if (this.vistaCalendario === 'month') {
                 this.navegarMes(direccion);
@@ -1440,6 +1482,14 @@ export default {
 </script>
 
 <style scoped>
+.miembros {
+    padding: 30px;
+    background-color: #1e1e1e;
+    border-radius: 12px;
+    min-height: 100vh;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
 /* Estilos personalizados para el calendario */
 .v-calendar-weekly__head-weekday {
     font-weight: bold;

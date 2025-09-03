@@ -21,6 +21,10 @@ import ReporteVentas from "../components/Productos/ReporteVentas.vue";
 import ScannerQE from "../components/Miembros/ScannerQR.vue";
 import Login from "../components/Usuarios/Login.vue";
 import GestionClases from "../components/Clases/GestionClases.vue";
+import Ejercicio from "../components/Planes/Ejercicio.vue";
+import CategoriasEjercicios from "../components/Planes/CategoriasEjercicios.vue";
+import Rutinas from "../components/Planes/Rutinas.vue";
+import ListaRutinas from "../components/Planes/ListaRutinas.vue";
 
 Vue.use(Router);
 
@@ -138,6 +142,31 @@ const router = new Router({
       path: "/gestion-clases",
       name: "GestionClases",
       component: GestionClases
+    },
+    {
+      path: "/ejercicios",
+      name: "Ejercicio",
+      component: Ejercicio
+    },
+    {
+      path: "/categoria-ejercicio",
+      name: "CategoriaEjercicios",
+      component: CategoriasEjercicios
+    },
+    {
+      path: "/rutinas/crear",
+      name: "CrearRutina",
+      component: Rutinas
+    },
+    {
+      path: "/rutinas/editar/:id",
+      name: "EditarRutina",
+      component: Rutinas
+    },
+    {
+      path: "/lista-rutinas",
+      name: "ListaRutinas",
+      component: ListaRutinas
     },
     {
       path: "*",

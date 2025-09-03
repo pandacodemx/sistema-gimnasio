@@ -103,6 +103,21 @@
           </v-list-item>
         </v-list-group>
 
+        <!-- Sección Clases -->
+        <v-list-group :value="true" prepend-icon="mdi-gymnastics" class="section-group">
+          <template v-slot:activator>
+            <v-list-item-title class="section-title">Planes</v-list-item-title>
+          </template>
+          <v-list-item v-for="item in planesItems" :key="item.title" link :to="item.link" class="drawer-item ml-5">
+            <v-list-item-icon>
+              <v-icon small>{{ item.icon }}</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>{{ item.title }}</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list-group>
+
         <!-- Sección Reportes -->
         <v-list-group :value="true" prepend-icon="mdi-chart-bar" class="section-group">
           <template v-slot:activator>
@@ -167,6 +182,12 @@ export default {
     ],
     clasesItems: [
       { title: "Gestion Clases", icon: "mdi-calendar-clock", link: "/gestion-clases" },
+    ],
+    planesItems: [
+      { title: "Rutinas", icon: "mdi-dumbbell", link: "/rutinas/crear" },
+      { title: "Lista Rutinas", icon: "mdi-weight-kilogram", link: "/lista-rutinas" },
+      { title: "Ejercicios", icon: "mdi-weight-lifter", link: "/ejercicios" },
+      { title: "Categorias", icon: "mdi-weight-lifter", link: "/categoria-ejercicio" },
     ],
     reportItems: [
       { title: "Pagos", icon: "mdi-account-cash", link: "/pagos" },

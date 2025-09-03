@@ -244,11 +244,9 @@ export default {
     display: inline-flex;
     align-items: center;
     padding: 6px 12px;
-    border-radius: 999px;
-    font-weight: bold;
-    font-size: 14px;
+    border-radius: 16px;
+    font-size: 0.875rem;
     color: #fff;
-    text-transform: capitalize;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 }
 

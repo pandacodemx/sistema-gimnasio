@@ -71,11 +71,7 @@ export default {
 
   data: () => ({
     membresiaSeleccionada: { id: "", nombre: "", precio: "", duracion: "" },
-    fechaSeleccionada: new Date(
-      Date.now() - new Date().getTimezoneOffset() * 60000
-    )
-      .toISOString()
-      .substr(0, 10),
+    fechaSeleccionada: new Date().toISOString().split('T')[0],
     membresias: [],
     cargando: false,
     mostrarConfirmacionFecha: false,
@@ -83,19 +79,24 @@ export default {
   computed: {
     fechaSeleccionadaFormateada() {
       if (!this.fechaSeleccionada) return '';
-      const fecha = new Date(this.fechaSeleccionada);
-      return fecha.toLocaleDateString('es-MX', {
+      const [year, month, day] = this.fechaSeleccionada.split('-');
+      const fechaLocal = new Date(year, month - 1, day);
+
+      return fechaLocal.toLocaleDateString('es-MX', {
         day: '2-digit',
         month: '2-digit',
-        year: 'numeric'
+        year: 'numeric',
+        timeZone: 'America/Mexico_City'
       });
     },
 
     fechaActualFormateada() {
-      return new Date().toLocaleDateString('es-MX', {
+      const ahora = new Date();
+      return ahora.toLocaleDateString('es-MX', {
         day: '2-digit',
         month: '2-digit',
-        year: 'numeric'
+        year: 'numeric',
+        timeZone: 'America/Mexico_City'
       });
     }
   },
@@ -120,12 +121,12 @@ export default {
     },
 
     esFechaDiferente() {
-      const fechaSeleccionada = new Date(this.fechaSeleccionada);
-      const fechaActual = new Date();
 
-      return fechaActual.getDate() !== fechaSeleccionada.getDate() ||
-        fechaActual.getMonth() !== fechaSeleccionada.getMonth() ||
-        fechaActual.getFullYear() !== fechaSeleccionada.getFullYear();
+      const fechaSelec = this.fechaSeleccionada;
+      const hoy = new Date();
+      const hoyFormateado = hoy.toISOString().split('T')[0];
+
+      return fechaSelec !== hoyFormateado;
     },
 
 
@@ -144,14 +145,13 @@ export default {
       this.mostrarConfirmacionFecha = false;
 
       const formatDateTimeMexico = () => {
-        const [year, month, day] = this.fechaSeleccionada.split('-');
+        const fechaPart = this.fechaSeleccionada;
         const ahora = new Date();
-
         const horas = String(ahora.getHours()).padStart(2, '0');
         const minutos = String(ahora.getMinutes()).padStart(2, '0');
         const segundos = String(ahora.getSeconds()).padStart(2, '0');
 
-        return `${year}-${month}-${day} ${horas}:${minutos}:${segundos}`;
+        return `${fechaPart} ${horas}:${minutos}:${segundos}`;
       };
 
       let payload = {

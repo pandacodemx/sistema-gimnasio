@@ -23,7 +23,7 @@
                                 </div>
                                 <h3 class="display-1 font-weight-bold">
                                     {{ item.total.toFixed(2) }}
-                                    <small class="text-caption">({{ item.cantidad }} pagos)</small>
+
                                 </h3>
                             </div>
                         </div>
