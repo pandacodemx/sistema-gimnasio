@@ -1,0 +1,125 @@
+Fase 1: Biblioteca de Ejercicios (1 semana)
+CRUD de ejercicios
+
+Categorización
+
+Búsqueda y filtros
+
+Fase 2: Creador de Rutinas (2 semanas)
+Editor de rutinas
+
+Sistema de días y ejercicios
+
+Templates predefinidos
+
+Fase 3: Asignación y Seguimiento (2 semanas)
+Asignación a miembros
+
+Registro de entrenamientos
+
+Historial de progreso
+
+Fase 4: Analytics y Reportes (1 semana)
+Dashboard de progreso
+
+Reportes de efectividad
+
+Sistema de notificaciones
+
+
+-----BD PLANES
+-- Tabla de categorías de ejercicios
+CREATE TABLE categorias_ejercicios (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    nombre VARCHAR(100) NOT NULL,
+    descripcion TEXT,
+    icono VARCHAR(50)
+);
+
+-- Tabla de ejercicios
+CREATE TABLE ejercicios (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    nombre VARCHAR(100) NOT NULL,
+    descripcion TEXT,
+    instrucciones TEXT,
+nivel_dificultad VARCHAR(110),
+equipamiento VARCHAR(110),
+    categoria_id INT,
+    imagen_url VARCHAR(255),
+    video_url VARCHAR(255),
+    met SMALLINT COMMENT 'Equivalentes metabólicos',
+    FOREIGN KEY (categoria_id) REFERENCES categorias_ejercicios(id)
+);
+
+-- Tabla de rutinas base
+CREATE TABLE rutinas (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    nombre VARCHAR(100) NOT NULL,
+    descripcion TEXT,
+    nivel_dificultad ENUM('principiante', 'intermedio', 'avanzado'),
+    duracion_semanas TINYINT,
+    objetivo ENUM('perdida_grasa', 'ganancia_muscular', 'fuerza', 'resistencia', 'general'),
+    creada_por INT COMMENT 'ID del instructor',
+    activa BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Tabla de días de rutina
+CREATE TABLE rutina_dias (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    rutina_id INT,
+    dia_semana TINYINT COMMENT '1-7 (Lunes-Domingo)',
+    nombre_dia VARCHAR(20),
+    FOREIGN KEY (rutina_id) REFERENCES rutinas(id) ON DELETE CASCADE
+);
+
+-- Tabla de ejercicios por día
+CREATE TABLE rutina_ejercicios (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    rutina_dia_id INT,
+    ejercicio_id INT,
+    series TINYINT,
+    repeticiones VARCHAR(50),
+    peso_recomendado VARCHAR(100),
+    descanso_segundos SMALLINT,
+    orden TINYINT,
+    notas TEXT,
+    FOREIGN KEY (rutina_dia_id) REFERENCES rutina_dias(id) ON DELETE CASCADE,
+    FOREIGN KEY (ejercicio_id) REFERENCES ejercicios(id)
+);
+
+-- Tabla de rutinas asignadas a miembros
+CREATE TABLE miembro_rutinas (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    miembro_id INT,
+    rutina_id INT,
+    fecha_inicio DATE,
+    fecha_fin DATE,
+    activa BOOLEAN DEFAULT TRUE,
+    asignada_por INT COMMENT 'ID del instructor',
+    notas TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (miembro_id) REFERENCES miembros(id),
+    FOREIGN KEY (rutina_id) REFERENCES rutinas(id)
+);
+
+-- Tabla de progreso de ejercicios
+CREATE TABLE progreso_ejercicios (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    miembro_id INT,
+    ejercicio_id INT,
+    fecha DATE,
+    series_completadas TINYINT,
+    repeticiones_por_serie JSON COMMENT '[12,10,8,6]',
+    peso_utilizado JSON COMMENT '[20,25,30,35]',
+    notas TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (miembro_id) REFERENCES miembros(id),
+    FOREIGN KEY (ejercicio_id) REFERENCES ejercicios(id)
+);
+
+
+
+
+{ id: 1, nombre: 'Sentadillas', descripcion: 'Ejercicio fundamental para piernas y glúteos', instrucciones: 'Pies al ancho de hombros, bajar flexionando rodillas', categoria_id: 1, imagen_url: 'https://via.placeholder.com/300x180?text=Sentadillas', met: 5, nivel_dificultad: 'principiante', equipamiento: 'peso corporal' },
+           
