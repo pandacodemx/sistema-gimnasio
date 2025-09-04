@@ -14,7 +14,7 @@
             <div :class="item.color" class="
                 text-left
                 v-card--material__heading
-                mb-n6
+                mb-n4
                 v-sheet
                 elevation-6
                 pa-4
@@ -29,7 +29,7 @@
                 <div class="body-3 grey--text font-weight-light">
                   {{ item.nombre }}
                 </div>
-                <h3 class="display-1 font-weight-bold text--primary">
+                <h3 class="total-dashboard font-weight-bold text--primary">
                   {{ item.total }}
                   <small></small>
                 </h3>
@@ -42,8 +42,12 @@
   </section>
 </template>
 
+<style>
+.total-dashboard {
+  font-size: 22px;
+}
+</style>
 
-////////////SCRIPT////////////////
 <script>
 export default {
   name: "CartasPersonalizadas",
