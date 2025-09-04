@@ -184,8 +184,10 @@ export default {
       { title: "Gestion Clases", icon: "mdi-calendar-clock", link: "/gestion-clases" },
     ],
     planesItems: [
-      { title: "Rutinas", icon: "mdi-dumbbell", link: "/rutinas/crear" },
-      { title: "Lista Rutinas", icon: "mdi-weight-kilogram", link: "/lista-rutinas" },
+      { title: "Gestionar Asignaciones ", icon: "mdi-dumbbell", link: "/gestion-asignaciones" },
+      { title: "Asignar Rutina", icon: "mdi-weight-kilogram", link: "/asignar-rutina" },
+      { title: "Creador Rutinas", icon: "mdi-dumbbell", link: "/rutinas/crear" },
+      { title: "Rutinas Creadas", icon: "mdi-weight-kilogram", link: "/lista-rutinas" },
       { title: "Ejercicios", icon: "mdi-weight-lifter", link: "/ejercicios" },
       { title: "Categorias", icon: "mdi-weight-lifter", link: "/categoria-ejercicio" },
     ],

@@ -25,6 +25,8 @@ import Ejercicio from "../components/Planes/Ejercicio.vue";
 import CategoriasEjercicios from "../components/Planes/CategoriasEjercicios.vue";
 import Rutinas from "../components/Planes/Rutinas.vue";
 import ListaRutinas from "../components/Planes/ListaRutinas.vue";
+import AsignarRutina from "../components/Planes/AsignarRutina.vue";
+import GestionAsignaciones from "../components/Planes/GestionAsignaciones.vue";
 
 Vue.use(Router);
 
@@ -167,6 +169,16 @@ const router = new Router({
       path: "/lista-rutinas",
       name: "ListaRutinas",
       component: ListaRutinas
+    },
+    {
+      path: "/asignar-rutina",
+      name: "AsignarRutina",
+      component: AsignarRutina
+    },
+    {
+      path: "/gestion-asignaciones",
+      name: "GestionAsignaciones",
+      component: GestionAsignaciones
     },
     {
       path: "*",
