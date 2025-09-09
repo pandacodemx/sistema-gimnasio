@@ -44,7 +44,7 @@
 
       <v-list dense nav class="nav-list">
         <!-- Sección Principal -->
-        <v-list-group :value="true" prepend-icon="mdi-home" class="section-group">
+        <v-list-group v-model="openGroups.principal" prepend-icon="mdi-home" class="section-group">
           <template v-slot:activator>
             <v-list-item-title class="section-title">Principal</v-list-item-title>
           </template>
@@ -167,6 +167,15 @@ export default {
 
   data: () => ({
     drawer: false,
+    openGroups: {
+      principal: false,
+      registros: false,
+      productos: false,
+      clases: false,
+      planes: false,
+      reportes: false,
+      config: false
+    },
     nombreUsuario: "",
     nombreGimnasio: "",
     logo: "",
