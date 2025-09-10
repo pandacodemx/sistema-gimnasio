@@ -1,18 +1,19 @@
 <?php
 include_once "base_datos.php";
-define("PASS_DEFECTO", "GimHunter123");
+define("PASS_DEFECTO", "Gym123");
 
 function registrarUsuario($usuario)
 {
     error_log("Usuario a registrar: " . print_r($usuario, true));
     $usuario->password = password_hash(PASS_DEFECTO, PASSWORD_DEFAULT);
+
     $sentencia = "INSERT INTO usuarios (usuario, nombre, telefono, rol, password) VALUES (?,?,?,?,?)";
     $parametros = [
-        $usuario['usuario'],
-        $usuario['nombre'],
-        $usuario['telefono'],
-        $usuario['rol'],
-        $usuario['password']
+        $usuario->usuario,
+        $usuario->nombre,
+        $usuario->telefono,
+        $usuario->rol,
+        $usuario->password
     ];
     return insertar($sentencia, $parametros);
 }

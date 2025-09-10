@@ -21,14 +21,16 @@
       </v-tooltip>
     </v-app-bar>
 
-    <v-navigation-drawer app v-model="drawer" class="custom-drawer" transition="slide-x-transition">
+    <!-- Drawer con mini-variant -->
+    <v-navigation-drawer app v-model="drawer" :mini-variant.sync="mini" class="custom-drawer"
+      transition="slide-x-transition" elevation="8">
       <!-- Header del drawer -->
       <div class="drawer-header">
         <v-list-item class="pa-4 user-info">
           <v-list-item-avatar size="64" class="avatar-border">
             <img :src="urlImagen(logo)" alt="Logo" class="avatar-image">
           </v-list-item-avatar>
-          <v-list-item-content>
+          <v-list-item-content v-if="!mini">
             <v-list-item-title class="font-weight-bold white--text gym-title">
               {{ nombreGimnasio }}
             </v-list-item-title>
@@ -49,102 +51,74 @@
             <v-list-item-title class="section-title">Principal</v-list-item-title>
           </template>
           <v-list-item v-for="item in mainItems" :key="item.title" link :to="item.link" class="drawer-item ml-5">
-            <v-list-item-icon>
-              <v-icon small>{{ item.icon }}</v-icon>
-            </v-list-item-icon>
-            <v-list-item-content>
-              <v-list-item-title>{{ item.title }}</v-list-item-title>
-            </v-list-item-content>
+            <v-list-item-icon><v-icon small>{{ item.icon }}</v-icon></v-list-item-icon>
+            <v-list-item-content><v-list-item-title>{{ item.title }}</v-list-item-title></v-list-item-content>
           </v-list-item>
         </v-list-group>
 
         <!-- Sección Registros -->
-        <v-list-group :value="true" prepend-icon="mdi-account-multiple" class="section-group">
+        <v-list-group v-model="openGroups.registros" prepend-icon="mdi-account-multiple" class="section-group">
           <template v-slot:activator>
             <v-list-item-title class="section-title">Registros</v-list-item-title>
           </template>
           <v-list-item v-for="item in registerItems" :key="item.title" link :to="item.link" class="drawer-item ml-5">
-            <v-list-item-icon>
-              <v-icon small>{{ item.icon }}</v-icon>
-            </v-list-item-icon>
-            <v-list-item-content>
-              <v-list-item-title>{{ item.title }}</v-list-item-title>
-            </v-list-item-content>
+            <v-list-item-icon><v-icon small>{{ item.icon }}</v-icon></v-list-item-icon>
+            <v-list-item-content><v-list-item-title>{{ item.title }}</v-list-item-title></v-list-item-content>
           </v-list-item>
         </v-list-group>
 
         <!-- Sección Productos -->
-        <v-list-group :value="true" prepend-icon="mdi-store" class="section-group">
+        <v-list-group v-model="openGroups.productos" prepend-icon="mdi-store" class="section-group">
           <template v-slot:activator>
             <v-list-item-title class="section-title">Tienda</v-list-item-title>
           </template>
           <v-list-item v-for="item in pruductosItems" :key="item.title" link :to="item.link" class="drawer-item ml-5">
-            <v-list-item-icon>
-              <v-icon small>{{ item.icon }}</v-icon>
-            </v-list-item-icon>
-            <v-list-item-content>
-              <v-list-item-title>{{ item.title }}</v-list-item-title>
-            </v-list-item-content>
+            <v-list-item-icon><v-icon small>{{ item.icon }}</v-icon></v-list-item-icon>
+            <v-list-item-content><v-list-item-title>{{ item.title }}</v-list-item-title></v-list-item-content>
           </v-list-item>
         </v-list-group>
 
         <!-- Sección Clases -->
-        <v-list-group :value="true" prepend-icon="mdi-dumbbell" class="section-group">
+        <v-list-group v-model="openGroups.clases" prepend-icon="mdi-dumbbell" class="section-group">
           <template v-slot:activator>
             <v-list-item-title class="section-title">Clases</v-list-item-title>
           </template>
           <v-list-item v-for="item in clasesItems" :key="item.title" link :to="item.link" class="drawer-item ml-5">
-            <v-list-item-icon>
-              <v-icon small>{{ item.icon }}</v-icon>
-            </v-list-item-icon>
-            <v-list-item-content>
-              <v-list-item-title>{{ item.title }}</v-list-item-title>
-            </v-list-item-content>
+            <v-list-item-icon><v-icon small>{{ item.icon }}</v-icon></v-list-item-icon>
+            <v-list-item-content><v-list-item-title>{{ item.title }}</v-list-item-title></v-list-item-content>
           </v-list-item>
         </v-list-group>
 
-        <!-- Sección Clases -->
-        <v-list-group :value="true" prepend-icon="mdi-gymnastics" class="section-group">
+        <!-- Sección Planes -->
+        <v-list-group v-model="openGroups.planes" prepend-icon="mdi-gymnastics" class="section-group">
           <template v-slot:activator>
             <v-list-item-title class="section-title">Planes</v-list-item-title>
           </template>
           <v-list-item v-for="item in planesItems" :key="item.title" link :to="item.link" class="drawer-item ml-5">
-            <v-list-item-icon>
-              <v-icon small>{{ item.icon }}</v-icon>
-            </v-list-item-icon>
-            <v-list-item-content>
-              <v-list-item-title>{{ item.title }}</v-list-item-title>
-            </v-list-item-content>
+            <v-list-item-icon><v-icon small>{{ item.icon }}</v-icon></v-list-item-icon>
+            <v-list-item-content><v-list-item-title>{{ item.title }}</v-list-item-title></v-list-item-content>
           </v-list-item>
         </v-list-group>
 
         <!-- Sección Reportes -->
-        <v-list-group :value="true" prepend-icon="mdi-chart-bar" class="section-group">
+        <v-list-group v-model="openGroups.reportes" prepend-icon="mdi-chart-bar" class="section-group">
           <template v-slot:activator>
             <v-list-item-title class="section-title">Reportes</v-list-item-title>
           </template>
           <v-list-item v-for="item in reportItems" :key="item.title" link :to="item.link" class="drawer-item ml-5">
-            <v-list-item-icon>
-              <v-icon small>{{ item.icon }}</v-icon>
-            </v-list-item-icon>
-            <v-list-item-content>
-              <v-list-item-title>{{ item.title }}</v-list-item-title>
-            </v-list-item-content>
+            <v-list-item-icon><v-icon small>{{ item.icon }}</v-icon></v-list-item-icon>
+            <v-list-item-content><v-list-item-title>{{ item.title }}</v-list-item-title></v-list-item-content>
           </v-list-item>
         </v-list-group>
 
         <!-- Sección Configuración -->
-        <v-list-group :value="true" prepend-icon="mdi-cog" class="section-group">
+        <v-list-group v-model="openGroups.config" prepend-icon="mdi-cog" class="section-group">
           <template v-slot:activator>
             <v-list-item-title class="section-title">Configuración</v-list-item-title>
           </template>
           <v-list-item v-for="item in configItems" :key="item.title" link :to="item.link" class="drawer-item ml-5">
-            <v-list-item-icon>
-              <v-icon small>{{ item.icon }}</v-icon>
-            </v-list-item-icon>
-            <v-list-item-content>
-              <v-list-item-title>{{ item.title }}</v-list-item-title>
-            </v-list-item-content>
+            <v-list-item-icon><v-icon small>{{ item.icon }}</v-icon></v-list-item-icon>
+            <v-list-item-content><v-list-item-title>{{ item.title }}</v-list-item-title></v-list-item-content>
           </v-list-item>
         </v-list-group>
       </v-list>
@@ -167,6 +141,10 @@ export default {
 
   data: () => ({
     drawer: false,
+    mini: false,
+    nombreUsuario: "",
+    nombreGimnasio: "",
+    logo: "",
     openGroups: {
       principal: false,
       registros: false,
@@ -176,9 +154,6 @@ export default {
       reportes: false,
       config: false
     },
-    nombreUsuario: "",
-    nombreGimnasio: "",
-    logo: "",
     mainItems: [
       { title: "Inicio", icon: "mdi-view-dashboard", link: "/" },
       { title: "Registrar visita", icon: "mdi-home-account", link: "/registrar-visita" },
@@ -234,6 +209,7 @@ export default {
   }
 };
 </script>
+
 
 <style scoped>
 /* Barra de aplicación superior */

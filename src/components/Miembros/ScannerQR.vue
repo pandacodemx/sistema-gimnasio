@@ -53,7 +53,8 @@ export default {
         alertType: 'info',
         loading: false,
         stream: null,
-        scanInterval: null
+        scanInterval: null,
+        lastScanned: null
     }),
 
     methods: {
@@ -100,6 +101,8 @@ export default {
         },
 
         async handleQRCode(data) {
+            if (this.lastScanned && Date.now() - this.lastScanned < 3000) return;
+            this.lastScanned = Date.now();
             try {
                 const qrData = JSON.parse(data);
                 if (!qrData.miembroId) throw new Error('QR no válido');
@@ -113,7 +116,7 @@ export default {
                     visita: {
                         idMiembro: qrData.miembroId,
                         idUsuario: localStorage.getItem("idUsuario"),
-                        // idMembresia: Opcional (puede omitirse si la función lo obtiene de la BD)
+
                     }
                 };
 
@@ -124,7 +127,6 @@ export default {
                     this.alertMessage = `Visita registrada para ID: ${qrData.miembroId}`;
                     this.stopScanner();
 
-                    // Opcional: reproducir sonido de éxito
                     this.playSound('success');
                 }
 
